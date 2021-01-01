@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	 version="3.1">
+    <servlet>
+        <servlet-name>Display_Course_Introduction_Teacher</servlet-name>
+        <servlet-class>Controller.Display_Course_Introduction_Teacher</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Display_Exercise_Teacher</servlet-name>
+        <servlet-class>Controller.Display_Exercise_Teacher</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Process_CourseIntroduction_Teacher</servlet-name>
+        <servlet-class>Controller.Process_CourseIntroduction_Teacher</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Process_Exercise_Teacher</servlet-name>
+        <servlet-class>Controller.Process_Exercise_Teacher</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Display_Course_Introduction_Teacher</servlet-name>
+        <url-pattern>/Display_Course_Introduction_Teacher</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Display_Exercise_Teacher</servlet-name>
+        <url-pattern>/Display_Exercise_Teacher</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Process_CourseIntroduction_Teacher</servlet-name>
+        <url-pattern>/Process_CourseIntroduction_Teacher</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Process_Exercise_Teacher</servlet-name>
+        <url-pattern>/Process_Exercise_Teacher</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    <welcome-file-list>
+        <welcome-file>home</welcome-file>
+    </welcome-file-list>
+</web-app>
