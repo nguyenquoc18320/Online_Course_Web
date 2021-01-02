@@ -7,6 +7,7 @@
 <%@page import="DAO.CourseDB"%>
 <%@page import="Model.Course"%>
 <%@page import="java.util.List"%>
+<%@page import="Model.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="/common/taglib.jsp" %>
 <!DOCTYPE html>
@@ -39,11 +40,17 @@
             newText.innerHTML = text;
             newDiv.appendChild(newText);
             
+              
+            //link to edit the course
+            var newLinkEdit = document.createElement('a');
+            newLinkEdit.href ="Display_Course_Introduction_Teacher?courseid="+idCourse;
+            newDiv.appendChild(newLinkEdit);
+            
             var newButtonEdit = document.createElement('button');
             newButtonEdit.setAttribute('class', 'btn-course');
             newButtonEdit.classList.add('btn-course-edit');
             newButtonEdit.innerHTML = '!';
-            newDiv.appendChild(newButtonEdit);
+            newLinkEdit.appendChild(newButtonEdit);
             
             var newButtonDelete = document.createElement('button');
             newButtonDelete.setAttribute('class', 'btn-course');
@@ -53,6 +60,7 @@
             
         }
         
+
     </script>
     </head>
     <body>
@@ -66,8 +74,8 @@
         </div>
         <div class="small-container">
             <div class="profile">
-                <p class="name-user">Trần Văn Ân</p>
-                <p class="role-user">Student</p>    
+                <p class="name-user">${User.getName()}</p>
+                <!--<p class="role-user">Student</p>-->    
             </div>
             <div class="course">
                 <div class="title-course">
@@ -87,7 +95,7 @@
                     
                 </div>
                    
-                <form action="Display_Course_Introduction_Teacher" method="post" class="add-course-div">
+                <form action="Display_Course_Introduction_Teacher?requirement=new" method="post" class="add-course-div">
                     <input type="submit" id="btnAddCourse" value="Thêm khóa học">
                 </form>
             </div>

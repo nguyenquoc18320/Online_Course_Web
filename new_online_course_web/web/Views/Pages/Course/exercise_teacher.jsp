@@ -6,6 +6,10 @@
 
 <%@page import="Model.Exercise"%>
 <%@page import="Model.Part"%>
+<%@page import="Model.Course"%>
+<%@page import="DAO.CourseDB"%>
+<%@page import="Model.Chap"%>
+<%@page import="DAO.ChapDB"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>	
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
@@ -14,7 +18,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Exercise</title>
-        <link rel="stylesheet" href="Views/Css/Course/exercise_teacher_css.scss">
+        <link rel="stylesheet" href="Views/Css/Course/exercise_teacher_css.css">
          <link rel="stylesheet" href="Views/Css/common.scss">
         <script src="https://kit.fontawesome.com/a076d05399.js"></script>
         
@@ -27,19 +31,23 @@
                 <img id='image_logo' src ="logo.png" >
             </div>
             <div id ='div_CourseName'>
-                <label id="label_courseName">Hiển thị tên khóa học</label>
+                <%Part part =(Part) session.getAttribute("part");
+                    Course course= DAO.CourseDB.getCourseById(part.getCourseId());%>
+                <label id="label_courseName"><%=course.getName()%></label>
             </div>
             <div id='div_account'>
-                <label id='label_account'>Name  <i class='fas fa-caret-down'></i></label>               
+                <label id='label_account'>${User.getName()}<i class='fas fa-caret-down'></i></label>               
             </div>
         </div>
         <form action="Process_Exercise_Teacher" medthod ="post">
             <c:set value="${part}" var="part" scope="request"/>
-            <%Part p = (Part) request.getAttribute("part");
-            request.setAttribute("part", p);
+            <%
+            Chap chap = (Chap)ChapDB.getChapByPrimaryKey(part.getCourseId(), part.getChapId());
+            request.setAttribute("part", part);
             %>
             <div id="container">
-                <h1 id='label_chapName_partName'>Hiển thị tên chương, bài</h1>
+                <h1 id='label_chapName'><%=chap.getName()%></h1>
+                <h1 id='label_partName'><%=part.getName()%></h1>
                 <div id='div_all_exercises'>
                     <div class='div_exercise' id='div_exercise1'>
                         <textarea class ='textarea_question' id='question1' name ='question1' placeholder="Nhập câu hỏi"></textarea>
@@ -60,7 +68,8 @@
                 <input type="button" id ='button_add_exercise' value='Thêm' onclick='AddExercise()'>
             </div>
             <div class ="div_save">
-                <input id="button_save" type="submit" value="Lưu">
+                <input id="button_save" type="submit" value="Lưu">                                   
+                <a  href="teacher-profile"><input  id='button_profile' type="button" value="Trang chính"></a>
             </div>
             <div class="footer">
                 <div class="small-container">

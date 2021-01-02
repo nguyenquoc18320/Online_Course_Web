@@ -46,16 +46,29 @@ public class Display_Course_Introduction_Teacher extends HttpServlet {
         } else {
             if (requirement == null) {
                 Course course = (Course) request.getAttribute("course");
-//            course = new Course(1, "", "", user.getUserId(),null, "");
+
                 if (course != null) {
                     course = CourseDB.getCourseById(course.getCourseId());
                 }
+                
+                //get courseid if exist, it is sent from teacherprofile
+                if(course==null)
+                {
+                    String courseid = request.getParameter("courseid");
+                    if(courseid !=null && !courseid.equals(""))
+                    {
+                         course = CourseDB.getCourseById(Integer.parseInt(courseid));
+                    }
+                }
+                
+                
                 int maxChap = 0;
 
                 if (course == null) {
                     String message = "Không tìm thấy khóa học!";
                     request.setAttribute("message", message);
                 }
+                
                 if (course != null) {
                     request.setAttribute("course", course);
                     int courseid = course.getCourseId();

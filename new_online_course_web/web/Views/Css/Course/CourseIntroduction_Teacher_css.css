@@ -369,6 +369,17 @@ padding-bottom: 20px;
     padding: 5px 20px 5px 20px;
 }
 
+#button_profile
+{
+     width: 200px;
+    margin-left: 20px;
+      font-weight: bold;
+    background-color: #045FB4;
+    font-size: 18px;
+    color:white;
+    padding: 5px 20px 5px 20px;
+}
+
 #button_newCourse
 {
     width: 200px;

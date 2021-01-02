@@ -422,8 +422,8 @@
                 <!--<a  href="Process_CourseIntroduction_Teacher"><input  id='button_save' type="button" value="Lưu"></a>-->
                 <input id ='button_save'  type="submit" value="Lưu">
                 <a  href="Display_Course_Introduction_Teacher?requirement='new'"><input  id='button_newCourse' type="button" value="Tạo khóa học mới"></a>
+                  <a  href="teacher-profile"><input  id='button_profile' type="button" value="Trang chính"></a>
 
-                <!--<input id="button_newCourse" type="submit" value="Tạo khóa mới">-->
             </div>
             <div class="footer">
                 <div class="small-container">
