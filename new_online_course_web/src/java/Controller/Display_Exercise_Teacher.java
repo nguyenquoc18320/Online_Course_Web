@@ -5,7 +5,6 @@ package Controller;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 import Model.*;
 import DAO.*;
 import java.io.IOException;
@@ -40,38 +39,48 @@ public class Display_Exercise_Teacher extends HttpServlet {
         int courseid = -1;
         int chapid = -1;
         int partid = -1;
-        
-        String url ="/Views/Pages/Course/exercise_teacher.jsp";
-        
+
+        String url = "/Views/Pages/Course/exercise_teacher.jsp";
+
         HttpSession session = request.getSession();
-        try {
-            courseid = Integer.parseInt(request.getParameter("courseid"));
-            chapid = Integer.parseInt(request.getParameter("chapid"));
-            partid = Integer.parseInt(request.getParameter("partid"));
-        } catch (Exception ex) {
+        User user = (User) session.getAttribute("User");
 
-        }
+        String requirement = request.getParameter("requirement");
 
-        part = PartDB.getPartByPrimaryKey(courseid, chapid, partid);
-
-        int maxExercise = 0;
-//        part= PartDB.getPartByPrimaryKey(1,1, 1);
-        if (part == null) {
-            request.setAttribute("message", "Không tìm thấy phần bài học!");
+        if (user == null) {
+            url = "/sign-in";
         } else {
-            
-            session.setAttribute("part", part);
+            //không phải là tạo kh
+                try {
+                    courseid = Integer.parseInt(request.getParameter("courseid"));
+                    chapid = Integer.parseInt(request.getParameter("chapid"));
+                    partid = Integer.parseInt(request.getParameter("partid"));
+                } catch (Exception ex) {
 
-            List<Exercise> exerciseList = ExerciseDB.getAllExercisePartOfPart(courseid, chapid, partid);
-            if (exerciseList != null) {
-                for (Exercise e : exerciseList) {
-                    request.setAttribute("Exercise" + e.getExerciseId(), e);
-                    maxExercise = e.getExerciseId();
                 }
-            }
-        }
 
-        request.setAttribute("maxExercise", maxExercise);
+                part = PartDB.getPartByPrimaryKey(courseid, chapid, partid);
+
+                int maxExercise = 0;
+                        
+                if (part == null) {
+                    request.setAttribute("message", "Không tìm thấy phần bài học để thêm bài tập!");
+                    url= "/"+ (String)request.getParameter("previousPage");
+                } else {
+
+                    session.setAttribute("part", part);
+
+                    List<Exercise> exerciseList = ExerciseDB.getAllExercisePartOfPart(courseid, chapid, partid);
+                    if (exerciseList != null) {
+                        for (Exercise e : exerciseList) {
+                            request.setAttribute("Exercise" + e.getExerciseId(), e);
+                            maxExercise = e.getExerciseId();
+                        }
+                    }
+                }
+
+                request.setAttribute("maxExercise", maxExercise);
+            }
         getServletContext().getRequestDispatcher(url).forward(request, response);
     }
 

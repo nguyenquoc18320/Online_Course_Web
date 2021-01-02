@@ -15,7 +15,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Giới thiệu khóa học</title>
-        <link rel="stylesheet" href="Views/Css/Course/CourseIntroduction_Teacher_css.scss">
+        <link rel="stylesheet" href="Views/Css/Course/CourseIntroduction_Teacher_css.css">
         <link rel="stylesheet" href="Views/Css/common.scss">
         <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     </head>
@@ -142,15 +142,15 @@
                             lastPart =document.getElementById("textbox_chap" + chap + "_part" + (numberOfPart+1));
                             
                             //Tới trang bài học
-                            lastPart.insertAdjacentHTML("afterend", "<a  class='link_goto' id = 'link_goto_part_chap"+chap+"_part"+(numberOfPart+1)
-                                    +"' href='Display_Exercise_Teacher'><input   type ='button' value='Bài học' button' ></a>");
+                            lastPart.insertAdjacentHTML("afterend", "<a   id = 'link_goto_part_chap"+chap+"_part"+(numberOfPart+1)
+                                    +"' href='Display_Exercise_Teacher'><input class='link_goto_Part'  type ='button' value='Bài học' button' ></a>");
                             
                             
                             lastPart =document.getElementById("link_goto_part_chap" + chap + "_part" + (numberOfPart+1));
                             
                             //Thêm nút bài tập
-                            lastPart.insertAdjacentHTML("afterend", "<a  class='link_goto' id = 'link_goto_exercise_chap"+chap+"_part"+(numberOfPart+1)
-                                    +"' href='Display_Exercise_Teacher'><input   type ='button' value='Bài tập' ></a>");
+                            lastPart.insertAdjacentHTML("afterend", "<a  id = 'link_goto_exercise_chap"+chap+"_part"+(numberOfPart+1)
+                                    +"' href='Display_Exercise_Teacher?previousPage=Display_Course_Introduction_Teacher'><input  class='link_goto_Exercise'  type ='button' value='Bài tập' ></a>");
                             numberOfParts[chap] += 1;
                             //console.log(numberOfParts);
                         }

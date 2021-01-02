@@ -44,10 +44,10 @@ public class TeacherProfileController extends HttpServlet {
         
         HttpSession session = request.getSession();
         //User user = (User)session.getAttribute("User");
-        User user = UserDB.GetUserByUserId(2);
+        User user = (User)session.getAttribute("User");
         if (user == null)
         {
-            //url = "/sign-in";
+            url = "/sign-in";
         }
         else
         {

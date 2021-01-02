@@ -4,6 +4,16 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 */
 /* 
+    Created on : Jan 2, 2021, 9:58:34 AM
+    Author     : A556U
+*/
+
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
     Created on : Nov 17, 2020, 2:58:48 PM
     Author     : A556U
 */
@@ -143,13 +153,6 @@ padding-bottom: 20px;
     /*float: right;*/
 }
 
-/*.link_goto
-{
-    display: block;
-    margin-left: 95%;
-    margin-right: 0px;
-    width: 10px;
-}*/
 
 
 .textbox_chap{
@@ -192,8 +195,18 @@ padding-bottom: 20px;
 
 .link_goto_Part
 {
-    background-color: blue;
-    
+    margin-top: 5px;
+    background-color: #B40486;
+         margin-left: 50%;
+          color: white;
+}
+
+.link_goto_Exercise
+{
+    margin-top: 5px;
+    margin-left: 5px;
+    background-color: #DF3A01;
+    color: white;
 }
 
 /*instructor info*/
