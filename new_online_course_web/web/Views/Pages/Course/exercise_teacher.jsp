@@ -124,7 +124,6 @@
 
         function AddExercise()
         {
-            totalExercise
             var emptyPosition = 0;
             for (var i = 1; i <= totalExercises; i++)
             {

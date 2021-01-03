@@ -46,7 +46,7 @@ public class Display_Course_Introduction_Teacher extends HttpServlet {
         } else {
             if (requirement == null) {
                 Course course = (Course) request.getAttribute("course");
-
+ 
                 if (course != null) {
                     course = CourseDB.getCourseById(course.getCourseId());
                 }

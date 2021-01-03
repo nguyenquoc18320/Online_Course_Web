@@ -37,65 +37,65 @@ public class Display_Course_Introduction_Student extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
         String url = "/Views/Pages/Course/Course_Introduction_Student.jsp";
         HttpSession session = request.getSession();
-        User user = (User)session.getAttribute("User");
-        if (user == null)
-        {
+        User user = (User) session.getAttribute("User");
+        if (user == null) {
             url = "/sign-in";
-        }
-        else
-        {
-            Course course = (Course) request.getAttribute("course");      
-    //       course = new Course(1, "", "", 1,null, "");
-           if(course!=null)
-            course = CourseDB.getCourseById(course.getCourseId());
-           int maxChap=0;
-
-           if(course==null)
-           {
-               String message =  "Không tìm thấy khóa học!";
-               request.setAttribute("message",message);
-           }
-            if(course!=null)
+        } else {
+            try
             {
-                request.setAttribute("course", course);
-                int courseid= course.getCourseId();
-                List<Chap> chapList = ChapDB.getAllChapByCourseId(courseid);
-                if(chapList!=null)
-                {
-                    for(Chap c : chapList)
-                    {
-                        int chapid = c.getChapid();
-                        request.setAttribute("chap"+chapid, c);
-                        maxChap= c.getChapid();
+                int courseid = Integer.parseInt(request.getParameter("courseid"));
+//            Course course = (Course) request.getAttribute("course");   
+//                int courseid = 1;
+                Course course = CourseDB.getCourseById(courseid);
+                if (course != null) {
+                    course = CourseDB.getCourseById(course.getCourseId());
+                }
+                int maxChap = 0;
 
-                        List<Part> partList = PartDB.getAllPartOfChap(courseid, chapid);
-                        if(partList!=null)
-                        {
-                            for( Part p : partList)
-                            {
-                                request.setAttribute("chap"+chapid+"_part"+p.getPartId(), p);
+                if (course == null) {
+                    String message = "Không tìm thấy khóa học!";
+                    request.setAttribute("message", message);
+                }
+                if (course != null) {
+                    request.setAttribute("course", course);
+                    List<Chap> chapList = ChapDB.getAllChapByCourseId(courseid);
+                    if (chapList != null) {
+                        for (Chap c : chapList) {
+                            int chapid = c.getChapid();
+                            request.setAttribute("chap" + chapid, c);
+                            maxChap = c.getChapid();
+
+                            List<Part> partList = PartDB.getAllPartOfChap(courseid, chapid);
+                            if (partList != null) {
+                                for (Part p : partList) {
+                                    request.setAttribute("chap" + chapid + "_part" + p.getPartId(), p);
+                                }
                             }
+                        }
+                    }
+
+                    //Các câu hỏi thường gặp
+                    List<FAQ> faqList = FAQDB.getAllFAQOfCourse(courseid);
+                    if (faqList != null) {
+                        for (FAQ f : faqList) {
+                            request.setAttribute("FAQ" + f.getFAQId(), f);
                         }
                     }
                 }
 
-                //Các câu hỏi thường gặp
-                List<FAQ> faqList = FAQDB.getAllFAQOfCourse(courseid);
-                if(faqList!=null)
-                {
-                    for(FAQ f: faqList)
-                    {
-                        request.setAttribute("FAQ"+f.getFAQId(), f);
-                    }
-                }
+                request.setAttribute("maxChap", maxChap);
             }
-
-            request.setAttribute("maxChap", maxChap);
+            catch(Exception ex)
+            {
+               //Set url trả về trang sinh viên
+                url= "/Views/Pages/Home/home.jsp";
+            }
         }
-        getServletContext().getRequestDispatcher("/Views/Pages/Course/Course_Introduction_Student.jsp").forward(request, response);        
+
+        getServletContext().getRequestDispatcher(url).forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
