@@ -7,7 +7,9 @@ package DAO;
 
 import Model.*;
 import DAO.*;
+import static DAO.AccountDB.GetStatusByState;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.*;
 
 /**
@@ -62,6 +64,52 @@ public class UserDB {
             em.close();
         }
         return user;
+    }
+    
+    public static List<User> GetUsersByFilter(String role, String state, String search)
+    {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        String qString = "";
+        if (!"".equals(search))
+            qString = "SELECT u FROM User AS u WHERE CONCAT(u.UserId, u.Name, u.Email) LIKE '%" + search + "%'";
+        else if (role.equals("0"))
+        {
+            if (state.equals("all"))
+                qString = "SELECT u FROM User AS u";
+            else
+            {
+                boolean status = AccountDB.GetStatusByState(state);
+                qString = "SELECT u FROM User AS u INNER JOIN Account as a ON u.UserId = a.UserId WHERE a.Status = " + status;
+            }
+        }
+        else
+        {
+            if (state.equals("all"))
+                qString = "SELECT u FROM User AS u WHERE u.Role = " + role;
+            else
+            {
+                boolean status = AccountDB.GetStatusByState(state);
+                qString = "SELECT u FROM User AS u INNER JOIN Account as a ON u.UserId = a.UserId WHERE u.Role = " + role + " AND a.Status = " + status;
+            }
+        }
+            
+        
+        TypedQuery<User> q = em.createQuery(qString, User.class);
+//        if (!role.equals("0") && search.equals(""))
+//            q.setParameter("role", role);
+       
+        List<User> users = null;
+        try{
+            users = q.getResultList();
+            if (users == null || users.isEmpty())
+                users = null;
+        }catch (Exception ex){
+            System.out.println("Error: " + ex.getMessage());
+        }
+        finally{
+            em.close();
+        }
+        return users;
     }
     
     public static boolean InsertUser(User user, Account account)

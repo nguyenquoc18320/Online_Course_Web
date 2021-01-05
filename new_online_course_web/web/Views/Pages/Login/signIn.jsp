@@ -14,9 +14,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
-    <link href="Views/Css/common.scss" type="text/css" rel="stylesheet">
+    <link href="Views/Css/common.css" type="text/css" rel="stylesheet">
      
-    <link href="Views/Css/Login/login.scss" type="text/css" rel="stylesheet"/>
+    <link href="Views/Css/Login/login.css" type="text/css" rel="stylesheet"/>
     <title>ASQ - Đăng nhập</title>
 </head>
 <body>

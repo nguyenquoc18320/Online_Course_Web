@@ -15,8 +15,8 @@
         
         <script src="https://kit.fontawesome.com/a076d05399.js"></script>
         
-        <link href="Views/Css/Home/home.scss" type="text/css" rel="stylesheet">
-        <link href="Views/Css/common.scss" type="text/css" rel="stylesheet">
+        <link href="Views/Css/Home/home.css" type="text/css" rel="stylesheet">
+        <link href="Views/Css/common.css" type="text/css" rel="stylesheet">
         
         <title>Trang Chủ</title>
     </head>

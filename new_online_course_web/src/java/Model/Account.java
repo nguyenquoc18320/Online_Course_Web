@@ -7,6 +7,7 @@ package Model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 /**
  *
  * @author TRAN VAN AN
@@ -52,5 +53,5 @@ public class Account implements Serializable {
         this.Status = Status;
     }
     
-    
+   
 }

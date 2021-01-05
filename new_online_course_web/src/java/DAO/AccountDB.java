@@ -48,6 +48,61 @@ public class AccountDB {
         }
     }
     
+     public static List<Account> GetAccounts()
+    {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        String qString = "SELECT a FROM Account AS a";
+        TypedQuery<Account> q = em.createQuery(qString, Account.class);
+        List<Account> accounts = null;
+        try{
+            accounts = q.getResultList();
+            if (accounts == null || accounts.isEmpty())
+                accounts = null;
+        }catch (Exception ex){
+            System.out.println("Error: " + ex.getMessage());
+        }
+        finally{
+            em.close();
+        }
+        return accounts;
+    }
+     
+    
+     public static List<Account> GetAccountsByStatus(String state)
+    {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        String qString = "";
+        if (state.equals("all"))
+            qString = "SELECT a FROM Account AS a";
+        else
+            qString = "SELECT a FROM Account a WHERE a.Status = :status";
+        TypedQuery<Account> q = em.createQuery(qString, Account.class);
+        if (!state.equals("all"))
+        {
+            boolean status = GetStatusByState(state);
+            q.setParameter("status", status);
+        }
+        List<Account> accounts = null;
+        try{
+            accounts = q.getResultList();
+            if (accounts == null || accounts.isEmpty())
+                accounts = null;
+        }catch (Exception ex){
+            System.out.println("Error: " + ex.getMessage());
+        }
+        finally{
+            em.close();
+        }
+        return accounts;
+    }
+    
+    public static boolean GetStatusByState(String state)
+    {
+        if (state.equals("activated") )
+            return true;
+        return false;
+    }
+     
     public static String SendMail(String email)
     {
         String code = CreateCode();
@@ -115,5 +170,36 @@ public class AccountDB {
         }finally{
             em.close();
         }
+    }
+    
+    public static boolean UpdateStatusByUserId(int userId, boolean status)
+    {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        EntityTransaction trans = em.getTransaction();
+        String qString = "UPDATE Account SET Status = :status WHERE UserId = :userId";
+        Query q = em.createQuery(qString);
+        q.setParameter("status", status);
+        q.setParameter("userId", userId);
+        int count = 0;
+        try
+        {
+            trans.begin();
+            count = q.executeUpdate();
+            trans.commit();
+        }catch(Exception ex)
+        {
+            trans.rollback();
+        }finally{
+            em.close();
+        }
+        return count > 0;
+    }
+    
+     public static Account getAccountInListByUserId(List<Account> accounts, int userId)
+    {
+        for (int i = 0; i < accounts.size(); i++)
+            if (accounts.get(i).getUserId() == userId)
+                return accounts.get(i);
+        return null;
     }
 }

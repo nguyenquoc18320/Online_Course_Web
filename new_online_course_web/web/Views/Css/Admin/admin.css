@@ -1,0 +1,166 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jan 4, 2021, 11:16:04 PM
+    Author     : TRAN VAN AN
+*/
+
+.content{
+    width: 70%;
+    margin: 0 auto;
+}
+
+.image-profile{
+    margin-top: 20px;
+    height: 475px;
+}
+
+.background-profile{
+    width: 100%;
+    height: 250px;
+    border-radius: 20px 20px 0px 0px;
+}
+
+.background-profile img{
+    width: 100%;
+    height: 100%;
+    border-radius: 20px 20px 0px 0px;
+    border: 1px solid #000;
+}
+
+.avatar-profile{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: -100px;
+}
+
+.avatar-profile img{
+    width: 200px;
+    height: 200px;
+    border: 1px solid #000;
+    border-radius: 50%;
+}
+
+.name-profile{
+    display: flex;
+    justify-content: center;
+    font-family: 'Times New Roman';
+    font-size: 40px;
+    font-weight: 600;
+    position: relative;
+    top: -125px;
+    text-transform: uppercase;
+}
+
+.introduce-profile{
+    border-radius: 20px;
+    border: 1px solid #000;
+    margin: 0 auto;
+}
+
+.introduce-profile.lagre{
+    width: 80%;
+}
+
+.introduce-profile.small{
+    cursor: pointer;
+    width: 25%;
+}
+
+.title-profile{
+    font-family: 'Times New Roman';
+    text-transform: uppercase;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #197BBD;
+    border-radius: 20px 20px 0 0;
+    color: #fff;
+    padding: 15px 40px;
+}
+
+
+.title-profile p{
+    margin: 0px;
+}
+
+.info-profile{
+    width: 100%; 
+    border-radius: 0 0 20px 20px;
+    margin: 20px 0;
+}
+
+.info-detail-profile{
+    display: flex;
+    font-size: 20px;
+}
+
+.title-info-detail-profile{
+    font-weight: bold;
+    flex: 30%;
+    padding-left: 10%;
+}
+
+.describe{
+    flex: 70%;
+}
+
+.detail-small{
+    text-align: center;
+    width: 100%;
+    padding: 60px 0;
+    font-size: 20px;
+}
+
+.filter{
+    display: flex;
+    margin: 40px 0;
+}
+
+.filter select{
+    flex: 30%;
+    padding: 5px 10px;
+    margin: 0px 20px 0 20px;
+}
+
+.filter input[text]{
+    flex: 40%;
+}
+
+#txtSearch{
+    width: 500px;
+    padding: 5px 10px;
+    margin-right: 20px;
+}
+
+.thead-light tr th{
+    text-align: center;
+}
+
+.center{
+    text-align: center;
+}
+
+.pointer{
+    cursor: pointer;
+}
+
+.fas.fa-info-circle
+{
+    cursor: pointer;
+}
+
+.btn-submit{
+    margin-right: 20px;
+    background-color: #197BBD;
+    font-weight: bold;
+    font-size: 20px;
+    border: 1px solid #000;
+    color: #fff;
+    border-radius: 20px;
+    padding: 0px 20px;
+}
