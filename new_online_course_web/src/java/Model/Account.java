@@ -15,26 +15,33 @@ import java.util.List;
 @Entity
 public class Account implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int UserId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int AccountId;
     private String Password;
     private boolean Status;
 
     public Account() {
     }
 
-    public Account(int UserId, String Password, boolean Status) {
-        this.UserId = UserId;
+    public Account(String Password, boolean Status) {
+        this.Password = Password;
+        this.Status = Status;
+    }
+    
+    
+    
+    public Account(int AccountId, String Password, boolean Status) {
+        this.AccountId = AccountId;
         this.Password = Password;
         this.Status = Status;
     }
 
-    public int getUserId() {
-        return UserId;
+    public int getAccountId() {
+        return AccountId;
     }
 
-    public void setUserId(int UserId) {
-        this.UserId = UserId;
+    public void setAccountId(int AccountId) {
+        this.AccountId = AccountId;
     }
 
     public String getPassword() {
@@ -52,6 +59,8 @@ public class Account implements Serializable {
     public void setStatus(boolean Status) {
         this.Status = Status;
     }
+
+    
     
    
 }

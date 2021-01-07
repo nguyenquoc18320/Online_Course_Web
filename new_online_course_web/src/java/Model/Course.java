@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.Collection;
 /**
  *
  * @author TRAN VAN AN
@@ -15,7 +16,7 @@ import java.sql.Timestamp;
 @Entity
 public class Course implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int CourseId;
     private String Name;
     private String Objective;
@@ -26,21 +27,21 @@ public class Course implements Serializable {
 
     public Course() {
     }
-    
-//    public Course(int courseid, String name, String objective, int userid, Timestamp modifiedDate,  String document) {
-//        this.CourseId = courseid;
-//        this.Name = name;
-//        this.Objective = objective;
-//        this.UserId = userid;
-//        this.ModifiedDate = modifiedDate;
-//        this.Document = document;
-//    }
 
-    public Course(int CourseId, String Name, String Objective, int UserId, Timestamp ModifiedDate, boolean Approved, String Document) {
+    public Course(String Name, String Objective, int user, Timestamp ModifiedDate, boolean Approved, String Document) {
+        this.Name = Name;
+        this.Objective = Objective;
+        this.UserId = user;
+        this.ModifiedDate = ModifiedDate;
+        this.Approved = Approved;
+        this.Document = Document;
+    }
+
+    public Course(int CourseId, String Name, String Objective, int user, Timestamp ModifiedDate, boolean Approved, String Document) {
         this.CourseId = CourseId;
         this.Name = Name;
         this.Objective = Objective;
-        this.UserId = UserId;
+        this.UserId = user;
         this.ModifiedDate = ModifiedDate;
         this.Approved = Approved;
         this.Document = Document;
@@ -74,8 +75,8 @@ public class Course implements Serializable {
         return UserId;
     }
 
-    public void setUserId(int UserId) {
-        this.UserId = UserId;
+    public void setUserId(int user) {
+        this.UserId = user;
     }
 
     public Timestamp getModifiedDate() {
@@ -101,6 +102,6 @@ public class Course implements Serializable {
     public void setDocument(String Document) {
         this.Document = Document;
     }
-    
+
     
 }

@@ -78,38 +78,37 @@ public class SignUpController extends HttpServlet {
         {
             if (password.trim().equals(rePassword.trim()))
             {
+               
                 if (UserDB.GetUserByEmail(email) == null)
                 {
                     if (UserDB.GetUserByPhone(phone) == null)
                     {
                         Timestamp createDate = new Timestamp(System.currentTimeMillis());
                         boolean isInserted = false;
-                        int maxUserId = UserDB.MaxUserId();
-                        if (maxUserId > 0)
+                        boolean isMale = "male".equals(gender);
+                        int roleId = "teacher".equals(role) ? 2 : 3 ;
+                        Role roleAdd = RoleDB.GetRoleByRoleId(roleId);
+                        try{
+                            Date birthDateUser = Date.valueOf(birthDate); 
+                            Account account = new Account(password, true);
+                            boolean isInsertedAcc = AccountDB.InsertAccount(account);
+                            int idAccount = AccountDB.MaxAccountId();
+                            account.setAccountId(idAccount);
+                            User user = new User(name, birthDateUser, email, isMale, phone, roleAdd , account, createDate);
+                            isInserted = UserDB.InsertAccount(user);
+                        }catch(Exception e)
                         {
-                            boolean isMale = "male".equals(gender);
-                            String roleId = "teacher".equals(role) ? "2" : "3" ;
-                            try{
-                                Date birthDateUser = Date.valueOf(birthDate); 
-                                User user = new User(maxUserId + 1, name, birthDateUser, email, isMale, phone, roleId , createDate);
-                                Account account = new Account(maxUserId + 1, password, true);
-                                isInserted = UserDB.InsertUser(user, account);
-                            }catch(Exception e)
-                            {
-                                System.out.println("Không thể chuyển ngày!");
-                            }
-                            if (!isInserted)
-                            {
-                                // insert is fail
-                            }
-                            else
-                            {
-                                url = "/sign-in";
-                            }
+                            e.printStackTrace();
                         }
-                        else{
-                            //Lấy maxuserid thất bại
+                        if (!isInserted)
+                        {
+                            // insert is fail
                         }
+                        else
+                        {
+                            url = "/sign-in";
+                        }
+                      
                     }
                     else
                     {
@@ -118,9 +117,10 @@ public class SignUpController extends HttpServlet {
                 }
                 else
                 {
-                    //User is exist
+                    //Email is exist
                 }
             }
+            else
             {
                 //password is not equals with repassword
             }

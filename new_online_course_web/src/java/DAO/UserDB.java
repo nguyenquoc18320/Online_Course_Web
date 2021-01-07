@@ -7,8 +7,8 @@ package DAO;
 
 import Model.*;
 import DAO.*;
-import static DAO.AccountDB.GetStatusByState;
-import java.util.Date;
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
@@ -17,6 +17,62 @@ import javax.persistence.*;
  * @author TRAN VAN AN
  */
 public class UserDB {
+    
+    public static boolean InsertAccount(User user)
+    {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        EntityTransaction trans = em.getTransaction();
+        boolean isInserted = false;
+        try{
+            trans.begin();
+            em.persist(user);
+            trans.commit();
+            isInserted = true;
+        }catch(Exception ex)
+        {
+            trans.rollback();
+            return false;
+        }finally{
+            em.close();
+        }
+        return isInserted;
+    }
+    
+     public static List<User> GetUsers()
+    {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        String qString = "SELECT u FROM User AS u";
+            
+        TypedQuery<User> q = em.createQuery(qString, User.class);
+       
+        List<User> users = null;
+        try{
+            users = q.getResultList();
+            if (users == null || users.isEmpty())
+                users = null;
+        }catch (Exception ex){
+            System.out.println("Error: " + ex.getMessage());
+        }
+        finally{
+            em.close();
+        }
+        return users;
+    }
+    
+    public static List<User> GetUsersByStatus(List<User> users, String status)
+    {
+        if (users == null)
+            return users;
+        if (status.equals("all"))
+            return users;
+        boolean isActivated = AccountDB.GetStatusByState(status);
+        List<User> usersFilter = new ArrayList<User>();
+        for(int i = 0; i < users.size(); i++)
+            if (users.get(i).getAccount().isStatus() == isActivated)
+                usersFilter.add(users.get(i));
+        return usersFilter;
+    }
+     
      public static User GetUserByUserId(int userId)
     {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
@@ -31,7 +87,7 @@ public class UserDB {
     public static User GetUserByEmail(String email)
     {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
-        String qString = "SELECT u FROM User AS u WHERE u.Email = :email";
+        String qString = "SELECT u FROM User u WHERE u.Email = :email";
         TypedQuery<User> q = em.createQuery(qString, User.class);
         q.setParameter("email", email);
         User user = null;
@@ -39,7 +95,8 @@ public class UserDB {
             user = q.getSingleResult();
         }catch(NoResultException ex)
         {
-            System.out.println("Kết nối thất bại!");
+            System.out.println("Kết nối thất bại! " + ex.getMessage());
+            return null;
         }
         finally{
             em.close();
@@ -59,6 +116,7 @@ public class UserDB {
         }catch(NoResultException ex)
         {
             System.out.println("Kết nối thất bại!");
+            return null;
         }
         finally{
             em.close();
@@ -66,37 +124,23 @@ public class UserDB {
         return user;
     }
     
-    public static List<User> GetUsersByFilter(String role, String state, String search)
+    public static List<User> GetUsersByFilter(Role role, String search)
     {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
         String qString = "";
-        if (!"".equals(search))
-            qString = "SELECT u FROM User AS u WHERE CONCAT(u.UserId, u.Name, u.Email) LIKE '%" + search + "%'";
-        else if (role.equals("0"))
+        if (!search.equals(""))
         {
-            if (state.equals("all"))
-                qString = "SELECT u FROM User AS u";
-            else
-            {
-                boolean status = AccountDB.GetStatusByState(state);
-                qString = "SELECT u FROM User AS u INNER JOIN Account as a ON u.UserId = a.UserId WHERE a.Status = " + status;
-            }
+            qString = "SELECT u FROM User AS u WHERE CONCAT(u.UserId, u.Name, u.Email) LIKE '%" + search + "%'";
         }
         else
         {
-            if (state.equals("all"))
-                qString = "SELECT u FROM User AS u WHERE u.Role = " + role;
-            else
-            {
-                boolean status = AccountDB.GetStatusByState(state);
-                qString = "SELECT u FROM User AS u INNER JOIN Account as a ON u.UserId = a.UserId WHERE u.Role = " + role + " AND a.Status = " + status;
-            }
+            qString = "SELECT u FROM User u WHERE u.role = :role";
         }
-            
-        
         TypedQuery<User> q = em.createQuery(qString, User.class);
-//        if (!role.equals("0") && search.equals(""))
-//            q.setParameter("role", role);
+        if (search.equals(""))
+        {
+            q.setParameter("role", role);
+        }
        
         List<User> users = null;
         try{
@@ -112,47 +156,30 @@ public class UserDB {
         return users;
     }
     
-    public static boolean InsertUser(User user, Account account)
+    public static boolean UpdateUser(int userId, String name, Date dateOfBirth, boolean gender, String email, String phone)
     {
-        boolean isInserted = false;
-        int maxUserId = MaxUserId();
-        if (maxUserId < 0)
-            return false;
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
         EntityTransaction trans = em.getTransaction();
-        trans.begin();
+        String qString = "UPDATE User SET Name = :name , DateOfBirth = :dateOfBirth , Gender = :gender , Email = :email , Phone = :phone WHERE UserId = :userId";
+        Query q = em.createQuery(qString);
+        q.setParameter("name", name);
+        q.setParameter("dateOfBirth", dateOfBirth);
+        q.setParameter("gender", gender);
+        q.setParameter("email", email);
+        q.setParameter("phone", phone);
+        q.setParameter("userId", userId);
+        int count = 0;
         try{
-            em.persist(user);
-            em.persist(account);
-            isInserted = true;
+            trans.begin();
+            count = q.executeUpdate();
             trans.commit();
-        }catch(Exception e)
+        }catch(Exception ex)
         {
-            isInserted = false;
-            System.out.println("Thêm user thất bại!");
             trans.rollback();
         }finally{
             em.close();
         }
-        return isInserted;
+        return count > 0;
     }
     
-    public static int MaxUserId()
-    {
-        EntityManager em = DBUtil.getEmFactory().createEntityManager();
-        String qString = "SELECT Max(UserId) FROM User";
-        int max = -1;
-        try{
-            String UserId = em.createNativeQuery(qString).getSingleResult().toString();
-            max = Integer.parseInt(UserId.toString());
-        }catch(NoResultException ex)
-        {
-            max = -1;
-            System.out.println("Kết nối thất bại!");
-        }
-        finally{
-            em.close();
-        }
-        return max;
-    }
 }

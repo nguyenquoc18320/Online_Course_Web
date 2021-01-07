@@ -70,6 +70,7 @@ and open the template in the editor.
 .introduce-profile.small{
     cursor: pointer;
     width: 25%;
+    min-width: 300px;
 }
 
 .title-profile{
@@ -81,10 +82,15 @@ and open the template in the editor.
     border-radius: 20px 20px 0 0;
     color: #fff;
     padding: 15px 40px;
+    display: flex;
 }
 
+.fas.fa-cog{
+    cursor: pointer;
+}
 
 .title-profile p{
+    flex: 1;
     margin: 0px;
 }
 
@@ -163,4 +169,99 @@ and open the template in the editor.
     color: #fff;
     border-radius: 20px;
     padding: 0px 20px;
+}
+
+a{
+    text-decoration: none;
+}
+
+a:hover , a:visited{
+    color: #000;
+}
+
+.function{
+    margin: 40px 0;
+}
+
+.front-div{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.content-front{
+    background: #fff;
+    width: 50%;
+    border-radius: 20px;
+}
+
+.btn-close{
+    color: red;
+    text-align: right;
+    font-size: 20px;
+    padding: 5px 10px;
+}
+
+.btn-close i{
+    cursor: pointer;
+}
+
+.header{
+    text-align: center;
+    text-transform: uppercase;
+    padding: 0px;
+    margin: 0px;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.field-input{
+    margin-left: 0;
+    font-size: 16px;
+}
+
+.field-input p{
+    
+}
+
+.field-input input, .field-input select{
+    width: 100%;
+    padding: 5px 10px;
+    font-size: 16px;
+    font-weight: normal;
+}
+
+.btn-submit-front{
+    text-align: center;
+    padding: 5px 10px;
+    width: 80%;
+    margin: 20px 20% 40px 10%;
+    cursor: pointer;
+}
+
+.btn-admin{
+    display: flex;
+    font-size: 24px;
+}
+
+.btn-admin i{
+    cursor: pointer;
+    border: 1px solid #000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    margin-right: 5px;
+}
+
+.fas.fa-plus-circle{
+    color: #197BBD;
+    border: 1px solid #197BBD;
 }

@@ -5,11 +5,11 @@
  */
 package Controller;
 
-import Model.*;
-import DAO.*;
+import DAO.UserDB;
+import Model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
+import java.sql.Date;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,8 +22,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author TRAN VAN AN
  */
-@WebServlet(name = "HomeController", urlPatterns = {"/home"})
-public class HomeController extends HttpServlet {
+@WebServlet(name = "EditInformationController", urlPatterns = {"/edit-information"})
+public class EditInformationController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,18 +39,54 @@ public class HomeController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("utf-8");
         
-//        Role roleAdmin = new Role("admin");
-//        Role roleTeacher = new Role("teacher");
-//        Role roleStudent = new Role("student");
-//        boolean isInserted1 = RoleDB.InsertRole(roleAdmin);
-//        boolean isInserted2 = RoleDB.InsertRole(roleTeacher);
-//        boolean isInserted3 = RoleDB.InsertRole(roleStudent);
-//        System.out.println(isInserted1 + " " + isInserted2 + " " + isInserted3);
-////           
-//        List<Role> Roles  = RoleDB.GetRoles();
-//        System.out.println(Roles.get(0).getRoleName() + " " + Roles.get(1).getRoleName() + " " + Roles.get(2).getRoleName());
-//        
-        RequestDispatcher rd = getServletContext().getRequestDispatcher("/Views/Pages/Home/home.jsp");
+        String url = "/admin";
+        HttpSession session = request.getSession();
+        
+        User user = (User)session.getAttribute("User");
+        if (user != null)
+        {
+            String userIdEdit = request.getParameter("userIdEdit");
+            if (userIdEdit == null)
+                userIdEdit = "";
+            request.setAttribute("UserIdEdit", userIdEdit);
+            String nameEdit = request.getParameter("nameEdit");
+            if (nameEdit == null)
+                nameEdit = "";
+            request.setAttribute("NameEdit", nameEdit);
+            String dateOfBirthEdit = request.getParameter("dateOfBirthEdit");
+            if (dateOfBirthEdit == null)
+                dateOfBirthEdit = "";
+            request.setAttribute("DateOfBirthEdit", dateOfBirthEdit);
+            String genderEdit = request.getParameter("genderEdit");
+            if (genderEdit == null)
+                genderEdit = "";
+            request.setAttribute("GenderEdit", genderEdit);
+            String emailEdit = request.getParameter("emailEdit");
+            if (emailEdit == null)
+                emailEdit = "";
+            request.setAttribute("EmailEdit", emailEdit);
+            String phoneEdit = request.getParameter("phoneEdit");
+            if (phoneEdit == null)
+                phoneEdit = "";
+            request.setAttribute("PhoneEdit", phoneEdit);
+            
+            if (userIdEdit != "" && nameEdit != "" && dateOfBirthEdit != "" && genderEdit != "" && emailEdit != "" && phoneEdit != "")
+            {
+                 System.out.println("Gender: " + genderEdit);
+                boolean gender = genderEdit.equals("true");
+                Date birthDateUser = Date.valueOf(dateOfBirthEdit); 
+                boolean isUpdated = UserDB.UpdateUser(Integer.parseInt(userIdEdit), nameEdit, birthDateUser, gender, emailEdit, phoneEdit);
+                User userEdit = UserDB.GetUserByUserId(Integer.parseInt(userIdEdit));
+                if (url.equals("/admin"))
+                    session.setAttribute("User", userEdit);
+                System.out.println(isUpdated);
+            }
+        }
+        else
+        {
+            url = "/sign-in";
+        }
+         RequestDispatcher rd = getServletContext().getRequestDispatcher(url);
         rd.forward(request, response);
     }
 

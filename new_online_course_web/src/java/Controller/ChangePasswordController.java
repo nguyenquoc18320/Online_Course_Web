@@ -6,6 +6,7 @@
 package Controller;
 
 import DAO.AccountDB;
+import DAO.UserDB;
 import Model.Account;
 import Model.User;
 import java.io.IOException;
@@ -44,7 +45,8 @@ public class ChangePasswordController extends HttpServlet {
         //Account account = (Account)session.getAttribute("Account");
         
         int userId = (int)session.getAttribute("UserId");
-        Account account = AccountDB.GetAccountByUserId(userId);
+        User userChangePassword = UserDB.GetUserByUserId(userId);
+        Account account = userChangePassword.getAccount();
         String password = request.getParameter("password");
         if (password == null)
             password = "";

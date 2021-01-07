@@ -17,7 +17,7 @@ import java.sql.Timestamp;
 @Entity
 public class User implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int UserId;
     private String Name;
 //    @Temporal(javax.persistence.TemporalType.DATE)
@@ -25,21 +25,70 @@ public class User implements Serializable {
     private String Email;
     private boolean Gender;
     private String Phone;
-    private String Role;
+    @ManyToOne
+    @JoinColumn(name="RoleId")
+    private Role role;
+    
+    @OneToOne
+    @JoinColumn(name="AccountId")
+    private Account account;
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+    
 //    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Timestamp CreatedDate;
 
     public User() {
     }
 
-    public User(int UserId, String Name, Date DateOfBirth, String Email, boolean Gender, String Phone, String Role, Timestamp CreatedDate) {
+    public User(String Name, Date DateOfBirth, String Email, boolean Gender, String Phone, Role role, Timestamp CreatedDate) {
+        this.Name = Name;
+        this.DateOfBirth = DateOfBirth;
+        this.Email = Email;
+        this.Gender = Gender;
+        this.Phone = Phone;
+        this.role = role;
+        this.CreatedDate = CreatedDate;
+    }
+
+    public User(int UserId, String Name, Date DateOfBirth, String Email, boolean Gender, String Phone, Role role, Account account, Timestamp CreatedDate) {
         this.UserId = UserId;
         this.Name = Name;
         this.DateOfBirth = DateOfBirth;
         this.Email = Email;
         this.Gender = Gender;
         this.Phone = Phone;
-        this.Role = Role;
+        this.role = role;
+        this.account = account;
+        this.CreatedDate = CreatedDate;
+    }
+
+    public User(String Name, Date DateOfBirth, String Email, boolean Gender, String Phone, Role role, Account account, Timestamp CreatedDate) {
+        this.Name = Name;
+        this.DateOfBirth = DateOfBirth;
+        this.Email = Email;
+        this.Gender = Gender;
+        this.Phone = Phone;
+        this.role = role;
+        this.account = account;
+        this.CreatedDate = CreatedDate;
+    }
+
+    
+    public User(int UserId, String Name, Date DateOfBirth, String Email, boolean Gender, String Phone, Role role, Timestamp CreatedDate) {
+        this.UserId = UserId;
+        this.Name = Name;
+        this.DateOfBirth = DateOfBirth;
+        this.Email = Email;
+        this.Gender = Gender;
+        this.Phone = Phone;
+        this.role = role;
         this.CreatedDate = CreatedDate;
     }
 
@@ -91,12 +140,12 @@ public class User implements Serializable {
         this.Phone = Phone;
     }
 
-    public String getRole() {
-        return Role;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRole(String Role) {
-        this.Role = Role;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public Timestamp getCreatedDate() {
@@ -106,6 +155,6 @@ public class User implements Serializable {
     public void setCreatedDate(Timestamp CreatedDate) {
         this.CreatedDate = CreatedDate;
     }
-    
+
     
 }

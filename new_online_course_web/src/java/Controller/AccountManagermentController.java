@@ -66,28 +66,47 @@ public class AccountManagermentController extends HttpServlet {
             {
                 boolean status = statusString.equals("true");
                 int userId = Integer.parseInt(userIdString);
-                Account account = AccountDB.GetAccountByUserId(userId);
+                User userUpdate = UserDB.GetUserByUserId(userId);
+                Account account = userUpdate.getAccount();
                 if (account.isStatus() != status)
                 {
-                    boolean isUpdated = AccountDB.UpdateStatusByUserId(userId, !account.isStatus());
+                    boolean isUpdated = AccountDB.UpdateStatusByUserId(account.getAccountId(), !account.isStatus());
                 }
             }
-
-            List<Role> roles = RoleDB.GetRoles();
-            request.setAttribute("Roles", roles);
-            Role role = RoleDB.GetRoleInListByRoleName(roles, accountType);
-            String roleId = role == null ? "0" : role.getRoleId();
-            List<User> users = UserDB.GetUsersByFilter(roleId, accountState, search);
+            
+            List<Role> roles = RoleDB.GetRolesByRole(accountType);
+            //List<Account> accounts = AccountDB.GetAccountsByStatus(accountState);
+            List<User> users = null;
+            if (roles.size() == 1)
+            {
+                Role roleFilter = roles.get(0);
+                users = UserDB.GetUsersByFilter(roleFilter, search);
+            }
+            else
+            {
+                users = UserDB.GetUsers();
+            }
+            
+            users = UserDB.GetUsersByStatus(users, accountState);
+            
             request.setAttribute("Users", users);
-            List<Account> accounts = AccountDB.GetAccounts();
-            request.setAttribute("Accounts", accounts);
+//            List<Role> roles = RoleDB.GetRoles();
+//            request.setAttribute("Roles", roles);
+//            Role role = RoleDB.GetRoleInListByRoleName(roles, accountType);
+//            int roleId = role == null ? 0 : role.getRoleId();
+//            List<User> users = UserDB.GetUsersByFilter(roleId, accountState, search);
+//            request.setAttribute("Users", users);
+//            List<Account> accounts = AccountDB.GetAccounts();
+//            request.setAttribute("Accounts", accounts);
+            String errorAddAdmin = (String)request.getAttribute("ErrorAddAdmin");
+            if (errorAddAdmin == null)
+                errorAddAdmin = "";
+            request.setAttribute("ErrorAddAdmin", errorAddAdmin);
         }
         else
         {
             url = "/sign-in";
         }
-
-      
         
         RequestDispatcher rd = getServletContext().getRequestDispatcher(url);
         rd.forward(request, response);

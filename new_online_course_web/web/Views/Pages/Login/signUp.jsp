@@ -24,7 +24,7 @@
             <a href="home"><div class="logo"></div></a>
         </div>
         <div class="content">
-            <form action="#" method="POST">
+            <form action="sign-up" method="POST">
                 <div class="small-container">
                     <div class="title">
                         <h2>ĐĂNG KÝ</h2>

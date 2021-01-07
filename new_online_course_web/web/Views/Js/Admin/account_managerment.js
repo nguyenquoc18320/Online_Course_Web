@@ -11,7 +11,7 @@ function LoadUsers(userId, name, email, role, status)
     var tbody_table = document.getElementById("tbody-table");
     //tbody_table.empty();
     var NewTr = document.createElement("tr");
-   var self = NewTr;
+    var self = NewTr;
 
     var UserId = document.createElement('td');
     UserId.setAttribute('class', 'center');

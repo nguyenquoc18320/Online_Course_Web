@@ -16,23 +16,39 @@ import java.util.List;
 @Entity
 public class Role {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private String RoleId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int RoleId;
     private String RoleName;
 
+    @OneToMany(mappedBy="role")
+    private List<User> Users;
+
+    public List<User> getUsers() {
+        return Users;
+    }
+
+    public void setUsers(List<User> Users) {
+        this.Users = Users;
+    }
+    
     public Role() {
     }
 
-    public Role(String RoleId, String RoleName) {
+    public Role(String RoleName) {
+        this.RoleName = RoleName;
+    }
+   
+
+    public Role(int RoleId, String RoleName) {
         this.RoleId = RoleId;
         this.RoleName = RoleName;
     }
 
-    public String getRoleId() {
+    public int getRoleId() {
         return RoleId;
     }
 
-    public void setRoleId(String RoleId) {
+    public void setRoleId(int RoleId) {
         this.RoleId = RoleId;
     }
 

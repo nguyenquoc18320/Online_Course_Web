@@ -20,18 +20,22 @@
         <script src="https://kit.fontawesome.com/a076d05399.js"></script>
         
         <script src="Views/Js/Admin/account_managerment.js"></script>
+        <script src="Views/Js/Admin/admin.js"></script>
         <title>ASQ | Admin</title>
     </head>
     <body>
         <div class = 'div_menu'>
-            <div class='div_logo'>
-                <img id='image_logo' src ="logo.png" >
+            <div class="small-container horizontal">
+                <div class='div_logo'>
+                    <a href="home"><img id='image_logo' src ="logo.png" ></a>
+                </div>
+                <div id='div_account'>
+                    <label id='label_account'>${User.getName()}  <i class='fas fa-caret-down'></i></label>               
+                </div>
             </div>
-            <div id='div_account'>
-                <label id='label_account'>${User.getName()}  <i class='fas fa-caret-down'></i></label>               
-            </div>
+            
         </div>
-        
+         
         <form action="account-managerment" method="post">
             <div class="small-container">
                 <div class="filter">
@@ -62,6 +66,10 @@
                     </select>
                     <input id="txtSearch" type="text" placeholder="Tìm kiếm" name="search" value="<c:out value="${Search}"/>"/>
                     <input type="submit" value="Tìm kiếm" class="btn-submit">
+                    <div class="btn-admin">
+                        <i class="fas fa-plus-circle" onclick="ShowFrontDiv()"></i>
+                        <a href="admin"><i class="far fa-user-circle"></i></a>
+                    </div>
                 </div>
                 <div class="table-div">
                      <div class="grid" id="gird-transport">
@@ -79,21 +87,21 @@
                             <tbody id="tbody-table">
                                    <%
                                        List<User> users = (List<User>)request.getAttribute("Users");
-                                       List<Account> accounts = (List<Account>)request.getAttribute("Accounts");
-                                       List<Role> roles = (List<Role>)request.getAttribute("Roles");
-                                       if (users != null && accounts != null)
+                                       //List<Account> accounts = (List<Account>)request.getAttribute("Accounts");
+                                       //List<Role> roles = (List<Role>)request.getAttribute("Roles");
+                                       if (users != null )
                                        {
                                             %> <script> tbody_table.empty();</script> <%
                                            for (int i = 0; i < users.size(); i++)
                                            {
                                                User user = (User)users.get(i);
-                                               if (accounts != null && roles != null)
-                                               {
-                                                    Account account = AccountDB.getAccountInListByUserId(accounts, user.getUserId());
-                                                    Role role = RoleDB.GetRoleInListByRoleId(roles, user.getRole());
+                                               //if (accounts != null && roles != null)
+                                               //{
+                                                    //Account account = AccountDB.getAccountInListByUserId(accounts, user.getUserId());
+                                                    //Role role = RoleDB.GetRoleInListByRoleId(roles, user.getRole());
                                                     %> <script>LoadUsers("<%=user.getUserId()%>", "<%=user.getName()%>", "<%=user.getEmail()%>",
-                                                                "<%=role.getRoleName()%>", "<%= account.isStatus()%>")</script> <%
-                                                }
+                                                                "<%=user.getRole().getRoleName()%>", "<%= user.getAccount().isStatus()%>")</script> <%
+                                                //}
                                            }
                                        }
                                    %>
@@ -104,7 +112,58 @@
                 </div>
             </div>
         </form>    
-        
+       <div class="front-div" id="front-div">
+            <div class="content-front">
+                <div class="btn-close" id="btn-close">
+                    <i class="far fa-times-circle" onclick="CloseFrontDiv()"></i>
+                </div>
+                <p class="header">Thêm tài khoản</p>
+                <form action="add-admin" method="post">
+                    <input type="hidden" name="errorAddAdmin" value="<c:out value="${ErrorAddAdmin}"/>">
+                    <% 
+                        String errorAddAdmin = (String)request.getAttribute("ErrorAddAdmin");
+                    %>
+                    <script>
+                        if ("<c:out value="${ErrorAddAdmin}"/>" != "")
+                            alert("<c:out value="${ErrorAddAdmin}"/>");
+                    </script>
+                    <div class="small-container">
+                        <div class="field-input">
+                            <p>Họ tên:</p>
+                            <input type="text" name="nameAdd"">
+                        </div>
+                        <div class="field-input">
+                            <p>Ngày sinh:</p>
+                            <input type="date" name="dateOfBirthAdd"">
+                        </div>
+                        <div class="field-input">
+                            <p>Giới tính:</p>
+                            <select id="genderAdd" name="genderAdd">
+                                <option value="true">Nam</option>
+                                <option value="false">Nữ</option>
+                            </select>
+                        </div>
+                        <div class="field-input">
+                            <p>Email:</p>
+                            <input type="email" name="emailAdd"">
+                        </div>
+                        <div class="field-input">
+                            <p>Điện thoại:</p>
+                            <input type="tel" name="phoneAdd"">
+                        </div>
+                        <div class="field-input">
+                            <p>Mật khẩu:</p>
+                            <input type="password" name="passwordAdd"">
+                        </div>
+                        <div class="field-input">
+                            <p>Xác nhật mật khẩu:</p>
+                            <input type="password" name="confirmPasswordAdd"">
+                        </div>
+                        <input type="submit" value="Thêm" class="btn-submit btn-submit-front"/>
+                    </div>
+                </form>
+            </div>
+        </div>
         
     </body>
 </html>

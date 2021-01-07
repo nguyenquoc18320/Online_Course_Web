@@ -5,6 +5,8 @@
  */
 package Controller;
 
+import DAO.*;
+import Model.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
@@ -13,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -36,6 +39,23 @@ public class AdminController extends HttpServlet {
         request.setCharacterEncoding("utf-8");
         
         String url = "/Views/Pages/Admin/admin.jsp";
+        
+        HttpSession session = request.getSession();
+        User user = (User)session.getAttribute("User");
+        if (user != null)
+        {
+            Role role = user.getRole();
+            if (role != null)
+                request.setAttribute("Role", role);
+            int activated = AccountDB.CountAccountActivated();
+            request.setAttribute("Activated", activated);
+            int locked = AccountDB.CountAccountLocked();
+            request.setAttribute("Locked", locked);
+            
+        }
+        else{
+            url = "/sign-in";
+        }
         
         RequestDispatcher rd = getServletContext().getRequestDispatcher(url);
         rd.forward(request, response);
