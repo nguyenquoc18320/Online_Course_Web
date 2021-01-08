@@ -9,16 +9,19 @@ package Controller;
 import DAO.*;
 import Model.*;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import javax.servlet.http.*;
+import com.google.gson.*;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author TRAN VAN AN
@@ -36,7 +39,7 @@ public class AccountManagermentController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, ParseException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("utf-8");
         
@@ -58,7 +61,8 @@ public class AccountManagermentController extends HttpServlet {
         
         HttpSession session = request.getSession();
         User user = (User)session.getAttribute("User");
-        if (user != null)
+
+        if (user != null && user.getRole().getRoleName().equals("admin"))
         {
             String statusString = request.getParameter("status");
             String userIdString = request.getParameter("userId");
@@ -86,18 +90,51 @@ public class AccountManagermentController extends HttpServlet {
             {
                 users = UserDB.GetUsers();
             }
-            
             users = UserDB.GetUsersByStatus(users, accountState);
-            
             request.setAttribute("Users", users);
-//            List<Role> roles = RoleDB.GetRoles();
-//            request.setAttribute("Roles", roles);
-//            Role role = RoleDB.GetRoleInListByRoleName(roles, accountType);
-//            int roleId = role == null ? 0 : role.getRoleId();
-//            List<User> users = UserDB.GetUsersByFilter(roleId, accountState, search);
-//            request.setAttribute("Users", users);
-//            List<Account> accounts = AccountDB.GetAccounts();
-//            request.setAttribute("Accounts", accounts);
+            
+            //Show form add admin
+            String isShowAddAdmin = request.getParameter("isShowAddAdmin");
+            if (isShowAddAdmin == null)
+                isShowAddAdmin = "false";
+            request.setAttribute("IsShowAddAdmin", isShowAddAdmin);
+            
+            //Code xử lý thống kê
+            String isShowReport = request.getParameter("isShowReport");
+            if (isShowReport == null)
+                isShowReport = "false";
+            request.setAttribute("IsShowReport", isShowReport);
+            String dateReport = request.getParameter("dateReport");
+            if (dateReport == null)
+            {
+                 Timestamp time = new Timestamp(System.currentTimeMillis());
+                 dateReport = (new Date(time.getTime())).toString();
+            }
+            request.setAttribute("DateReport", dateReport);
+            String typeDate = request.getParameter("typeDate");
+            if (typeDate == null)
+                typeDate = "week";
+            request.setAttribute("TypeDate", typeDate);
+            
+            SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
+            //java.sql.Date dateReportDate =  Date.valueOf(dateReport); //formatDate.parse(dateReport);
+            java.util.Date dateReportDate = (java.util.Date) formatDate.parse(dateReport);
+            List<User> userReport = UserDB.GetUsersByTypeDate(typeDate, dateReportDate);
+            String reportAccounts ;
+            if (userReport != null)
+            {
+                Map<String, Integer> maps = UserDB.ReportRegistrationAccount(userReport);
+    //            List<String> dates = maps.keySet().stream().collect(Collectors.toCollection(ArrayList::new));
+    //            List<Integer> listusers = maps.values().stream().collect(Collectors.toCollection(ArrayList::new));
+                Gson gson = new Gson();
+                reportAccounts = gson.toJson(maps);
+            }
+            else
+            {
+                reportAccounts = "";
+            }
+            request.setAttribute("ReportAccounts", reportAccounts);
+            
             String errorAddAdmin = (String)request.getAttribute("ErrorAddAdmin");
             if (errorAddAdmin == null)
                 errorAddAdmin = "";
@@ -108,6 +145,11 @@ public class AccountManagermentController extends HttpServlet {
             url = "/sign-in";
         }
         
+        if (!url.contains(".jsp"))
+        {
+            response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY); 
+            response.setHeader("Location", URL.url + url); 
+        }
         RequestDispatcher rd = getServletContext().getRequestDispatcher(url);
         rd.forward(request, response);
     }
@@ -124,7 +166,11 @@ public class AccountManagermentController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ParseException ex) {
+            Logger.getLogger(AccountManagermentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -138,7 +184,11 @@ public class AccountManagermentController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ParseException ex) {
+            Logger.getLogger(AccountManagermentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

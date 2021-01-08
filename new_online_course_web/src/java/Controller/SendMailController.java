@@ -6,6 +6,7 @@
 package Controller;
 
 import DAO.AccountDB;
+import DAO.URL;
 import DAO.UserDB;
 import Model.Account;
 import Model.User;
@@ -41,7 +42,10 @@ public class SendMailController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("utf-8");
         
+        String url = "/Views/Pages/Login/getPassword.jsp";
+        
         HttpSession session = request.getSession();
+        String errorSendMail = "";
         User user = null;
         String email = request.getParameter("email");
         if (email == null)
@@ -55,11 +59,21 @@ public class SendMailController extends HttpServlet {
             code = AccountDB.SendMail(email);
 //            account = AccountDB.GetAccountByUserId(user.getUserId());
 //            session.setAttribute("Account", account);
+            session.setAttribute("Code", code);
+            session.setAttribute("UserId", user.getUserId());
         }
-        session.setAttribute("Code", code);
-        session.setAttribute("UserId", user.getUserId());
+        else
+        {
+            errorSendMail = "Email chưa đăng kí!";
+        }
         
-        RequestDispatcher rd = getServletContext().getRequestDispatcher("/Views/Pages/Login/getPassword.jsp");
+        session.setAttribute("ErrorSendMail", errorSendMail);
+         if (!url.contains(".jsp"))
+        {
+            response.setStatus(response.SC_MOVED_TEMPORARILY); 
+            response.setHeader("Location", URL.url + url); 
+        }
+        RequestDispatcher rd = getServletContext().getRequestDispatcher(url);
         rd.forward(request, response);
     }
 

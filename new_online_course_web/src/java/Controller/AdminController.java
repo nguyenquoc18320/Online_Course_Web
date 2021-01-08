@@ -39,11 +39,36 @@ public class AdminController extends HttpServlet {
         request.setCharacterEncoding("utf-8");
         
         String url = "/Views/Pages/Admin/admin.jsp";
-        
         HttpSession session = request.getSession();
         User user = (User)session.getAttribute("User");
-        if (user != null)
+        if (user != null && user.getRole().getRoleName().equals("admin"))
         {
+            //Get Error Edit Information
+            String errorEditInformation = (String)session.getAttribute("ErrorEditInformation");
+            if (errorEditInformation == null)
+                errorEditInformation = "";
+            session.setAttribute("ErrorEditInformation", errorEditInformation);
+             //Get Error Edit Information
+            String errorChangePassword = (String)session.getAttribute("ErrorChangePassword");
+            if (errorChangePassword == null)
+                errorChangePassword = "";
+            session.setAttribute("ErrorChangePassword", errorChangePassword);
+            
+            //Show form edit information
+            String isShowEditInfo = request.getParameter("isShowEditInfo");
+            if (isShowEditInfo == null)
+                isShowEditInfo = "false";
+            if ("false".equals(isShowEditInfo))
+                session.setAttribute("ErrorEditInformation", null);
+            request.setAttribute("IsShowEditInfo", isShowEditInfo);
+            //Show form edit password
+            String isShowEditPass = request.getParameter("isShowEditPass");
+            if (isShowEditPass == null)
+                isShowEditPass = "false";
+            if ("false".equals(isShowEditPass))
+                session.setAttribute("ErrorChangePassword", null);
+            request.setAttribute("IsShowEditPass", isShowEditPass);
+            
             Role role = user.getRole();
             if (role != null)
                 request.setAttribute("Role", role);
@@ -51,12 +76,16 @@ public class AdminController extends HttpServlet {
             request.setAttribute("Activated", activated);
             int locked = AccountDB.CountAccountLocked();
             request.setAttribute("Locked", locked);
-            
         }
         else{
             url = "/sign-in";
         }
         
+        if (!url.contains(".jsp"))
+        {
+            response.setStatus(response.SC_MOVED_TEMPORARILY); 
+            response.setHeader("Location", URL.url + url); 
+        }
         RequestDispatcher rd = getServletContext().getRequestDispatcher(url);
         rd.forward(request, response);
     }

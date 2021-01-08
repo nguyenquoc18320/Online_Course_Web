@@ -23,7 +23,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author TRAN VAN AN
  */
-@WebServlet(name = "TeacherProfileController", urlPatterns = {"/teacher-profile"})
+@WebServlet(name = "TeacherProfileController", urlPatterns = {"/teacher"})
 public class TeacherProfileController extends HttpServlet {
 
     /**
@@ -45,14 +45,14 @@ public class TeacherProfileController extends HttpServlet {
         HttpSession session = request.getSession();
         //User user = (User)session.getAttribute("User");
         User user = (User)session.getAttribute("User");
-        if (user == null)
-        {
-            url = "/sign-in";
-        }
-        else
+        if (user != null && user.getRole().getRoleName().equals("teacher"))
         {
             List<Course> courses = CourseDB.GetCourseByUserId(user.getUserId());
             session.setAttribute("CoursesTeacher", courses);
+        }
+        else
+        {
+            url = "/sign-in";
         }
         
         RequestDispatcher rd = getServletContext().getRequestDispatcher(url);

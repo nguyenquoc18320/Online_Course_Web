@@ -38,7 +38,7 @@ public class HomeController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("utf-8");
-        
+        String url = "/Views/Pages/Home/home.jsp";
 //        Role roleAdmin = new Role("admin");
 //        Role roleTeacher = new Role("teacher");
 //        Role roleStudent = new Role("student");
@@ -49,8 +49,14 @@ public class HomeController extends HttpServlet {
 ////           
 //        List<Role> Roles  = RoleDB.GetRoles();
 //        System.out.println(Roles.get(0).getRoleName() + " " + Roles.get(1).getRoleName() + " " + Roles.get(2).getRoleName());
-//        
-        RequestDispatcher rd = getServletContext().getRequestDispatcher("/Views/Pages/Home/home.jsp");
+//      
+        
+        if (!url.contains(".jsp"))
+        {
+            response.setStatus(response.SC_MOVED_TEMPORARILY); 
+            response.setHeader("Location", URL.url + url); 
+        }
+        RequestDispatcher rd = getServletContext().getRequestDispatcher(url);
         rd.forward(request, response);
     }
 

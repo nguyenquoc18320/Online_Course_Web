@@ -6,10 +6,12 @@
 package DAO;
 
 import Model.*;
-import DAO.*;
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.*;
 
 /**
@@ -66,7 +68,7 @@ public class UserDB {
         if (status.equals("all"))
             return users;
         boolean isActivated = AccountDB.GetStatusByState(status);
-        List<User> usersFilter = new ArrayList<User>();
+        List<User> usersFilter = new ArrayList<>();
         for(int i = 0; i < users.size(); i++)
             if (users.get(i).getAccount().isStatus() == isActivated)
                 usersFilter.add(users.get(i));
@@ -91,7 +93,7 @@ public class UserDB {
         TypedQuery<User> q = em.createQuery(qString, User.class);
         q.setParameter("email", email);
         User user = null;
-        try{
+        try{    
             user = q.getSingleResult();
         }catch(NoResultException ex)
         {
@@ -182,4 +184,77 @@ public class UserDB {
         return count > 0;
     }
     
+    public static List<User> GetUsersByTypeDate(String typeDate, java.util.Date date)
+    {
+        java.sql.Date dateStart = new java.sql.Date(UserDB.GetDateStart(typeDate, date).getTime());
+        java.sql.Date dateEnd = new java.sql.Date(UserDB.GetDateEnd(typeDate, date).getTime());
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        String qString = "SELECT u FROM User u WHERE CAST(u.CreatedDate AS DATE) BETWEEN CAST(:dateStart AS DATE) AND CAST(:dateEnd AS DATE)";
+        TypedQuery<User> q = em.createQuery(qString, User.class);
+        q.setParameter("dateStart", dateStart);
+        q.setParameter("dateEnd", dateEnd);
+        List<User> users = null;
+        try{
+            users = q.getResultList();
+            if (users == null || users.isEmpty())
+                users = null;
+        }catch (Exception ex){
+            System.out.println("Error: " + ex.getMessage());
+        }
+        finally{
+            em.close();
+        }
+        return users;
+    }
+    
+    public static Date GetDateStart( String typeDate, Date date)
+    {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        if (typeDate.equals("week"))
+        {
+            int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+            c.add(Calendar.DATE, - dayOfWeek + 1);
+        }
+        else
+        {
+            c.set(Calendar.DATE, 1);
+        }
+        return (Date)c.getTime();
+    }
+    
+     public static Date GetDateEnd( String typeDate, Date date)
+    {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        if (typeDate.equals("week"))
+        {
+            int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+            c.add(Calendar.DATE, 7 - dayOfWeek);
+        }
+        else
+        {
+            c.add(Calendar.MONTH, 1);
+            c.set(Calendar.DATE, 1);
+            c.add(Calendar.DATE, -1);
+        }
+        return (Date) c.getTime();
+    }
+    
+    public static Map<String, Integer> ReportRegistrationAccount(List<User> users)
+    {
+        Map<String, Integer> map = new HashMap<>();
+        users.forEach((User user) -> {
+            String key  = (new java.sql.Date(user.getCreatedDate().getTime())).toString();
+            if(map.containsKey(key)){
+                map.replace(key, map.get(key), map.get(key) + 1);
+            }else{
+                map.put(key, 1);
+            }
+        });
+        return map;
+    }
+    
 }
+
+ 

@@ -6,9 +6,11 @@
 package Controller;
 
 import DAO.AccountDB;
+import DAO.URL;
 import DAO.UserDB;
 import Model.Account;
 import Model.User;
+import com.sun.tools.javac.tree.JCTree;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
@@ -43,32 +45,90 @@ public class ChangePasswordController extends HttpServlet {
         String url = "/Views/Pages/Login/changePassword.jsp";
         HttpSession session = request.getSession();
         //Account account = (Account)session.getAttribute("Account");
-        
-        int userId = (int)session.getAttribute("UserId");
-        User userChangePassword = UserDB.GetUserByUserId(userId);
-        Account account = userChangePassword.getAccount();
-        String password = request.getParameter("password");
-        if (password == null)
-            password = "";
-        request.setAttribute("Password", password);
-        String rePassword = request.getParameter("rePassword");
-        if (rePassword == null)
-            rePassword = "";
-        request.setAttribute("RePassword", rePassword);
-        
-        if (rePassword != "" && password != "" && account != null)
+        User user = (User)session.getAttribute("User");
+        User userChangePassword;
+        String errorChangePassword = "";
+        boolean allowChange = true;
+        session.setAttribute("ErrorSendMail", null);
+        int userId;
+        if (user == null)
         {
-            if (password.equals(rePassword))
+            userId = (int)session.getAttribute("UserId");
+            userChangePassword = UserDB.GetUserByUserId(userId);
+        }
+        else{
+            userChangePassword = user;
+            String roleName = user.getRole().getRoleName();
+            url = "/" + roleName;
+            String oldPassword = request.getParameter("oldPassword");
+            if (oldPassword == null)
+                oldPassword = "";
+            if (!oldPassword.equals(user.getAccount().getPassword()))
             {
-                boolean isChange = AccountDB.ChangePassword(account, password);
-                if (isChange)
-                {
-                    session.setAttribute("User", null);
-                    url = "/sign-in";
-                }
+                allowChange = false;
             }
         }
-        
+       
+        if (allowChange)
+        {
+            Account account = userChangePassword.getAccount();
+            String password = request.getParameter("password");
+            if (password == null)
+                password = "";
+            request.setAttribute("Password", password);
+            String rePassword = request.getParameter("rePassword");
+            if (rePassword == null)
+                rePassword = "";
+            request.setAttribute("RePassword", rePassword);
+
+            if (!"".equals(rePassword) && password != "" && account != null)
+            {
+                if (password.equals(rePassword))
+                {
+                    boolean isChange = AccountDB.ChangePassword(account, password);
+                    if (isChange)
+                    {
+                        if (user == null)
+                        {
+                            url = "/sign-in";
+                            session.setAttribute("User", null);
+                        }
+                        else
+                        {
+                            url += "?isShowEditPass=true";
+                            errorChangePassword = "Đổi mật khẩu thành công!";
+                            session.setAttribute("Code", null);
+                        }
+                    }
+                    else
+                    {
+                        if (user != null) url += "?isShowEditPass=true";
+                        errorChangePassword = "Đổi mật khẩu không thành công!";
+                    }
+                }
+                else
+                {
+                    if (user != null) url += "?isShowEditPass=true";
+                    errorChangePassword = "Xác nhận mật khẩu không khớp!";
+                }
+            }
+            else
+            {
+                if (user != null) url += "?isShowEditPass=true";
+                 errorChangePassword = "Không được để trống dữ liệu!";
+            }
+        }
+        else
+        {
+            if (user != null) url += "?isShowEditPass=true";
+            errorChangePassword = "Mật khẩu cũ không đúng!";
+        }
+        session.setAttribute("ErrorChangePassword", errorChangePassword);
+        if (!url.contains(".jsp"))
+        {
+            response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY); 
+            response.setHeader("Location", URL.url + url); 
+        }
         RequestDispatcher rd = getServletContext().getRequestDispatcher(url);
         rd.forward(request, response);
     }

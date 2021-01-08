@@ -24,6 +24,10 @@
             <a href="home"><div class="logo"></div></a>
         </div>
         <div class="content">
+            <script>
+                if ("<c:out value="${ErrorChangePassword}"/>" != "")
+                    alert("<c:out value="${ErrorChangePassword}"/>");
+            </script>
             <form action="change-password" method="POST">
                 <div class="small-container">
                     <div class="title">

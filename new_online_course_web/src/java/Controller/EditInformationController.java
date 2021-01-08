@@ -5,6 +5,7 @@
  */
 package Controller;
 
+import DAO.URL;
 import DAO.UserDB;
 import Model.User;
 import java.io.IOException;
@@ -45,6 +46,11 @@ public class EditInformationController extends HttpServlet {
         User user = (User)session.getAttribute("User");
         if (user != null)
         {
+            //Show form edit information
+            String urlShowEditInfo = "?isShowEditInfo";
+            
+            String errorEditInformation = "";
+            url = "/" + user.getRole().getRoleName();
             String userIdEdit = request.getParameter("userIdEdit");
             if (userIdEdit == null)
                 userIdEdit = "";
@@ -70,22 +76,52 @@ public class EditInformationController extends HttpServlet {
                 phoneEdit = "";
             request.setAttribute("PhoneEdit", phoneEdit);
             
-            if (userIdEdit != "" && nameEdit != "" && dateOfBirthEdit != "" && genderEdit != "" && emailEdit != "" && phoneEdit != "")
+            if (!"".equals(userIdEdit) && !"".equals(nameEdit) && !"".equals(dateOfBirthEdit) && !"".equals(genderEdit) && !"".equals(emailEdit) && phoneEdit != "")
             {
-                 System.out.println("Gender: " + genderEdit);
-                boolean gender = genderEdit.equals("true");
-                Date birthDateUser = Date.valueOf(dateOfBirthEdit); 
-                boolean isUpdated = UserDB.UpdateUser(Integer.parseInt(userIdEdit), nameEdit, birthDateUser, gender, emailEdit, phoneEdit);
-                User userEdit = UserDB.GetUserByUserId(Integer.parseInt(userIdEdit));
-                if (url.equals("/admin"))
-                    session.setAttribute("User", userEdit);
-                System.out.println(isUpdated);
+                User userEdit = UserDB.GetUserByEmail(emailEdit);
+                if (userEdit == null)
+                {
+                    boolean gender = genderEdit.equals("true");
+                    Date birthDateUser = Date.valueOf(dateOfBirthEdit); 
+                    boolean isUpdated = UserDB.UpdateUser(Integer.parseInt(userIdEdit), nameEdit, birthDateUser, gender, emailEdit, phoneEdit);
+                    userEdit = UserDB.GetUserByUserId(Integer.parseInt(userIdEdit));
+                    if (!isUpdated)
+                        url += "?isShowEditInfo=true";
+                    if (url.equals("/admin"))
+                        session.setAttribute("User", userEdit);
+                }
+                else
+                {
+                    if (userEdit.getEmail().equals(user.getEmail()))
+                    {
+                        boolean gender = genderEdit.equals("true");
+                        Date birthDateUser = Date.valueOf(dateOfBirthEdit); 
+                        boolean isUpdated = UserDB.UpdateUser(Integer.parseInt(userIdEdit), nameEdit, birthDateUser, gender, emailEdit, phoneEdit);
+                        userEdit = UserDB.GetUserByUserId(Integer.parseInt(userIdEdit));
+                        if (!isUpdated)
+                            url += "?isShowEditInfo=true";
+                        if (url.equals("/admin"))
+                            session.setAttribute("User", userEdit);
+                    }
+                      else
+                    {
+                        url += "?isShowEditInfo=true";
+                        errorEditInformation = "Địa chỉ email đã tồn tại!";
+                    }
+                }
             }
+            session.setAttribute("ErrorEditInformation", errorEditInformation);
         }
         else
         {
             url = "/sign-in";
         }
+        if (!url.contains(".jsp"))
+        {
+            response.setStatus(response.SC_MOVED_TEMPORARILY); 
+            response.setHeader("Location", URL.url + url); 
+        }
+        
          RequestDispatcher rd = getServletContext().getRequestDispatcher(url);
         rd.forward(request, response);
     }

@@ -4,8 +4,6 @@
  * and open the template in the editor.
  */
 
-    
-
 function LoadUsers(userId, name, email, role, status)
 {
     var tbody_table = document.getElementById("tbody-table");
@@ -55,4 +53,84 @@ function changeStatus(status, userId)
 {
     status = !status;
     window.location = "/new_online_course_web/account-managerment?status=" + status + "&userId=" + userId;
+}
+
+function reportAccounts()
+{
+    
+}
+
+function chartReport(labels_input, data_input) {
+    var config = {
+        type: 'line',
+        data: {
+            labels: labels_input,
+            datasets: [{
+                label: 'Số tài khoản đăng kí',
+                backgroundColor: ['rgba(54, 162, 235, 0.2)'],
+                borderColor: ['rgba(54, 162, 235, 1)'],
+                fill: true,
+                data: data_input
+            }]
+        },
+        options: {
+            responsive: true,
+            title: {
+                display: true,
+                text: ''
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                }],
+                yAxes: [{
+                    display: true,
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    };
+    var ctx = document.getElementById('myChartReport').getContext('2d');
+    window.myLineRevenue = new Chart(ctx, config);
+}
+
+function LoadChartReport(reportAccounts)
+{
+    var dates = [];
+    var counts = [];
+    var i = 0;
+    dates = Object.keys(reportAccounts);
+    dates.forEach(function(date){
+       date[i] = new Date(date);
+       i++;
+    });
+    dates.sort(function(a,b){
+        return new Date(a) - new Date(b);
+    });
+    dates.forEach(function(key){
+        counts.push(reportAccounts[key.toString()]);  // <- obj is undefined !!
+    });
+    chartReport(dates, counts);
+}
+
+function CloseFrontDivReport()
+{
+    window.location = "/new_online_course_web/account-managerment?isShowReport=false";
+}
+
+function ShowFrontDivReport()
+{
+    window.location = "/new_online_course_web/account-managerment?isShowReport=true";
+}
+
+function CloseFrontDivAddAdmin()
+{
+    window.location = "/new_online_course_web/account-managerment?isShowAddAdmin=false";
+}
+
+function ShowFrontDivAddAdmin()
+{
+    window.location = "/new_online_course_web/account-managerment?isShowAddAdmin=true";
 }

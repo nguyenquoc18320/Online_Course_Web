@@ -26,6 +26,10 @@
         </div>
         <div class="content">   
             <form action="sign-in" method="POST">
+                <script>
+                    if ("<c:out value="${ErrorSignIn}"/>" != "")
+                        alert("<c:out value="${ErrorSignIn}"/>");
+                </script>
                 <div class="small-container">
                     <div class="title">
                         <h2>ĐĂNG NHẬP</h2>

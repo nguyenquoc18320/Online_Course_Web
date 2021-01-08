@@ -25,6 +25,10 @@
         </div>
         <div class="content">
             <form action="sign-up" method="POST">
+                <script>
+                    if ("<c:out value="${ErrorSignUp}"/>" != "")
+                        alert("<c:out value="${ErrorSignUp}"/>");
+                </script>
                 <div class="small-container">
                     <div class="title">
                         <h2>ĐĂNG KÝ</h2>
@@ -42,8 +46,7 @@
                             <span>Ngày sinh: </span>
                         </div>
                         <div class="text-input">
-                            <fmt:parseDate pattern="yyyy-MM-dd" value="${BirthDate}" var="varBirtdDate" />
-                            <input type="date" id="dtBirthDate" data-date-format="DD MMMM YYYY" name="birthDate" value="<c:out value="${varBirtdDate}"/>" required/>
+                            <input type="date" id="dtBirthDate" name="birthDate" value="<c:out value="${BirthDate}"/>" required/>
                         </div>
                     </div>
                     <div class="text-input-login horizontal gender">

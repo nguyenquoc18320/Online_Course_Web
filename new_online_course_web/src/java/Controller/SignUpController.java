@@ -8,12 +8,7 @@ package Controller;
 import DAO.*;
 import Model.*;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.sql.Date;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -21,6 +16,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -44,6 +40,11 @@ public class SignUpController extends HttpServlet {
         request.setCharacterEncoding("utf-8");
         
         String url = "/Views/Pages/Login/signUp.jsp";
+        
+        HttpSession session = request.getSession();
+        session.setAttribute("User", null);
+        String errorSignUp = "";
+       
         String name = request.getParameter("name");
         if (name == null)
             name = "";
@@ -98,11 +99,11 @@ public class SignUpController extends HttpServlet {
                             isInserted = UserDB.InsertAccount(user);
                         }catch(Exception e)
                         {
-                            e.printStackTrace();
+                            errorSignUp = "Hệ thống hiện tại đang được bảo trì vui lòng thử lại sau!";
                         }
                         if (!isInserted)
                         {
-                            // insert is fail
+                            errorSignUp = "Thêm tài khoản không thành công!";
                         }
                         else
                         {
@@ -112,21 +113,27 @@ public class SignUpController extends HttpServlet {
                     }
                     else
                     {
-                        //Phone is exist
+                        errorSignUp = "Số điện thoại đã tồn tại!";
                     }
                 }
                 else
                 {
-                    //Email is exist
+                    errorSignUp = "Email đã tồn tại!";
                 }
             }
             else
             {
-                //password is not equals with repassword
+                errorSignUp = "Mật khẩu xác nhận không khớp!";
             }
         }
         
+        request.setAttribute("ErrorSignUp", errorSignUp);
         
+        if (!url.contains(".jsp"))
+        {
+            response.setStatus(response.SC_MOVED_TEMPORARILY); 
+            response.setHeader("Location", URL.url + url); 
+        }
         RequestDispatcher rd = getServletContext().getRequestDispatcher(url);
         rd.forward(request, response);
     }

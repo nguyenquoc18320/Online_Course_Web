@@ -6,6 +6,7 @@
 package Controller;
 
 import DAO.AccountDB;
+import DAO.URL;
 import Model.*;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -40,6 +41,10 @@ public class SignInController extends HttpServlet {
         
         String url = "/Views/Pages/Login/signIn.jsp";
         HttpSession session = request.getSession();
+        session.setAttribute("User", null);
+        
+        String errorSignIn = "";
+        
         String email = request.getParameter("email");
         if (email == null)
         {
@@ -58,11 +63,23 @@ public class SignInController extends HttpServlet {
             user = AccountDB.IsLoginSuccess(email, password);
             if (user != null)
             {
-                url = "/home";
+                url = "/" + user.getRole().getRoleName();
+                //url = "/home";
+            }
+            else
+            {
+                errorSignIn = "Email hoặc mật khẩu không đúng!";
             }
         }
+        
         session.setAttribute("User", user);
         
+        request.setAttribute("ErrorSignIn", errorSignIn);
+        if (!url.contains(".jsp"))
+        {
+            response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY); 
+            response.setHeader("Location", URL.url + url); 
+        }
         RequestDispatcher rd = getServletContext().getRequestDispatcher(url);
         rd.forward(request, response);
     }

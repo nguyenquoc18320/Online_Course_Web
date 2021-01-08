@@ -23,8 +23,14 @@
                  <div class='div_logo'>
                     <a href="home"><img id='image_logo' src ="logo.png" ></a>
                 </div>
-                <div id='div_account'>
-                    <label id='label_account'>${User.getName()}  <i class='fas fa-caret-down'></i></label>               
+                 
+                <div id='div_account' class="div_account">
+                    <label id='label_account'>${User.getName()} </label>
+                    <div class="drop-down account" id="drop-down-person">
+                        <a href="admin"><button>Thông tin cá nhân</button></a>
+                        <a href="sign-in"><button>Đăng xuất</button></a>
+                     </div>    
+                    <i class='fas fa-caret-down' onclick="ToggleDropDown('drop-down-person')"></i>    
                 </div>
              </div>
         </div>
@@ -43,7 +49,12 @@
             </div>
             <div class="introduce-profile lagre">
                 <div class="title-profile">
-                    <p>Giới thiệu</p> <i class="fas fa-cog" id="setting" onclick="ShowFrontDiv()"></i>
+                    <p>Giới thiệu</p>
+                    <div class="drop-down setting" id="drop-down-setting">
+                        <button onclick="ShowFrontDivEditInfo()">Đổi thông tin cá nhân</button>
+                        <button onclick="ShowFrontDivEditPass()">Đổi mật khẩu</button>
+                    </div>
+                    <i class="fas fa-cog" id="setting" onclick="ToggleDropDown('drop-down-setting')"></i> 
                 </div>
                 <div class="info-profile">
                     <div class="info-detail-profile">
@@ -81,21 +92,29 @@
         </div>
      
         <div class="front-div" id="front-div">
+            <script>
+                if ("<c:out value="${ErrorEditInformation}"/>" != "")
+                    alert("<c:out value="${ErrorEditInformation}"/>");
+                if ("<c:out value="${IsShowEditInfo}"/>" == "true")
+                    document.getElementById('front-div').style.display = 'flex';
+                else
+                    document.getElementById('front-div').style.display = 'none';
+            </script>
             <div class="content-front">
                 <div class="btn-close" id="btn-close">
-                    <i class="far fa-times-circle" onclick="CloseFrontDiv()"></i>
+                    <i class="far fa-times-circle" onclick="CloseFrontDivEditInfo()"></i>
                 </div>
                 <p class="header">Cập nhật tài khoản</p>
                 <form action="edit-information" method="post">
                     <div class="small-container">
-                        <input type="hidden" name="userIdEdit" value="<c:out value="${User.getUserId()}"/>">
+                        <input type="hidden" name="userIdEdit" required value="<c:out value="${User.getUserId()}"/>">
                         <div class="field-input">
                             <p>Name:</p>
-                            <input type="text" name="nameEdit" value="<c:out value="${User.getName()}"/>">
+                            <input type="text" name="nameEdit" required value="<c:out value="${User.getName()}"/>">
                         </div>
                         <div class="field-input">
                             <p>Ngày sinh:</p>
-                            <input type="date" name="dateOfBirthEdit" value="<c:out value="${User.getDateOfBirth()}"/>">
+                            <input type="date" name="dateOfBirthEdit" required value="<c:out value="${User.getDateOfBirth()}"/>">
                         </div>
                          <div class="field-input">
                             <p>Giới tính:</p>
@@ -111,52 +130,54 @@
                         </div>
                          <div class="field-input">
                             <p>Email:</p>
-                            <input type="text" name="emailEdit" value="<c:out value="${User.getEmail()}"/>">
+                            <input type="text" name="emailEdit" required value="<c:out value="${User.getEmail()}"/>">
                         </div>
                          <div class="field-input">
                             <p>Điện thoại:</p>
-                            <input type="text" name="phoneEdit" value="<c:out value="${User.getPhone()}"/>">
+                            <input type="text" name="phoneEdit" required value="<c:out value="${User.getPhone()}"/>">
                         </div>
-                        <input type="submit" value="Cập nhật" class="btn-submit center btn-submit-front" id="btnUpdate"/>
+                        <input type="submit" value="Cập nhật" required class="btn-submit center btn-submit-front" id="btnUpdate"/>
                     </div>
-                        
                 </form>    
             </div>
             
         </div>
       
-        <div class="footer">
-            <div class="small-container">
-                <div class="info-member">
-                    <div class="member-detail">
-                        <h3>Name of Member</h3>
-                        <ul>
-                            <li>Trần Văn Ân</li>
-                            <li>Nguyễn Phan Sự</li>
-                            <li>Nguyễn Anh Quốc</li>
-                        </ul>
+        <div class="front-div" id="front-div-change-password">
+            <script>
+                if ("<c:out value="${ErrorChangePassword}"/>" != "")
+                    alert("<c:out value="${ErrorChangePassword}"/>");
+                if ("<c:out value="${IsShowEditPass}"/>" == "true")
+                    document.getElementById('front-div-change-password').style.display = 'flex';
+                else
+                    document.getElementById('front-div-change-password').style.display = 'none';
+            </script>
+            <div class="content-front">
+                <div class="btn-close" id="btn-close">
+                    <i class="far fa-times-circle" onclick="CloseFrontDivEditPass()"></i>
+                </div>
+                <p class="header">Cập nhật mật khẩu</p>
+                <form action="change-password" method="post">
+                    <div class="small-container">
+                        <input type="hidden" name="userId" value="<c:out value="${User.getUserId()}"/>">
+                        <div class="field-input">
+                            <p>Mật khẩu cũ:</p>
+                            <input type="password" name="oldPassword" required value="<c:out value="${OldPassword}"/>">
+                        </div>
+                        <div class="field-input">
+                            <p>Mật khẩu mới:</p>
+                            <input type="password" name="password" required value="<c:out value="${Password}"/>">
+                        </div>
+                        <div class="field-input">
+                            <p>Xác nhận mật khẩu:</p>
+                            <input type="password" name="rePassword" required value="<c:out value="${RePassword}"/>">
+                        </div>
+                        <input type="submit" value="Cập nhật" class="btn-submit center btn-submit-front" id="btnUpdatePassword"/>
                     </div>
-                    <div class="member-detail">
-                        <h3>ID Student</h3>
-                        <ul>
-                            <li>18110249</li>
-                            <li>18110355</li>
-                            <li>18110345</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="info-contact member-detail">
-                    <h3>Contact</h3>
-                    <ul>
-                        <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
-                        <li><a href="#"><i class="fas fa-at"></i> Email</a></li>
-                        <li><a href="#"><i class="fab fa-telegram"></i> Telegram</a></li>
-                    </ul>
-                </div>
-                <div class="icon-logo">
-
-                </div>
+                        
+                </form>    
             </div>
-        </div>
+        </div>                
+       
     </body>
 </html>

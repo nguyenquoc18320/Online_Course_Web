@@ -34,6 +34,10 @@
                             <span>Email:</span>
                         </div>
                         <form action="send-mail" method="POST"> 
+                            <script>
+                                if ("<c:out value="${ErrorSendMail}"/>" != "")
+                                    alert("<c:out value="${ErrorSendMail}"/>");
+                            </script>
                             <div class="text-input" id="input-email">
                                 <input type="email" id="txtEmail" name="email" value="<c:out value="${Email}"/>" required/>
                                 <input type="submit" value="Gửi" id="btnSendCode"/>
@@ -41,6 +45,10 @@
                         </form>
                     </div>
                     <form action="get-password" method="POST">
+                         <script>
+                                if ("<c:out value="${ErrorGetPassword}"/>" != "")
+                                    alert("<c:out value="${ErrorGetPassword}"/>");
+                            </script>
                         <div class="text-input-login">
                             <div class="label-input">
                                 <span>Mã: </span>

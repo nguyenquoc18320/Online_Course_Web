@@ -41,15 +41,32 @@ public class GetPasswordController extends HttpServlet {
         HttpSession session = request.getSession();
         String txtCode = request.getParameter("code");
         String code = (String)session.getAttribute("Code");
+        //Get error send email
+        String errorSendMail = (String)session.getAttribute("ErrorSendMail");
+        if (errorSendMail == null)
+            errorSendMail = "";
+        session.setAttribute("ErrorSendMail", errorSendMail);
+        //Get error compare code
+        String errorGetPassword = request.getParameter("errorGetPassword");
+        if (errorGetPassword == null)
+            errorGetPassword = "";
         if (code == null)
             code = "";
-        if (code != "")
+        if (!"".equals(code))
         {
             if (code.equals(txtCode))
                 url = "/Views/Pages/Login/changePassword.jsp";
+            else
+                errorGetPassword = "Mã code không trùng khớp!";
         }
         request.setAttribute("Code", code);
         
+        request.setAttribute("ErrorGetPassword", errorGetPassword);
+        if (!url.contains(".jsp"))
+        {
+            response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY); 
+            response.setHeader("Location", URL.url + url); 
+        }
         RequestDispatcher rd = getServletContext().getRequestDispatcher(url);
         rd.forward(request, response);
     }

@@ -7,6 +7,7 @@ package Controller;
 
 import DAO.AccountDB;
 import DAO.RoleDB;
+import DAO.URL;
 import DAO.UserDB;
 import Model.Account;
 import Model.Role;
@@ -47,7 +48,7 @@ public class AddAdminController extends HttpServlet {
         String url = "/account-managerment";
         HttpSession session = request.getSession();
         User user = (User)session.getAttribute("User");
-        if (user != null)
+        if (user != null  && user.getRole().getRoleName().equals("admin"))
         {
             String nameAdd = request.getParameter("nameAdd");
             if (nameAdd == null)
@@ -79,7 +80,6 @@ public class AddAdminController extends HttpServlet {
             request.setAttribute("ConfirmPasswordAdd", confirmPasswordAdd);
             
             String errorAddAdmin = "";
-            
             if (!"".equals(nameAdd.trim()))
             {
                 if (passwordAdd.trim().equals(confirmPasswordAdd.trim()))
@@ -141,7 +141,11 @@ public class AddAdminController extends HttpServlet {
         {
             url = "/sign-in";
         }
-        
+         if (!url.contains(".jsp"))
+        {
+            response.setStatus(response.SC_MOVED_TEMPORARILY); 
+            response.setHeader("Location", URL.url + url); 
+        }
         RequestDispatcher rd = getServletContext().getRequestDispatcher(url);
         rd.forward(request, response);
     }

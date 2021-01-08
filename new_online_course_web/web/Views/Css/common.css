@@ -99,14 +99,27 @@ body{
 }
 
 
-#div_account
+.div_account
 {
-    height: 100%;
-    width: 200px;
+    position: relative;
+    height: 87px;
+    width: 300px;
     display: flex;
     margin: auto 0 auto auto;
     align-items: center;
+    text-align: right;
     /*flex: 30%;*/
+}
+
+.div_account label{
+    position: absolute;
+    right: 15px;
+}
+
+.div_account i{
+    position: absolute;
+    right: 0;
+    cursor: pointer;
 }
 
 #label_account
@@ -114,8 +127,4 @@ body{
     font-family: Time New Roman;
     font-size: 18px;
     font-weight: bold;
-    margin-left: auto;
-    margin-right: 0px;
-    margin-top: auto;
-    margin-bottom: auto;
 }
