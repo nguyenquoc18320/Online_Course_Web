@@ -1,0 +1,324 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jan 4, 2021, 11:16:04 PM
+    Author     : TRAN VAN AN
+*/
+
+.content{
+    width: 70%;
+    margin: 0 auto;
+}
+
+.image-profile{
+    margin-top: 20px;
+    height: 475px;
+}
+
+.background-profile{
+    width: 100%;
+    height: 250px;
+    border-radius: 20px 20px 0px 0px;
+}
+
+.background-profile img{
+    width: 100%;
+    height: 100%;
+    border-radius: 20px 20px 0px 0px;
+    border: 1px solid #000;
+}
+
+.avatar-profile{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: -100px;
+}
+
+.avatar-profile img{
+    width: 200px;
+    height: 200px;
+    border: 1px solid #000;
+    border-radius: 50%;
+}
+
+.name-profile{
+    display: flex;
+    justify-content: center;
+    font-family: 'Times New Roman';
+    font-size: 40px;
+    font-weight: 600;
+    position: relative;
+    top: -125px;
+    text-transform: uppercase;
+}
+
+.introduce-profile{
+    border-radius: 20px;
+    border: 1px solid #000;
+    margin: 0 auto;
+}
+
+.introduce-profile.lagre{
+    width: 80%;
+}
+
+.introduce-profile.small{
+    cursor: pointer;
+    width: 25%;
+    min-width: 300px;
+}
+
+.title-profile{
+    font-family: 'Times New Roman';
+    text-transform: uppercase;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #197BBD;
+    border-radius: 20px 20px 0 0;
+    color: #fff;
+    padding: 15px 40px;
+    display: flex;
+    height: 20px;
+    position: relative;
+}
+
+.fas.fa-cog{
+    cursor: pointer;
+}
+
+.title-profile p{
+    flex: 1;
+    margin: 0px;
+}
+
+.info-profile{
+    width: 100%; 
+    border-radius: 0 0 20px 20px;
+    margin: 20px 0;
+}
+
+.info-detail-profile{
+    display: flex;
+    font-size: 20px;
+}
+
+.title-info-detail-profile{
+    font-weight: bold;
+    flex: 30%;
+    padding-left: 10%;
+}
+
+.describe{
+    flex: 70%;
+}
+
+.detail-small{
+    text-align: center;
+    width: 100%;
+    padding: 60px 0;
+    font-size: 20px;
+}
+
+.filter{
+    display: flex;
+    margin: 40px 0;
+}
+
+.filter select{
+    flex: 30%;
+    padding: 5px 10px;
+    margin: 0px 20px 0 20px;
+}
+
+.filter input[text]{
+    flex: 40%;
+}
+
+#txtSearch{
+    width: 500px;
+    padding: 5px 10px;
+    margin-right: 20px;
+}
+
+.thead-light tr th{
+    text-align: center;
+}
+
+.center{
+    text-align: center;
+}
+
+.pointer{
+    cursor: pointer;
+}
+
+.fas.fa-info-circle
+{
+    cursor: pointer;
+}
+
+.btn-submit{
+    margin-right: 20px;
+    background-color: #197BBD;
+    font-weight: bold;
+    font-size: 20px;
+    border: 1px solid #000;
+    color: #fff;
+    border-radius: 20px;
+    padding: 0px 20px;
+}
+
+a{
+    text-decoration: none;
+}
+
+a:hover , a:visited{
+    color: #000;
+}
+
+.function{
+    margin: 40px 0;
+}
+
+.front-div{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.content-front{
+    background: #fff;
+    width: 50%;
+    border-radius: 20px;
+    padding-bottom: 40px;
+}
+
+.content-front.full{
+    width: 100%;
+}
+
+.content-front.large{
+    width: 80%;
+}
+
+.btn-close{
+    color: red;
+    text-align: right;
+    font-size: 20px;
+    padding: 5px 10px;
+}
+
+.btn-close i{
+    cursor: pointer;
+}
+
+.header{
+    text-align: center;
+    text-transform: uppercase;
+    padding: 0px;
+    margin: 0px;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.field-input{
+    margin-left: 0;
+    font-size: 16px;
+}
+
+.field-input p{
+    
+}
+
+.field-input input, .field-input select{
+    width: 100%;
+    padding: 5px 10px;
+    font-size: 16px;
+    font-weight: normal;
+}
+
+.btn-submit-front{
+    text-align: center;
+    padding: 5px 10px;
+    width: 80%;
+    margin: 20px 20% 0 10%;
+    cursor: pointer;
+}
+
+.btn-admin{
+    display: flex;
+    font-size: 24px;
+}
+
+.btn-admin i{
+    cursor: pointer;
+    border: 1px solid #000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    margin-right: 5px;
+}
+
+.fas.fa-plus-circle{
+    color: #197BBD;
+    border: 1px solid #197BBD;
+}
+
+.drop-down{
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    border: 1px solid #000;
+    height: fit-content;
+    transition: 1s ease-in-out;
+    text-align: center;
+    justify-content: center;
+}
+
+.drop-down.setting{
+    top: 40px; 
+    right: 40px;
+}
+
+.drop-down.account{
+    top: 60px; 
+    right: 0;
+}
+
+.drop-down button{
+    text-align: center;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    background: #fff;
+    width: 100%;
+}
+
+.chart{
+    height: 50%;
+}
+
+.select-date{
+    text-align: right;
+    margin-top: 20px;   
+}
+
+.select-date input[type="date"]{
+    padding: 2px 10px;
+}
+.select-date select{
+    padding: 5px 10px;
+}

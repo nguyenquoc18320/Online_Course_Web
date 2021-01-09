@@ -13,9 +13,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
-    <link href="Views/Css/common.scss" type="text/css" rel="stylesheet">
+    <link href="Views/Css/common.css" type="text/css" rel="stylesheet">
     
-    <link href="Views/Css/Login/login.scss" type="text/css" rel="stylesheet"/>
+    <link href="Views/Css/Login/login.css" type="text/css" rel="stylesheet"/>
     <title>ASQ - Quên mật khẩu</title>
 </head>
 <body>
@@ -24,6 +24,10 @@
             <a href="home"><div class="logo"></div></a>
         </div>
         <div class="content">
+            <script>
+                if ("<c:out value="${ErrorChangePassword}"/>" != "")
+                    alert("<c:out value="${ErrorChangePassword}"/>");
+            </script>
             <form action="change-password" method="POST">
                 <div class="small-container">
                     <div class="title">

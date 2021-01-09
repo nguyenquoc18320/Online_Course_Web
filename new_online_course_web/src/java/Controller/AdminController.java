@@ -5,12 +5,10 @@
  */
 package Controller;
 
-import DAO.CourseDB;
-import DAO.UserDB;
+import DAO.*;
 import Model.*;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,8 +21,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author TRAN VAN AN
  */
-@WebServlet(name = "TeacherProfileController", urlPatterns = {"/teacher"})
-public class TeacherProfileController extends HttpServlet {
+@WebServlet(name = "AdminController", urlPatterns = {"/admin"})
+public class AdminController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,21 +38,54 @@ public class TeacherProfileController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("utf-8");
         
-        String url = "/Views/Pages/User/teacherProfile.jsp";
-        
+        String url = "/Views/Pages/Admin/admin.jsp";
         HttpSession session = request.getSession();
-        //User user = (User)session.getAttribute("User");
         User user = (User)session.getAttribute("User");
-        if (user != null && user.getRole().getRoleName().equals("teacher"))
+        if (user != null && user.getRole().getRoleName().equals("admin"))
         {
-            List<Course> courses = CourseDB.GetCourseByUserId(user.getUserId());
-            session.setAttribute("CoursesTeacher", courses);
+            //Get Error Edit Information
+            String errorEditInformation = (String)session.getAttribute("ErrorEditInformation");
+            if (errorEditInformation == null)
+                errorEditInformation = "";
+            session.setAttribute("ErrorEditInformation", errorEditInformation);
+             //Get Error Edit Information
+            String errorChangePassword = (String)session.getAttribute("ErrorChangePassword");
+            if (errorChangePassword == null)
+                errorChangePassword = "";
+            session.setAttribute("ErrorChangePassword", errorChangePassword);
+            
+            //Show form edit information
+            String isShowEditInfo = request.getParameter("isShowEditInfo");
+            if (isShowEditInfo == null)
+                isShowEditInfo = "false";
+            if ("false".equals(isShowEditInfo))
+                session.setAttribute("ErrorEditInformation", null);
+            request.setAttribute("IsShowEditInfo", isShowEditInfo);
+            //Show form edit password
+            String isShowEditPass = request.getParameter("isShowEditPass");
+            if (isShowEditPass == null)
+                isShowEditPass = "false";
+            if ("false".equals(isShowEditPass))
+                session.setAttribute("ErrorChangePassword", null);
+            request.setAttribute("IsShowEditPass", isShowEditPass);
+            
+            Role role = user.getRole();
+            if (role != null)
+                request.setAttribute("Role", role);
+            int activated = AccountDB.CountAccountActivated();
+            request.setAttribute("Activated", activated);
+            int locked = AccountDB.CountAccountLocked();
+            request.setAttribute("Locked", locked);
         }
-        else
-        {
+        else{
             url = "/sign-in";
         }
         
+        if (!url.contains(".jsp"))
+        {
+            response.setStatus(response.SC_MOVED_TEMPORARILY); 
+            response.setHeader("Location", URL.url + url); 
+        }
         RequestDispatcher rd = getServletContext().getRequestDispatcher(url);
         rd.forward(request, response);
     }

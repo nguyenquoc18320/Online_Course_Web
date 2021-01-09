@@ -8,12 +8,7 @@ package Controller;
 import DAO.*;
 import Model.*;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.sql.Date;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -21,6 +16,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -44,6 +40,11 @@ public class SignUpController extends HttpServlet {
         request.setCharacterEncoding("utf-8");
         
         String url = "/Views/Pages/Login/signUp.jsp";
+        
+        HttpSession session = request.getSession();
+        session.setAttribute("User", null);
+        String errorSignUp = "";
+       
         String name = request.getParameter("name");
         if (name == null)
             name = "";
@@ -78,55 +79,61 @@ public class SignUpController extends HttpServlet {
         {
             if (password.trim().equals(rePassword.trim()))
             {
+               
                 if (UserDB.GetUserByEmail(email) == null)
                 {
                     if (UserDB.GetUserByPhone(phone) == null)
                     {
                         Timestamp createDate = new Timestamp(System.currentTimeMillis());
                         boolean isInserted = false;
-                        int maxUserId = UserDB.MaxUserId();
-                        if (maxUserId > 0)
+                        boolean isMale = "male".equals(gender);
+                        int roleId = "teacher".equals(role) ? 2 : 3 ;
+                        Role roleAdd = RoleDB.GetRoleByRoleId(roleId);
+                        try{
+                            Date birthDateUser = Date.valueOf(birthDate); 
+                            Account account = new Account(password, true);
+                            boolean isInsertedAcc = AccountDB.InsertAccount(account);
+                            int idAccount = AccountDB.MaxAccountId();
+                            account.setAccountId(idAccount);
+                            User user = new User(name, birthDateUser, email, isMale, phone, roleAdd , account, createDate);
+                            isInserted = UserDB.InsertAccount(user);
+                        }catch(Exception e)
                         {
-                            boolean isMale = "male".equals(gender);
-                            String roleId = "teacher".equals(role) ? "2" : "3" ;
-                            try{
-                                Date birthDateUser = Date.valueOf(birthDate); 
-                                User user = new User(maxUserId + 1, name, birthDateUser, email, isMale, phone, roleId , createDate);
-                                Account account = new Account(maxUserId + 1, password, true);
-                                isInserted = UserDB.InsertUser(user, account);
-                            }catch(Exception e)
-                            {
-                                System.out.println("Không thể chuyển ngày!");
-                            }
-                            if (!isInserted)
-                            {
-                                // insert is fail
-                            }
-                            else
-                            {
-                                url = "/sign-in";
-                            }
+                            errorSignUp = "Hệ thống hiện tại đang được bảo trì vui lòng thử lại sau!";
                         }
-                        else{
-                            //Lấy maxuserid thất bại
+                        if (!isInserted)
+                        {
+                            errorSignUp = "Thêm tài khoản không thành công!";
                         }
+                        else
+                        {
+                            url = "/sign-in";
+                        }
+                      
                     }
                     else
                     {
-                        //Phone is exist
+                        errorSignUp = "Số điện thoại đã tồn tại!";
                     }
                 }
                 else
                 {
-                    //User is exist
+                    errorSignUp = "Email đã tồn tại!";
                 }
             }
+            else
             {
-                //password is not equals with repassword
+                errorSignUp = "Mật khẩu xác nhận không khớp!";
             }
         }
         
+        request.setAttribute("ErrorSignUp", errorSignUp);
         
+        if (!url.contains(".jsp"))
+        {
+            response.setStatus(response.SC_MOVED_TEMPORARILY); 
+            response.setHeader("Location", URL.url + url); 
+        }
         RequestDispatcher rd = getServletContext().getRequestDispatcher(url);
         rd.forward(request, response);
     }

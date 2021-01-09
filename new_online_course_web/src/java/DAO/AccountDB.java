@@ -17,19 +17,48 @@ import javax.mail.internet.*;
  */
 public class AccountDB {
     
-    public boolean IsExistEmail(String email)
+    public static boolean IsExistEmail(String email)
     {
         User user = UserDB.GetUserByEmail(email);
         return user != null;
     }
     
+    public static User GetAccountByAccountId(int userId)
+    {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        try{
+            User user = em.find(User.class, userId);
+            return user;
+        }finally{
+            em.close();
+        }
+    }
+    
+    public static boolean InsertAccount(Account account)
+    {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        EntityTransaction trans = em.getTransaction();
+        boolean isInserted = false;
+        try{
+            trans.begin();
+            em.persist(account);
+            trans.commit();
+            isInserted = true;
+        }catch(Exception ex)
+        {
+            trans.rollback();
+        }finally{
+            em.close();
+        }
+        return isInserted;
+    }
     
     public static User IsLoginSuccess(String email, String password)
     {
         User user = UserDB.GetUserByEmail(email);
         Account account;
         if (user != null)
-            account = AccountDB.GetAccountByUserId(user.getUserId());
+            account = user.getAccount();
         else
             return null;
         if (account == null || !account.getPassword().equals(password) || !account.isStatus())
@@ -37,12 +66,101 @@ public class AccountDB {
         return user;
     }
     
-    public static Account GetAccountByUserId(int userId)
+    public static Account GetAccountByUser(User user)
     {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
         try{
-            Account acc = em.find(Account.class, userId);
+            Account acc = em.find(Account.class, user);
             return acc;
+        }finally{
+            em.close();
+        }
+    }
+    
+    
+    
+     public static List<Account> GetAccounts()
+    {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        String qString = "SELECT a FROM Account AS a";
+        TypedQuery<Account> q = em.createQuery(qString, Account.class);
+        List<Account> accounts = null;
+        try{
+            accounts = q.getResultList();
+            if (accounts == null || accounts.isEmpty())
+                accounts = null;
+        }catch (Exception ex){
+            System.out.println("Error: " + ex.getMessage());
+        }
+        finally{
+            em.close();
+        }
+        return accounts;
+    }
+     
+    
+     public static List<Account> GetAccountsByStatus(String state)
+    {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        String qString = "";
+        if (state.equals("all"))
+            qString = "SELECT a FROM Account AS a";
+        else
+            qString = "SELECT a FROM Account a WHERE a.Status = :status";
+        TypedQuery<Account> q = em.createQuery(qString, Account.class);
+        if (!state.equals("all"))
+        {
+            boolean status = GetStatusByState(state);
+            q.setParameter("status", status);
+        }
+        List<Account> accounts = null;
+        try{
+            accounts = q.getResultList();
+            if (accounts == null || accounts.isEmpty())
+                accounts = null;
+        }catch (Exception ex){
+            System.out.println("Error: " + ex.getMessage());
+        }
+        finally{
+            em.close();
+        }
+        return accounts;
+    }
+     
+    public static boolean GetStatusByState(String state)
+    {
+        if (state.equals("activated") )
+            return true;
+        return false;
+    }
+    
+    public static int CountAccountActivated()
+    {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        String qString = "SELECT COUNT(*) FROM Account WHERE status = 1";
+        try
+        {
+            int count = Integer.parseInt(em.createNativeQuery(qString).getSingleResult().toString());
+            return count;
+        }catch(Exception ex)
+        {
+            return 0;
+        }finally{
+            em.close();
+        }
+    }
+     
+     public static int CountAccountLocked()
+    {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        String qString = "SELECT COUNT(*) FROM Account WHERE status = 0";
+        try
+        {
+            int count = Integer.parseInt(em.createNativeQuery(qString).getSingleResult().toString());
+            return count;
+        }catch(Exception ex)
+        {
+            return 0;
         }finally{
             em.close();
         }
@@ -116,4 +234,53 @@ public class AccountDB {
             em.close();
         }
     }
+    
+    public static boolean UpdateStatusByUserId(int accountId, boolean status)
+    {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        EntityTransaction trans = em.getTransaction();
+        String qString = "UPDATE Account SET Status = :status WHERE AccountId = :accountId";
+        Query q = em.createQuery(qString);
+        q.setParameter("status", status);
+        q.setParameter("accountId", accountId);
+        int count = 0;
+        try
+        {
+            trans.begin();
+            count = q.executeUpdate();
+            trans.commit();
+        }catch(Exception ex)
+        {
+            trans.rollback();
+        }finally{
+            em.close();
+        }
+        return count > 0;
+    }
+    
+     public static int MaxAccountId()
+    {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        String qString = "SELECT Max(AccountId) FROM Account";
+        int max = -1;
+        try{
+            String AccountId = em.createNativeQuery(qString).getSingleResult().toString();
+            max = Integer.parseInt(AccountId.toString());
+        }catch(NoResultException ex)
+        {
+            max = -1;
+            System.out.println("Kết nối thất bại!");
+        }
+        finally{
+            em.close();
+        }
+        return max;
+    }
+//     public static Account getAccountInListByUserId(List<Account> accounts, int userId)
+//    {
+//        for (int i = 0; i < accounts.size(); i++)
+//            if (accounts.get(i).getUser().getUserId()== userId)
+//                return accounts.get(i);
+//        return null;
+//    }
 }

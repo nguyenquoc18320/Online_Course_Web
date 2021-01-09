@@ -17,10 +17,10 @@
         
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
-        <link href="Views/Css/Course/course.scss" type="text/css" rel="stylesheet">
-        <link rel="stylesheet" href="Views/Css/common.scss">
+        <link href="Views/Css/Course/course.css" type="text/css" rel="stylesheet">
+        <link rel="stylesheet" href="Views/Css/common.css">
         <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-        <link rel="stylesheet" href="Views/Css/Profile/teachProfile.scss">
+        <link rel="stylesheet" href="Views/Css/Profile/teachProfile.css">
         <title>ASQ | Profile</title>
         
         <script>

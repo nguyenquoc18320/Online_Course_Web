@@ -13,9 +13,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
-    <link href="Views/Css/common.scss" type="text/css" rel="stylesheet">
+    <link href="Views/Css/common.css" type="text/css" rel="stylesheet">
     
-    <link href="Views/Css/Login/login.scss" type="text/css" rel="stylesheet"/>
+    <link href="Views/Css/Login/login.css" type="text/css" rel="stylesheet"/>
     <title>ASQ - Quên mật khẩu</title>
 </head>
 <body>
@@ -34,6 +34,10 @@
                             <span>Email:</span>
                         </div>
                         <form action="send-mail" method="POST"> 
+                            <script>
+                                if ("<c:out value="${ErrorSendMail}"/>" != "")
+                                    alert("<c:out value="${ErrorSendMail}"/>");
+                            </script>
                             <div class="text-input" id="input-email">
                                 <input type="email" id="txtEmail" name="email" value="<c:out value="${Email}"/>" required/>
                                 <input type="submit" value="Gửi" id="btnSendCode"/>
@@ -41,6 +45,10 @@
                         </form>
                     </div>
                     <form action="get-password" method="POST">
+                         <script>
+                                if ("<c:out value="${ErrorGetPassword}"/>" != "")
+                                    alert("<c:out value="${ErrorGetPassword}"/>");
+                            </script>
                         <div class="text-input-login">
                             <div class="label-input">
                                 <span>Mã: </span>

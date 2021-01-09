@@ -9,6 +9,7 @@ import Model.*;
 import DAO.*;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -37,8 +38,25 @@ public class HomeController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("utf-8");
+        String url = "/Views/Pages/Home/home.jsp";
+//        Role roleAdmin = new Role("admin");
+//        Role roleTeacher = new Role("teacher");
+//        Role roleStudent = new Role("student");
+//        boolean isInserted1 = RoleDB.InsertRole(roleAdmin);
+//        boolean isInserted2 = RoleDB.InsertRole(roleTeacher);
+//        boolean isInserted3 = RoleDB.InsertRole(roleStudent);
+//        System.out.println(isInserted1 + " " + isInserted2 + " " + isInserted3);
+////           
+//        List<Role> Roles  = RoleDB.GetRoles();
+//        System.out.println(Roles.get(0).getRoleName() + " " + Roles.get(1).getRoleName() + " " + Roles.get(2).getRoleName());
+//      
         
-        RequestDispatcher rd = getServletContext().getRequestDispatcher("/Views/Pages/Home/home.jsp");
+        if (!url.contains(".jsp"))
+        {
+            response.setStatus(response.SC_MOVED_TEMPORARILY); 
+            response.setHeader("Location", URL.url + url); 
+        }
+        RequestDispatcher rd = getServletContext().getRequestDispatcher(url);
         rd.forward(request, response);
     }
 

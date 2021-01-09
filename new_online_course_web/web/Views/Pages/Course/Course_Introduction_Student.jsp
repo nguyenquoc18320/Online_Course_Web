@@ -16,7 +16,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Giới thiệu khóa học</title>
         <link rel="stylesheet" href="Views/Css/Course/Course_Introduction_Student_css.css">
-        <link rel="stylesheet" href="Views/Css/common.scss">
+        <link rel="stylesheet" href="Views/Css/common.css">
         <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     </head>
 
