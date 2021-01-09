@@ -45,7 +45,6 @@ public class AccountManagermentController extends HttpServlet {
         
         String url = "/Views/Pages/Admin/account_managerment.jsp";
         
-        
         String accountType = request.getParameter("accountType");
         if (accountType == null)
             accountType = "all";
@@ -63,7 +62,12 @@ public class AccountManagermentController extends HttpServlet {
         User user = (User)session.getAttribute("User");
 
         if (user != null && user.getRole().getRoleName().equals("admin"))
-        {
+        { 
+            //Show error inserted
+            String errorAddAdmin = (String)session.getAttribute("ErrorAddAdmin");
+            if (errorAddAdmin == null)
+                errorAddAdmin = "";
+            request.setAttribute("ErrorAddAdmin", errorAddAdmin);
             String statusString = request.getParameter("status");
             String userIdString = request.getParameter("userId");
             if (statusString != null && userIdString != null)
@@ -134,11 +138,7 @@ public class AccountManagermentController extends HttpServlet {
                 reportAccounts = "";
             }
             request.setAttribute("ReportAccounts", reportAccounts);
-            
-            String errorAddAdmin = (String)request.getAttribute("ErrorAddAdmin");
-            if (errorAddAdmin == null)
-                errorAddAdmin = "";
-            request.setAttribute("ErrorAddAdmin", errorAddAdmin);
+           
         }
         else
         {

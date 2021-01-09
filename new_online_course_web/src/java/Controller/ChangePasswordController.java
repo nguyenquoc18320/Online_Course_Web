@@ -10,9 +10,7 @@ import DAO.URL;
 import DAO.UserDB;
 import Model.Account;
 import Model.User;
-import com.sun.tools.javac.tree.JCTree;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -60,6 +58,8 @@ public class ChangePasswordController extends HttpServlet {
             userChangePassword = user;
             String roleName = user.getRole().getRoleName();
             url = "/" + roleName;
+            if (roleName.equals("admin"))
+                url = "/account-profile";
             String oldPassword = request.getParameter("oldPassword");
             if (oldPassword == null)
                 oldPassword = "";
@@ -81,7 +81,7 @@ public class ChangePasswordController extends HttpServlet {
                 rePassword = "";
             request.setAttribute("RePassword", rePassword);
 
-            if (!"".equals(rePassword) && password != "" && account != null)
+            if (!"".equals(rePassword) && !"".equals(password) && account != null)
             {
                 if (password.equals(rePassword))
                 {

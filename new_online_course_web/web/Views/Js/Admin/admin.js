@@ -6,15 +6,15 @@
 
 function ToggleDropDown(id)
 {
-    var front_div = document.getElementById(id);
-    if (front_div !== null)
-        if (front_div.style.display === 'flex')
+    var drop_down = document.getElementById(id);
+    if (drop_down !== null)
+        if (drop_down.style.display === 'flex')
         {
-            front_div.style.display = 'none';
+            drop_down.style.display = 'none';
         }
         else
         {
-            front_div.style.display = 'flex';
+            drop_down.style.display = 'flex';
         }
 }
 
@@ -34,20 +34,20 @@ function ShowFrontDiv(id)
 
 function CloseFrontDivEditInfo()
 {
-    window.location = "/new_online_course_web/admin?isShowEditInfo=false";
+    window.location = "/new_online_course_web/account-profile?isShowEditInfo=false";
 }
 
 function ShowFrontDivEditInfo()
 {
-    window.location = "/new_online_course_web/admin?isShowEditInfo=true";
+    window.location = "/new_online_course_web/account-profile?isShowEditInfo=true";
 }
 
 function CloseFrontDivEditPass()
 {
-    window.location = "/new_online_course_web/admin?isShowEditPass=false";
+    window.location = "/new_online_course_web/account-profile?isShowEditPass=false";
 }
 
 function ShowFrontDivEditPass()
 {
-    window.location = "/new_online_course_web/admin?isShowEditPass=true";
+    window.location = "/new_online_course_web/account-profile?isShowEditPass=true";
 }
