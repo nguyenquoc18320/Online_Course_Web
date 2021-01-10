@@ -55,20 +55,36 @@ public class FAQDB {
         return result;
     }
     
-    public static boolean deleteFAQ(int courseid, int faqid)
+    public static boolean deleteFAQ(FAQ faq)
     {
             boolean result = true;
             EntityManager entityManager = DBUtil.getEmFactory().createEntityManager();
-            EntityTransaction tran = entityManager.getTransaction();
-            tran.begin();
-       try {
-           FAQ faq = getFAQByFK(courseid, faqid);
-           Query query = entityManager.createNativeQuery("DELETE FROM faq where CourseId=" + courseid + " and FAQId= " + faqid+";");
-            query.executeUpdate();
-            tran.commit();
+          EntityTransaction tran = entityManager.getTransaction();
+          tran.begin();
+                
+       try {      
+                entityManager.remove(entityManager.merge(faq));
+                tran.commit();
         } catch (Exception e) {
             System.out.println(e);
+            result = false;
             tran.rollback();
+        } finally {
+            entityManager.close();
+        }
+        return result;
+    }
+    
+    public static boolean deleteFAQByCourse(Course course, int faqOrder)
+    {
+            boolean result = true;
+            EntityManager entityManager = DBUtil.getEmFactory().createEntityManager();
+       try {
+           FAQ faq = getFAQByCourseAndOrder(course, faqOrder);
+           if(faq!=null)
+               result = deleteFAQ(faq);
+        } catch (Exception e) {
+            System.out.println(e);
             result = false;
         } finally {
             entityManager.close();
@@ -76,12 +92,12 @@ public class FAQDB {
         return result;
     }
     
-     public static FAQ getFAQByFK(int courseid, int FAQId) {
+     public static FAQ getFAQByCourseAndOrder(Course course, int FAQOrder) {
         EntityManager entityManager = DBUtil.getEmFactory().createEntityManager();
-        String queryS = "SELECT f from FAQ f where f.CourseId = :courseid and f.FAQId = :faqid";
+        String queryS = "SELECT f from FAQ f where f.course = :course and f.FAQOrder = :faqorder";
         TypedQuery<FAQ> query = entityManager.createQuery(queryS, FAQ.class);
-        query.setParameter("courseid", courseid);
-        query.setParameter("faqid", FAQId);
+        query.setParameter("course", course);
+        query.setParameter("faqorder", FAQOrder);
 
          FAQ faq =null;
         try {
@@ -96,19 +112,44 @@ public class FAQDB {
         return faq;
     }
     
-     public static boolean FAQExists(int courseid, int faqid)
+     public static boolean FAQExists(Course course, int FAQOrder) 
     {
-        FAQ u = getFAQByFK(courseid, faqid);
+        FAQ u = getFAQByCourseAndOrder(course, FAQOrder);
         return u!=null;
     }
      
     public static List<FAQ> getAllFAQOfCourse(int courseid)
     {
+        Course course = CourseDB.GetCourseByCourseId(courseid);
         EntityManager entityManager= DBUtil.getEmFactory().createEntityManager();
-        String queryS = "SELECT f from FAQ f where f.CourseId = :courseid";
+        String queryS = "SELECT f from FAQ f where f.course = :course";
         
         TypedQuery<FAQ> q = entityManager.createQuery(queryS, FAQ.class);
-        q.setParameter("courseid", courseid);
+        q.setParameter("course", course);
+        
+        List<FAQ> faqList ;
+        
+        try
+        {
+            faqList = q.getResultList();
+            if(faqList==null || faqList.isEmpty())
+                faqList=null;
+        }
+        finally
+        {
+            entityManager.close();
+        }
+        return faqList;
+        
+    }
+    
+    public static List<FAQ> getAllFAQOfCourse(Course course)
+    {    
+        EntityManager entityManager= DBUtil.getEmFactory().createEntityManager();
+        String queryS = "SELECT f from FAQ f where f.course = :course";
+        
+        TypedQuery<FAQ> q = entityManager.createQuery(queryS, FAQ.class);
+        q.setParameter("course", course);
         
         List<FAQ> faqList ;
         

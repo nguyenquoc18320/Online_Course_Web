@@ -1,50 +1,54 @@
+package Model;
+
+
+
+import java.util.Date;
+import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Model;
-import javax.persistence.*;
-import java.io.Serializable;
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.util.Collection;
+
 /**
  *
- * @author TRAN VAN AN
+ * @author A556U
  */
 @Entity
-public class Course implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class Course {
+    @Id 
     private int CourseId;
     private String Name;
     private String Objective;
-    private int UserId;
-    private Timestamp ModifiedDate;
+    @ManyToOne
+    private User user;
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date ModifiedDate;
     private boolean Approved;
-    private String Document;
+    private String document;
 
-    public Course() {
+//    @OneToMany (targetEntity = Chap.class)
+//    private List<Chap> chaps;
+    
+    public Course()
+    {
+        
     }
-
-    public Course(String Name, String Objective, int user, Timestamp ModifiedDate, boolean Approved, String Document) {
-        this.Name = Name;
-        this.Objective = Objective;
-        this.UserId = user;
-        this.ModifiedDate = ModifiedDate;
-        this.Approved = Approved;
-        this.Document = Document;
-    }
-
-    public Course(int CourseId, String Name, String Objective, int user, Timestamp ModifiedDate, boolean Approved, String Document) {
+    
+    public Course(int CourseId, String Name, String Objective, User user, Date ModifiedDate, boolean Approved, String document) {
         this.CourseId = CourseId;
         this.Name = Name;
         this.Objective = Objective;
-        this.UserId = user;
+        this.user = user;
         this.ModifiedDate = ModifiedDate;
         this.Approved = Approved;
-        this.Document = Document;
+        this.document = document;
     }
 
     public int getCourseId() {
@@ -71,19 +75,19 @@ public class Course implements Serializable {
         this.Objective = Objective;
     }
 
-    public int getUserId() {
-        return UserId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(int user) {
-        this.UserId = user;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public Timestamp getModifiedDate() {
+    public Date getModifiedDate() {
         return ModifiedDate;
     }
 
-    public void setModifiedDate(Timestamp ModifiedDate) {
+    public void setModifiedDate(Date ModifiedDate) {
         this.ModifiedDate = ModifiedDate;
     }
 
@@ -96,12 +100,12 @@ public class Course implements Serializable {
     }
 
     public String getDocument() {
-        return Document;
+        return document;
     }
 
-    public void setDocument(String Document) {
-        this.Document = Document;
+    public void setDocument(String document) {
+        this.document = document;
     }
-
+   
     
 }

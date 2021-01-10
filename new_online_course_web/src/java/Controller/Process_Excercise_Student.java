@@ -5,10 +5,16 @@
  */
 package Controller;
 
-import DAO.ExerciseDB;
+import DAO.ExcerciseDB;
 import DAO.PartDB;
-import Model.Exercise;
+import DAO.StudentExcerciseDB;
+import DAO.UserDB;
+import Model.Chap;
+import Model.Course;
+import Model.Excercise;
 import Model.Part;
+import Model.StudentExcercise;
+import Model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -22,7 +28,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author A556U
  */
-public class Process_Exercise_Student extends HttpServlet {
+public class Process_Excercise_Student extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,44 +46,70 @@ public class Process_Exercise_Student extends HttpServlet {
 
         HttpSession session = request.getSession();
         Part part = (Part) session.getAttribute("part");
+        User user = (User)session.getAttribute("User");
+
         //The message sent to jsp
         String message = "";
 
-        String url = "/Views/Pages/Course/exercise_student.jsp";
+        String url = "/Views/Pages/Course/excercise_student.jsp";
         //the following part to test
         // part = new Part(1, 1, 1, "");
-        int maxExercise = 0;
+        int maxExcercise = 0;
 
         if (part == null) {
             request.setAttribute("message", "Không tìm thấy phần bài tập!");
 //            url = "/" + (String) request.getParameter("previousPage");
-        } else {
+        }
+        if (user == null ) {
+            url = "/sign-in";
+        }
+        else if(user.getRole().getRoleId()!=3)
+        {
+             url = "/Views/Pages/Home/home.jsp";
+        }else {
             session.setAttribute("part", part);
              
-            List<Exercise> exerciseList = ExerciseDB.getAllExercisePartOfPart(part.getCourseId(), part.getChapId(), part.getPartId());
-            maxExercise=exerciseList.size();
-            if (exerciseList != null) {
-                for (Exercise e : exerciseList) {
-                    request.setAttribute("Exercise" + e.getExerciseId(), e);
-                    maxExercise = e.getExerciseId();
+            Course course = part.getCourse();
+            Chap chap = part.getChap();
+            
+            List<Excercise> excerciseList = ExcerciseDB.getAllExcercisePartOfPart(course,chap, part);
+            
+            maxExcercise=excerciseList.size();
+            if (excerciseList != null) {
+                
+                //get max time of attemps
+                int maxTime = StudentExcerciseDB.getMaxTime(user, course, chap, part);
+                
+                for (Excercise e : excerciseList) {
+                    request.setAttribute("Excercise" + e.getExcerciseOrder(), e);
+                    maxExcercise = e.getExcerciseOrder();
                     
-                    String answerOfStudent = (String)request.getParameter("answer"+e.getExerciseId());
+                    String answerOfStudent = (String)request.getParameter("answer"+e.getExcerciseOrder());
                     
-                    request.setAttribute("answer"+e.getExerciseId(), answerOfStudent);
+                    request.setAttribute("answer"+e.getExcerciseOrder(), answerOfStudent);
+                    
+                    
+                    StudentExcercise stEx= new StudentExcercise(user,course, chap, part, e, maxTime+1, answerOfStudent);
+                    
+                    //Add anser into database
+                    if(!StudentExcerciseDB.insert(stEx))
+                    {
+                        message="Lưu thông tin thất bại";
+                    }
                     
                     if(answerOfStudent!=null && e.getCorrectAnswer().equals(answerOfStudent))
                     {
-                        request.setAttribute("resultOfAnswer"+e.getExerciseId(), "Trả lời đúng");                     
+                        request.setAttribute("resultOfAnswer"+e.getExcerciseOrder(), "Trả lời đúng");                     
                     }
                     else 
                     {
-                        request.setAttribute("resultOfAnswer"+e.getExerciseId(), "Trả lời sai! Đáp án đúng là "+e.getCorrectAnswer());                     
+                        request.setAttribute("resultOfAnswer"+e.getExcerciseOrder(), "Trả lời sai! Đáp án đúng là "+e.getCorrectAnswer());                     
                     }
                      
                 }
             }
             
-              request.setAttribute("maxExercise", maxExercise);
+              request.setAttribute("maxExcercise", maxExcercise);
         }
 
       

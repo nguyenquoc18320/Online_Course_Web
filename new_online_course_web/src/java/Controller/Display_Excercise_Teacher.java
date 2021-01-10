@@ -20,7 +20,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author A556U
  */
-public class Display_Exercise_Teacher extends HttpServlet {
+public class Display_Excercise_Teacher extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,31 +37,36 @@ public class Display_Exercise_Teacher extends HttpServlet {
 
         Part part = null;
         int courseid = -1;
-        int chapid = -1;
-        int partid = -1;
+        int chaporder = -1;
+        int partorder = -1;
 
-        String url = "/Views/Pages/Course/exercise_teacher.jsp";
+        String url = "/Views/Pages/Course/excercise_teacher.jsp";
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("User");
 
         String requirement = request.getParameter("requirement");
 
-        if (user == null) {
+         if (user == null ) {
             url = "/sign-in";
+        }
+        else if(user.getRole().getRoleId()!=2)
+        {
+             url = "/Views/Pages/Home/home.jsp";
         } else {
             //không phải là tạo kh
                 try {
                     courseid = Integer.parseInt(request.getParameter("courseid"));
-                    chapid = Integer.parseInt(request.getParameter("chapid"));
-                    partid = Integer.parseInt(request.getParameter("partid"));
+                    chaporder = Integer.parseInt(request.getParameter("chapid"));
+                    partorder = Integer.parseInt(request.getParameter("partid"));
                 } catch (Exception ex) {
-
+                     request.setAttribute("message", "Không tìm thấy phần bài học để thêm bài tập!");
                 }
 
-                part = PartDB.getPartByPrimaryKey(courseid, chapid, partid);
-
-                int maxExercise = 0;
+                Course course = CourseDB.GetCourseByCourseId(courseid);
+                Chap chap = ChapDB.getChapOfCourseByOrder(course, chaporder);
+                part = PartDB.getPartByCourseAndChap(course, chap, partorder);
+                int maxExcercise = 0;
                         
                 if (part == null) {
                     request.setAttribute("message", "Không tìm thấy phần bài học để thêm bài tập!");
@@ -70,16 +75,16 @@ public class Display_Exercise_Teacher extends HttpServlet {
 
                     session.setAttribute("part", part);
 
-                    List<Exercise> exerciseList = ExerciseDB.getAllExercisePartOfPart(courseid, chapid, partid);
-                    if (exerciseList != null) {
-                        for (Exercise e : exerciseList) {
-                            request.setAttribute("Exercise" + e.getExerciseId(), e);
-                            maxExercise = e.getExerciseId();
+                    List<Excercise> excerciseList = ExcerciseDB.getAllExcercisePartOfPart(course, chap, part);
+                    if (excerciseList != null) {
+                        for (Excercise e : excerciseList) {
+                            request.setAttribute("Excercise" + e.getExcerciseOrder(), e);
+                            maxExcercise = e.getExcerciseOrder();
                         }
                     }
                 }
 
-                request.setAttribute("maxExercise", maxExercise);
+                request.setAttribute("maxExcercise", maxExcercise);
             }
         getServletContext().getRequestDispatcher(url).forward(request, response);
     }

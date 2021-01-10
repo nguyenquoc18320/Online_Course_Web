@@ -20,20 +20,42 @@ public class CourseDB {
     public static Course GetCourseByCourseId(int courseId)
     { 
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
+         Course course=null;
         try{
-            Course course = em.find(Course.class, courseId);
-            return course;
+            course = em.find(Course.class, courseId);
+            
         }finally{
             em.close();
         }
+        return course;
+    }
+    
+     public static List<Course> GetCourseByUser(User user)
+    { 
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        String qString = "SELECT c FROM Course AS c WHERE c.user = :user";
+        TypedQuery<Course> q = em.createQuery(qString, Course.class);
+        q.setParameter("user", user);
+        List<Course> courses = null;
+        try{
+            courses = q.getResultList();
+        }catch(NoResultException ex)
+        {
+            System.out.println("Kết nối thất bại!");
+        }
+        finally{
+            em.close();
+        }
+        return courses;
     }
     
     public static List<Course> GetCourseByUserId(int userId)
     { 
+        User user = UserDB.GetUserByUserId(userId);
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
-        String qString = "SELECT c FROM Course AS c WHERE c.UserId = :userId";
+        String qString = "SELECT c FROM Course AS c WHERE c.user = :user";
         TypedQuery<Course> q = em.createQuery(qString, Course.class);
-        q.setParameter("userId", userId);
+        q.setParameter("user", user);
         List<Course> courses = null;
         try{
             courses = q.getResultList();
@@ -52,16 +74,16 @@ public class CourseDB {
         EntityTransaction tran = entityManager.getTransaction();
         tran.begin();
 
-//        try {
+        try {
             entityManager.persist(course);
             tran.commit();
-//        } catch (Exception e) {
-//            System.out.println(e);
-//            tran.rollback();
-//            result = false;
-//        } finally {
-//            entityManager.close();
-//        }
+        } catch (Exception e) {
+            System.out.println(e);
+            tran.rollback();
+            result = false;
+        } finally {
+            entityManager.close();
+        }
         return result;
     }
 
@@ -145,17 +167,17 @@ public class CourseDB {
         return u!=null;
     }
     
-     public static List<Exercise> getAllPartOfChap( int courseid, int chapid, int partid)
+     public static List<Excercise> getAllPartOfChap( int courseid, int chapid, int partid)
     {
         EntityManager entityManager = DBUtil.getEmFactory().createEntityManager();
         String queryS = "Select e from Exercise e where e.CourseId = :courseid and e.ChapId = :chapid and e.PartId = :partid ";
         
-        TypedQuery<Exercise> q = entityManager.createQuery(queryS, Exercise.class);
+        TypedQuery<Excercise> q = entityManager.createQuery(queryS, Excercise.class);
         q.setParameter("courseid", courseid);
         q.setParameter("chapid", chapid);
         q.setParameter("partid", partid);
         
-        List<Exercise> exerciseList ;
+        List<Excercise> exerciseList ;
         
         try
         {

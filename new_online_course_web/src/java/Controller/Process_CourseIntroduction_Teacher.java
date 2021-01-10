@@ -15,7 +15,13 @@ import javax.servlet.http.HttpServletResponse;
 import Model.*;
 import java.util.ArrayList;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpSession;
 
@@ -35,68 +41,80 @@ public class Process_CourseIntroduction_Teacher extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, ParseException {
 
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
 
-         HttpSession session = request.getSession();
-        User user = (User)session.getAttribute("User");
+  HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("User");
 
-        String url = "/Views/Pages/Course/CourseIntroduction_Teacher.jsp";
+        String sDate1 = "31/12/1998";
+//        Date now=new SimpleDateFormat("dd/MM/yyyy").parse(sDate1);
 
-        if (user == null) {
-            url = "/Views/Pages/Home/home.jsp";
-        } else {
-            String objective = (String) request.getParameter("objective");
-            String courseName = (String) request.getParameter("courseName");
-            String courseId = (String) request.getParameter("courseId");
+        Timestamp now = new Timestamp(Calendar.getInstance().getTimeInMillis());
 
-            Timestamp now = new Timestamp(Calendar.getInstance().getTimeInMillis());
-            String message = "";
+//        user= new User(1,"a", now,
+        String url = "/Views/Pages/Course/CourseIntroduction_Teacher.jsp";      
 
-            int courseid;
-            //if courseid does not exist in the database
-            if (courseId == null || "".equals(courseId)) {
-                int max = CourseDB.getMaxCourseID();
-                session.setAttribute("info", max);
-                courseid = max + 1;
-                Course course = new Course(max+1, courseName, objective, user.getUserId(),now, false,""  );
-                
-                if (CourseDB.insertCourse(course)) {
+         if (user == null ) {
+            url = "/sign-in";
+        }
+        else if(user.getRole().getRoleId()!=2)
+        {
+             url = "/Views/Pages/Home/home.jsp";
+        }else {
+        String objective = (String) request.getParameter("objective");
+        String courseName = (String) request.getParameter("courseName");
+        String courseId = (String) request.getParameter("courseId");
 
-                    request.setAttribute("course", course);
-                } else {
-                    message = "Tạo khóa học mới thất bại";
-                }
+        String message = "";
+
+        int courseid;
+        Course course=null;
+        //if courseid does not exist in the database
+        if (courseId == null || "".equals(courseId)) {
+            int max = CourseDB.getMaxCourseID();
+            session.setAttribute("info", max);
+            courseid = max + 1;
+            course = new Course(max + 1, courseName, objective, user, now, false, "");
+
+            if (CourseDB.insertCourse(course)) {
+
+                request.setAttribute("course", course);
             } else {
-                courseid = Integer.parseInt(courseId);
-                Course course = new Course(courseid, courseName, objective, user.getUserId(),now, false,""  );
-                try {
-                    if (CourseDB.courseExists(courseid)) {
-                        request.setAttribute("course", course);
-                        if (!CourseDB.updateCourse(course)) {
-                            message = "Lưu thất bại";
-                        }
-                    } else {
-                        message = "Không tìm thấy khóa học";
-                    }
-                } catch (Exception ex) {
-                    message = "Lưu thất bại";
-                }
+                message = "Tạo khóa học mới thất bại";
             }
+        } else {
+            courseid = Integer.parseInt(courseId);
+            course = new Course(courseid, courseName, objective, user, now, false, "");
+            try {
+                if (CourseDB.courseExists(courseid)) {
+                    request.setAttribute("course", course);
+                    if (!CourseDB.updateCourse(course)) {
+                        message = "Lưu thất bại";
+                    }
+                } else {
+                    message = "Không tìm thấy khóa học";
+                }
+            } catch (Exception ex) {
+                message = "Lưu thất bại";
+            }
+        }
 
-            int maxChap = 0;
+        int maxChap = 0;
             //Process the chaps
             for (int i = 1; i <= 10; i++) {
                 String chapName = (String) request.getParameter("chap" + i);
                 if (chapName != null && !chapName.equals("")) {
-                    Chap chap = new Chap(courseid, i, chapName);
-                    if (ChapDB.chapExists(courseid, i)) {
+                    Chap chap = ChapDB.getChapOfCourseByOrder(course, i);
+                    if (chap!=null) {  
+                        chap.setName(chapName);
                         if (!ChapDB.updateChap(chap)) {
                             message = "Lưu thất bại";
                         }
                     } else {
+                        chap = new Chap(course,i, chapName);
                         if (!ChapDB.insertChap(chap)) {
                             message = "Lưu thất bại";
                         }
@@ -105,34 +123,39 @@ public class Process_CourseIntroduction_Teacher extends HttpServlet {
                     maxChap = i;
                 }
             }
-
-            //Xử lí part
+            
+//            //Xử lí part
             for (int chapid = 1; chapid <= 10; chapid++) {
+                Chap chap = ChapDB.getChapOfCourseByOrder(course, chapid);
+                //chưa xử lí nếu part rỗng
+                
                 for (int partid = 1; partid <= 10; partid++) {
                     String partName = (String) request.getParameter("chap" + chapid + "_part" + partid);
                     if (partName != null && !partName.equals("")) {
-                        Part part = new Part(courseid, chapid, partid, partName);
+                        Part part = PartDB.getPartByCourseAndChap(course, chap, partid);
                         //the part exist in the database
-                        if (PartDB.partExists(courseid, chapid, partid)) {
+                        if (part!=null) {
+                            part.setName(partName);
                             if (!PartDB.updatePart(part)) {
                                 message = "Lưu thất bại";
                             }
                         } else {
+                            part = new Part(chap, course, partid, partName, "", "" );
                             if (PartDB.insertPart(part) == false) {
                                 message = "Lưu thất bại";
                             }
                         }
                         request.setAttribute("chap" + chapid + "_part" + partid, part);
                     } else {
-                        try {
-                            PartDB.deletePart(courseid, chapid, partid);
+                        try {                                      
+                            PartDB.deletePart(course, chap, partid);                  
                         } catch (Exception ex) {
                             message = "Lưu thất bại";
                         }
                     }
                 }
             }
-
+//
             ///Xử lí FAQ
             for (int faqId = 1; faqId <= 10; faqId++) {
                 String question = request.getParameter("question" + faqId);
@@ -145,34 +168,37 @@ public class Process_CourseIntroduction_Teacher extends HttpServlet {
                 }
                 //There is at least one of the question or the answer
                 if (!question.equals("") || !answer.equals("")) {
-                    FAQ faq = new FAQ(courseid, faqId, question, answer);
+                    FAQ faq = FAQDB.getFAQByCourseAndOrder(course, faqId);
 
                     //update if the faq exists in db
-                    if (FAQDB.FAQExists(courseid, faqId)) {
+                    if (faq!=null) {
+                        faq.setQuestion(question);
+                        faq.setAnswer(answer);
                         if (!FAQDB.updateFAQ(faq)) {
                             message = "Lưu thất bại";
                         }
                     } else//add new faq
                     {
+                        faq=new  FAQ(faqId, course, question, answer);
                         if (!FAQDB.insertFAQ(faq)) {
                             message = "Lưu thất bại";
                         }
                     }
                     request.setAttribute("FAQ" + faqId, faq);
-                } else//delete the chap if it exists in db
+                } else//delete the faq if it exists in db
                 {
-                    if (!FAQDB.deleteFAQ(courseid, faqId)) {
+                    if (!FAQDB.deleteFAQByCourse(course, faqId)) {
                         message = "Lưu thất bại";
                     }
                 }
             }
 
-            if (message.equals("")) {
-                message = "Lưu thành công";
-            }
+        if (message.equals("")) {
+            message = "Lưu thành công";
+        }
 
-            request.setAttribute("maxChap", maxChap);
-            request.setAttribute("message", message);
+        request.setAttribute("maxChap", maxChap);
+        request.setAttribute("message", message);
         }
         getServletContext().getRequestDispatcher(url).forward(request, response);
 
@@ -190,7 +216,11 @@ public class Process_CourseIntroduction_Teacher extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ParseException ex) {
+            Logger.getLogger(Process_CourseIntroduction_Teacher.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -204,7 +234,11 @@ public class Process_CourseIntroduction_Teacher extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ParseException ex) {
+            Logger.getLogger(Process_CourseIntroduction_Teacher.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

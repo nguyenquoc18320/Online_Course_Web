@@ -40,7 +40,7 @@ public class TeacherProfileController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("utf-8");
         
-        String url = "/Views/Pages/User/teacherProfile.jsp";
+        String url = "/Views/Pages/User/teacher.jsp";
         
         HttpSession session = request.getSession();
         //User user = (User)session.getAttribute("User");

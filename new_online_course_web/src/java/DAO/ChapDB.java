@@ -16,6 +16,8 @@ import javax.persistence.TypedQuery;
  * @author A556U
  */
 public class ChapDB {
+    
+   
     public static boolean insertChap(Chap chap)
     {
       
@@ -90,7 +92,7 @@ public class ChapDB {
     public static int getMaxChapOfTheCourse(int courseid)
     {
         EntityManager entityManager = DBUtil.getEmFactory().createEntityManager();
-        String queryS = "Select Max(ChapId) from Chap where courseid = "+ courseid;
+        String queryS = "Select Max(ChapOrder) from Chap where courseid = "+ courseid;
         
         try {
             int max = Integer.parseInt(entityManager.createNativeQuery(queryS).getSingleResult().toString());
@@ -103,21 +105,21 @@ public class ChapDB {
     }
     
     //check whether the chap exists
-    public static boolean chapExists (int courseid, int chapid)
+    public static boolean chapExists (Course course, int chaporder)
     {
-        Chap chap = getChapByPrimaryKey(courseid, chapid);
+        Chap chap = getChapOfCourseByOrder(course, chaporder);
         return chap!=null;              
     }
     
     //get Chap defined by primay key
-    public static Chap getChapByPrimaryKey(int courseid, int chapid)
+    public static Chap getChapOfCourseByOrder(Course course, int chaporder)
     {
         EntityManager entityManager = DBUtil.getEmFactory().createEntityManager();
-        String queryS = "Select c from Chap c where c.CourseId = :courseid and c.ChapId = :chapid";
+        String queryS = "Select c from Chap c where c.course = :course and c.ChapOrder = :chaporder";
         
         TypedQuery<Chap> query = entityManager.createQuery(queryS, Chap.class);
-        query.setParameter("courseid", courseid);
-        query.setParameter("chapid", chapid);
+        query.setParameter("course", course);
+        query.setParameter("chaporder", chaporder);
         
         Chap chap;
         try
@@ -137,14 +139,39 @@ public class ChapDB {
     
     
     //The function to get all chap by courseid
-    public static List<Chap> getAllChapByCourseId(int courseId)
+    public static List<Chap> getAllChapByCourse(Course course)
     {
         EntityManager entityManager = DBUtil.getEmFactory().createEntityManager();
-        String queryS = "Select c from Chap c where c.CourseId = :courseId";
+        String queryS = "Select c from Chap c where c.course = :course";
         
         TypedQuery<Chap> q = entityManager.createQuery(queryS, Chap.class);
-        q.setParameter("courseId", courseId);
+        q.setParameter("course", course);
 
+        
+        List<Chap> chaps;
+       try
+       {
+           chaps = q.getResultList();
+           if(chaps==null || chaps.isEmpty())
+               chaps=null;
+       }
+       finally
+               {
+                   entityManager.close();
+               }
+       return chaps;
+               
+    }
+    
+    public static List<Chap> getAllChapByCourseId(int courseid)
+    {
+        Course course = CourseDB.GetCourseByCourseId(courseid);
+        
+        EntityManager entityManager = DBUtil.getEmFactory().createEntityManager();
+        String queryS = "Select c from Chap c where c.course = :course";
+        
+        TypedQuery<Chap> q = entityManager.createQuery(queryS, Chap.class);
+        q.setParameter("course", course);
         
         List<Chap> chaps;
        try

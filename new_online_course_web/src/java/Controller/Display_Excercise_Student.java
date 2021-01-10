@@ -5,9 +5,13 @@
  */
 package Controller;
 
-import DAO.ExerciseDB;
+import DAO.ChapDB;
+import DAO.CourseDB;
+import DAO.ExcerciseDB;
 import DAO.PartDB;
-import Model.Exercise;
+import Model.Chap;
+import Model.Course;
+import Model.Excercise;
 import Model.Part;
 import Model.User;
 import java.io.IOException;
@@ -18,12 +22,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author A556U
  */
-public class Display_Exercise_Student extends HttpServlet {
+public class Display_Excercise_Student extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,16 +42,13 @@ public class Display_Exercise_Student extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Part part = null;
-//        int courseid = 1;
-//        int chapid = 1;
-//        int partid = 1;
-        String url = "/Views/Pages/Course/exercise_student.jsp";
+    
+        String url = "/Views/Pages/Course/excercise_student.jsp";
+          
         try {
             int courseid = Integer.parseInt(request.getParameter("courseid"));
-            int chapid = Integer.parseInt(request.getParameter("chapid"));
-            int partid = Integer.parseInt( request.getParameter("partid"));
-
-           
+            int chapOrder = Integer.parseInt(request.getParameter("chapid"));
+            int partOrder = Integer.parseInt(request.getParameter("partid"));
 
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("User");
@@ -55,44 +57,37 @@ public class Display_Exercise_Student extends HttpServlet {
 
             if (user == null) {
                 url = "/sign-in";
+            } else if (user.getRole().getRoleId() != 3) {
+                url = "/Views/Pages/Home/home.jsp";
             } else {
-                //không phải là tạo kh
-//                try {
-//                    courseid = Integer.parseInt(request.getParameter("courseid"));
-//                    chapid = Integer.parseInt(request.getParameter("chapid"));
-//                    partid = Integer.parseInt(request.getParameter("partid"));
-//                } catch (Exception ex) {
-//
-//                }
+                Course course = CourseDB.GetCourseByCourseId(courseid);
+                Chap chap = ChapDB.getChapOfCourseByOrder(course, chapOrder);
+                part = PartDB.getPartByCourseAndChap(course, chap, partOrder);
 
-                part = PartDB.getPartByPrimaryKey(courseid, chapid, partid);
-
-                int maxExercise = 0;
+                int maxExcercise = 0;
 
                 if (part == null) {
-                    request.setAttribute("message", "Không tìm thấy phần bài học để thêm bài tập!");
+                    request.setAttribute("message", "Không tìm thấy phần bài tập của bài học!");
                     url = "/" + (String) request.getParameter("previousPage");
                 } else {
 
                     session.setAttribute("part", part);
 
-                    List<Exercise> exerciseList = ExerciseDB.getAllExercisePartOfPart(courseid, chapid, partid);
-                    if (exerciseList != null) {
-                        for (Exercise e : exerciseList) {
-                            request.setAttribute("Exercise" + e.getExerciseId(), e);
-                            maxExercise = e.getExerciseId();
+                    List<Excercise> excerciseList = ExcerciseDB.getAllExcercisePartOfPart(course, chap, part);
+                    if (excerciseList != null) {
+                        for (Excercise e : excerciseList) {
+                            request.setAttribute("Excercise" + e.getExcerciseOrder(), e);
+                            maxExcercise = e.getExcerciseOrder();
                         }
                     }
                 }
 
-                request.setAttribute("maxExercise", maxExercise);
+                request.setAttribute("maxExcercise", maxExcercise);
             }
-        }
-        catch(Exception ex)
-        {
+        } catch (Exception ex) {
             //url nhớ trả về trang sinh viên
-             url = "/Views/Pages/Home/home.jsp";
-             request.setAttribute("message", "Không thấy phần bìa tập");
+            url = "/Views/Pages/Home/home.jsp";
+            request.setAttribute("message", "Không thấy phần bài tập");
         }
         getServletContext().getRequestDispatcher(url).forward(request, response);
 

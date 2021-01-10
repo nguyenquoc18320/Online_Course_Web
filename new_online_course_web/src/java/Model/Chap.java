@@ -1,52 +1,83 @@
+package Model;
+
+
+import java.io.Serializable;
+import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Model;
-
-import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.ManyToOne;
 
 /**
  *
  * @author A556U
  */
-@Entity
-public class Chap implements Serializable  {
 
-    @Id
-    private int CourseId;
-    @Id
+@Entity 
+
+public class Chap {
+    @ManyToOne
+    private Course course;
+    
+    @Id 
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int ChapId ;
+    private int ChapOrder;
     private String Name;
+//    @OneToMany(targetEntity = Part.class)
+//    private List<Part> parts; 
 
      public Chap() {
     }
 
-    public Chap(int CourseId, int ChapId, String Name) {
-        this.CourseId = CourseId;
+    public Chap(Course course, int ChapId, int ChapOrder, String Name) {
+        this.course = course;
         this.ChapId = ChapId;
+        this.ChapOrder = ChapOrder;
         this.Name = Name;
     }
-       
 
-    public int getCourseId() {
-        return CourseId;
+    public Chap(Course course, int ChapOrder, String Name) {
+        this.course = course;
+        this.ChapOrder = ChapOrder;
+        this.Name = Name;
+    }
+    
+    
+
+    public int getChapOrder() {
+        return ChapOrder;
     }
 
-    public void setCourseId(int CourseId) {
-        this.CourseId = CourseId;
+    public void setChapOrder(int ChapOrder) {
+        this.ChapOrder = ChapOrder;
     }
 
-    public int getChapid() {
+    
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
+
+    public int getChapId() {
         return ChapId;
     }
 
-    public void setChapid(int ChapId) {
+    public void setChapId(int ChapId) {
         this.ChapId = ChapId;
     }
 

@@ -57,23 +57,40 @@ public class PartDB {
         return result;
     }
 
-    public static boolean partExists(int courseid, int chapid, int partid) {
-        Part p = getPartByPrimaryKey(courseid, chapid, partid);
+    public static boolean partExists(Course course, Chap chap, int partid) {
+        Part p = getPartByCourseAndChap(course, chap, partid);
         return p != null;
     }
 
-    public static boolean deletePart(int courseid, int chapid, int partid) {
+    public static boolean deletePart(Part part)
+    {
         boolean result = true;
         EntityManager entityManager = DBUtil.getEmFactory().createEntityManager();
         EntityTransaction tran = entityManager.getTransaction();
         tran.begin();
         try {
-            Query query = entityManager.createNativeQuery("DELETE FROM part where CourseId=" + courseid + " and ChapId= " + chapid
-                    + " and PartId =" + partid + ";");
-            query.executeUpdate();
-            tran.commit();
-        } catch (Exception ex) {
-            tran.rollback();
+          entityManager.remove(entityManager.merge(part));
+          tran.commit();
+        } catch (Exception ex) {        
+            result = false;
+        } finally {
+            entityManager.close();
+        }
+        return result;
+    }
+    
+    public static boolean deletePart(Course course, Chap chap, int partOrder) {
+        boolean result = true;
+        EntityManager entityManager = DBUtil.getEmFactory().createEntityManager();
+       
+        try {
+            Part part = getPartByCourseAndChap(course, chap, partOrder);
+            if(part!=null)
+            {
+                result = deletePart(part);
+            }
+      
+        } catch (Exception ex) {           
             result = false;
         } finally {
             entityManager.close();
@@ -82,14 +99,14 @@ public class PartDB {
     }
 
     //get Chap defined by primay key
-    public static Part getPartByPrimaryKey(int courseid, int chapid, int partid) {
+    public static Part getPartByCourseAndChap(Course course, Chap chap, int partorder) {
         EntityManager entityManager = DBUtil.getEmFactory().createEntityManager();
-        String queryS = "Select p from Part p where p.CourseId = :courseid and p.ChapId = :chapid and p.PartId = :partid";
+        String queryS = "Select p from Part p where p.course = :course and p.chap = :chap and p.PartOrder = :partorder";
 
         TypedQuery<Part> query = entityManager.createQuery(queryS, Part.class);
-        query.setParameter("courseid", courseid);
-        query.setParameter("chapid", chapid);
-        query.setParameter("partid", partid);
+        query.setParameter("course", course);
+        query.setParameter("chap", chap);
+        query.setParameter("partorder", partorder);
 
         Part part;
         try {
@@ -103,14 +120,40 @@ public class PartDB {
     }
 
     //get all part of a chap 
-    public static List<Part> getAllPartOfChap( int courseid, int chapid)
+    public static List<Part> getAllPartOfChap( Course course, Chap chap)
     {
         EntityManager entityManager = DBUtil.getEmFactory().createEntityManager();
-        String queryS = "Select p from Part p where p.CourseId = :courseid and p.ChapId = :chapid";
+        String queryS = "Select p from Part p where p.course = :course and p.chap = :chap";
         
         TypedQuery<Part> q = entityManager.createQuery(queryS, Part.class);
-        q.setParameter("courseid", courseid);
-        q.setParameter("chapid", chapid);
+        q.setParameter("course", course);
+        q.setParameter("chap", chap);
+        
+        List<Part> partList ;
+        
+        try
+        {
+            partList = q.getResultList();
+            if( partList==null || partList.isEmpty())
+                partList=null;
+        }
+        finally
+        {
+            entityManager.close();
+        }
+        return partList;
+    }
+    
+     public static List<Part> getAllPartOfChap( int courseid, int chapOrder)
+    {
+        Course course = CourseDB.GetCourseByCourseId(courseid);
+        Chap chap = ChapDB.getChapOfCourseByOrder(course, chapOrder);
+        EntityManager entityManager = DBUtil.getEmFactory().createEntityManager();
+        String queryS = "Select p from Part p where p.course = :course and p.chap = :chap";
+        
+        TypedQuery<Part> q = entityManager.createQuery(queryS, Part.class);
+        q.setParameter("course", course);
+        q.setParameter("chap", chap);
         
         List<Part> partList ;
         

@@ -41,9 +41,14 @@ public class Display_Course_Introduction_Teacher extends HttpServlet {
 
         String requirement = request.getParameter("requirement");
 
-        if (user == null) {
+        if (user == null ) {
             url = "/sign-in";
-        } else {
+        }
+        else if(user.getRole().getRoleId()!=2)
+        {
+             url = "/Views/Pages/Home/home.jsp";
+        }
+        else {
             if (requirement == null) {
                 Course course = (Course) request.getAttribute("course");
  
@@ -55,6 +60,7 @@ public class Display_Course_Introduction_Teacher extends HttpServlet {
                 if(course==null)
                 {
                     String courseid = request.getParameter("courseid");
+
                     if(courseid !=null && !courseid.equals(""))
                     {
                          course = CourseDB.getCourseById(Integer.parseInt(courseid));
@@ -75,14 +81,14 @@ public class Display_Course_Introduction_Teacher extends HttpServlet {
                     List<Chap> chapList = ChapDB.getAllChapByCourseId(courseid);
                     if (chapList != null) {
                         for (Chap c : chapList) {
-                            int chapid = c.getChapid();
-                            request.setAttribute("chap" + chapid, c);
-                            maxChap = c.getChapid();
+                            int chapOrder = c.getChapOrder();
+                            request.setAttribute("chap" + chapOrder, c);
+                            maxChap = c.getChapOrder();
 
-                            List<Part> partList = PartDB.getAllPartOfChap(courseid, chapid);
+                            List<Part> partList = PartDB.getAllPartOfChap( courseid, chapOrder);
                             if (partList != null) {
                                 for (Part p : partList) {
-                                    request.setAttribute("chap" + chapid + "_part" + p.getPartId(), p);
+                                    request.setAttribute("chap" + chapOrder + "_part" + p.getPartOrder(), p);
                                 }
                             }
                         }

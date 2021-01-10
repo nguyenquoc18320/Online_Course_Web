@@ -206,7 +206,7 @@ padding-bottom: 20px;
           color: white;
 }
 
-.link_goto_Exercise
+.link_goto_Excercise
 {
     margin-top: 5px;
     margin-left: 5px;
@@ -323,23 +323,27 @@ padding-bottom: 20px;
     margin-right: 5%;
 }
 
-.textarea_question
+.button_question
 {
    width: 100%;
    resize: vertical;
    font-size: 17px;
    font-family: Time New Roman;
+   text-align: left;
+   margin-bottom: 10px;
 /*   background-color: blue;
    color:red;*/
 }
 
-.textarea_answer
+.button_answer
 {
    width: 90%;
    resize: vertical;
    font-size: 17px;
    font-family: Time New Roman;
    margin-left: 10%;
+   text-align: left;
+    margin-bottom: 30px;
 }
 
 

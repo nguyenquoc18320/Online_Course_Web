@@ -5,48 +5,48 @@
         <servlet-class>Controller.Display_Course_Introduction_Teacher</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>Display_Exercise_Teacher</servlet-name>
-        <servlet-class>Controller.Display_Exercise_Teacher</servlet-class>
+        <servlet-name>Display_Excercise_Teacher</servlet-name>
+        <servlet-class>Controller.Display_Excercise_Teacher</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>Process_CourseIntroduction_Teacher</servlet-name>
         <servlet-class>Controller.Process_CourseIntroduction_Teacher</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>Process_Exercise_Teacher</servlet-name>
-        <servlet-class>Controller.Process_Exercise_Teacher</servlet-class>
+        <servlet-name>Process_Excercise_Teacher</servlet-name>
+        <servlet-class>Controller.Process_Excercise_Teacher</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>Display_Exercise_Student</servlet-name>
-        <servlet-class>Controller.Display_Exercise_Student</servlet-class>
+        <servlet-name>Display_Excercise_Student</servlet-name>
+        <servlet-class>Controller.Display_Excercise_Student</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>Process_Exercise_Student</servlet-name>
-        <servlet-class>Controller.Process_Exercise_Student</servlet-class>
+        <servlet-name>Process_Excercise_Student</servlet-name>
+        <servlet-class>Controller.Process_Excercise_Student</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Display_Course_Introduction_Teacher</servlet-name>
         <url-pattern>/Display_Course_Introduction_Teacher</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>Display_Exercise_Teacher</servlet-name>
-        <url-pattern>/Display_Exercise_Teacher</url-pattern>
+        <servlet-name>Display_Excercise_Teacher</servlet-name>
+        <url-pattern>/Display_Excercise_Teacher</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Process_CourseIntroduction_Teacher</servlet-name>
         <url-pattern>/Process_CourseIntroduction_Teacher</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>Process_Exercise_Teacher</servlet-name>
-        <url-pattern>/Process_Exercise_Teacher</url-pattern>
+        <servlet-name>Process_Excercise_Teacher</servlet-name>
+        <url-pattern>/Process_Excercise_Teacher</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>Display_Exercise_Student</servlet-name>
-        <url-pattern>/Display_Exercise_Student</url-pattern>
+        <servlet-name>Display_Excercise_Student</servlet-name>
+        <url-pattern>/Display_Excercise_Student</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>Process_Exercise_Student</servlet-name>
-        <url-pattern>/Process_Exercise_Student</url-pattern>
+        <servlet-name>Process_Excercise_Student</servlet-name>
+        <url-pattern>/Process_Excercise_Student</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

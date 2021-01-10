@@ -1,12 +1,18 @@
+package Model;
+
+
+import Model.Course;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Model;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
 
 /**
  *
@@ -14,37 +20,59 @@ import javax.persistence.Id;
  */
 @Entity
 public class FAQ {
-    @Id 
-    private int CourseId;
-    
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int FAQId;
+    
+    private int FAQOrder;
+    @ManyToOne
+    private Course course;
+    
     private String Question;
     private String Answer;
-    
-    public FAQ(){}
 
-    public FAQ(int CourseId, int FAQId, String Question, String Answer) {
-        this.CourseId = CourseId;
+    public FAQ(){
+        
+    }
+
+    public FAQ(int FAQId, int FAQOrder, Course course, String Question, String Answer) {
         this.FAQId = FAQId;
+        this.FAQOrder = FAQOrder;
+        this.course = course;
         this.Question = Question;
         this.Answer = Answer;
     }
 
-    public int getCourseId() {
-        return CourseId;
+    public FAQ(int FAQOrder, Course course, String Question, String Answer) {
+        this.FAQOrder = FAQOrder;
+        this.course = course;
+        this.Question = Question;
+        this.Answer = Answer;
     }
-
-    public void setCourseId(int CourseId) {
-        this.CourseId = CourseId;
-    }
-
+    
+    
     public int getFAQId() {
         return FAQId;
     }
 
     public void setFAQId(int FAQId) {
         this.FAQId = FAQId;
+    }
+
+    public int getFAQOrder() {
+        return FAQOrder;
+    }
+
+    public void setFAQOrder(int FAQOrder) {
+        this.FAQOrder = FAQOrder;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     public String getQuestion() {
@@ -62,8 +90,7 @@ public class FAQ {
     public void setAnswer(String Answer) {
         this.Answer = Answer;
     }
-      
     
-            
+    
+    
 }
-

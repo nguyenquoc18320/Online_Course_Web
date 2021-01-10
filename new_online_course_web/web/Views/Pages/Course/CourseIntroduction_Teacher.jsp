@@ -16,7 +16,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Giới thiệu khóa học</title>
         <link rel="stylesheet" href="Views/Css/Course/CourseIntroduction_Teacher_css.css">
-        <link rel="stylesheet" href="Views/Css/common.css">
+        <link rel="stylesheet" href="Views/Css/common.scss">
         <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     </head>
 
@@ -30,7 +30,7 @@
                     <img id='image_logo' src ="logo.png" >
                 </div>
                 <div id='div_account'>
-                    <label id='label_account'>${User.getName()}  <i class='fas fa-caret-down'></i></label>               
+                    <label id='label_account'><c:out value="${User.getName()}"/>  <i class='fas fa-caret-down'></i></label>               
                 </div>
             </div>
             <div class="div_container">
@@ -58,7 +58,7 @@
                     <input class="btn_add_chap" id='btn_add_chap' type='button' value='Add Chap' onclick ='addChap()' >
                     <input class="btn_standardize_chap" id='btn_standardize_chap' type='button' value='Chuẩn hóa' onclick='Standardize()' >
 
-<!--                    <form action ="exercise_teacher.jsp"
+<!--                    <form action ="excercise_teacher.jsp"
                         method="post">
                         <input type ="submit" value="thu">
                     </form>-->
@@ -134,7 +134,7 @@
                                 lastPart = document.getElementById("textbox_chap" + chap);
                             } else
                             {
-                                lastPart = document.getElementById("link_goto_exercise_chap" + chap + "_part"+numberOfPart);
+                                lastPart = document.getElementById("link_goto_excercise_chap" + chap + "_part"+numberOfPart);
                             }
 
                             lastPart.insertAdjacentHTML("afterend", "<input type = 'text' class ='textbox_part' id ='textbox_chap" + chap + "_part" + (numberOfPart + 1) + "'\n\
@@ -142,15 +142,15 @@
                             lastPart =document.getElementById("textbox_chap" + chap + "_part" + (numberOfPart+1));
                             
                             //Tới trang bài học
-                            lastPart.insertAdjacentHTML("afterend", "<a   id = 'link_goto_part_chap"+chap+"_part"+(numberOfPart+1)
-                                    +"' href='Display_Exercise_Teacher'><input class='link_goto_Part'  type ='button' value='Bài học' button' ></a>");
+                            lastPart.insertAdjacentHTML("afterend", "<a  class='link_part' id = 'link_goto_part_chap"+chap+"_part"+(numberOfPart+1)
+                                    +"' href='#'><input class='link_goto_Part'  type ='button' value='Bài học' button' ></a>");
                             
                             
                             lastPart =document.getElementById("link_goto_part_chap" + chap + "_part" + (numberOfPart+1));
                             
                             //Thêm nút bài tập
-                            lastPart.insertAdjacentHTML("afterend", "<a  id = 'link_goto_exercise_chap"+chap+"_part"+(numberOfPart+1)
-                                    +"' href='Display_Exercise_Teacher?previousPage=Display_Course_Introduction_Teacher'><input  class='link_goto_Exercise'  type ='button' value='Bài tập' ></a>");
+                            lastPart.insertAdjacentHTML("afterend", "<a class='link_excercise'  id = 'link_goto_excercise_chap"+chap+"_part"+(numberOfPart+1)
+                                    +"' href='Display_Excercise_Teacher?previousPage=Display_Course_Introduction_Teacher'><input  class='link_goto_Excercise'  type ='button' value='Bài tập' ></a>");
                             numberOfParts[chap] += 1;
                             //console.log(numberOfParts);
                         }
@@ -223,13 +223,15 @@
                                         String s = "chap" + chapid + "_part" + partid;
                                         Part part = (Part) request.getAttribute("chap" + chapid + "_part" + partid);
                                         if (part != null) {%>
-                                        addPart(<%=part.getChapId()%>);
+                                            addPart("<c:out  value="<%= part.getChap().getChapOrder()%>"></c:out>");
                                             var input = document.getElementById('<%="textbox_chap"+chapid+"_part"+partid%>');
                                             input.setAttribute("value","<c:out value='<%=part.getName()%>'/>");
                                             
                                             //chang link of link_goto
-                                            var link = document.getElementById('<%="link_goto_exercise_chap"+chapid+"_part"+partid%>');
-                                            link.setAttribute("href", '<%="Display_Exercise_Teacher?courseid="+part.getCourseId()+"&chapid="+part.getChapId()+"&partid="+part.getPartId()%>');
+                                            var link = document.getElementById("link_goto_excercise_chap"+ "<c:out  value='<%= part.getChap().getChapOrder()%>'/>" +"_part"+ "<c:out  value='<%= part.getPartOrder()%>'/>");
+                                            link.setAttribute("href", "Display_Excercise_Teacher?courseid="+"<c:out  value='<%= part.getCourse().getCourseId()%>'/>"+
+                                                    "&chapid="+"<c:out  value='<%= part.getChap().getChapOrder()%>'/>"
+                                                    +"&partid="+"<c:out  value='<%= part.getPartOrder()%>'/>");
                                             
                                             
                                         <% }

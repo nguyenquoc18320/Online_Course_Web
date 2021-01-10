@@ -75,7 +75,7 @@ and open the template in the editor.
 }
 
 /*trình bày các nội dung*/
-#div_all_exercises
+#div_all_excercises
 {
     width: 100%;
    height: auto;
@@ -100,14 +100,13 @@ and open the template in the editor.
     color: red;
 }
 
-.button_question
+.textarea_question
 {
     width: 100%;
     resize: vertical;
     font-size: 17px;
     font-family: Time New Roman;  
     background-color: #A9E2F3;
-    text-align: left;
     color: black;
 }
 
@@ -122,45 +121,46 @@ and open the template in the editor.
     background-color: #E1F5A9;
     color: black;}
 
-.radio_answer
+.input_answer
 {
+    width: 90%;
     font-family: Time New Roman;
     font-size: 17px;
-    margin-top: 10px;
+    margin-bottom: 10px;
     margin-left: 10%;
     color: black;
 }
 
-.p_correctAnswer
-{
-     font-family: Time New Roman;
-    font-size: 17px;
-    margin-top: 10px;
-    margin-left: 10%;
-    color: black;
-    font-weight: bold;
-}
-
-.p_explaination
-{
-    font-family: Time New Roman;
-    font-size: 17px;
-    margin-top: 10px;
-    margin-left: 10%;
-    color: #A901DB;
-}
-
-.div_exercise
+.div_excercise
 {
     width: 100%;
     /*background-color: red;*/
     height: auto;
-    margin-top: 20px;  
+    margin-top: 20px;
+    
 }
 
+#button_add_excercise
+{
+    font-size: 17px;
+    margin-top: 20px;
+    margin-left: 20px;
+    background-color:#08088A;
+    width: 100px;
+    height: 30px;
+    border-radius: 5px;
+    color:white;
+}
 
+.label_correctAnswer
+{
+    margin-left: 10%;
+    margin-top: 30px;
+    color: blue;
+    font-weight: bold;
+}
 
-#div_button
+.div_save
 {
     width:100%;
     height: 50px;
@@ -169,7 +169,7 @@ and open the template in the editor.
      justify-content: center;
 }
 
-#button_completed
+#button_save
 {
     background-color: #04B404;
     color:white;
@@ -190,21 +190,8 @@ and open the template in the editor.
     width: 120px;
     height: 50px;
     border-radius: 10px;
-    margin:5px 5px 5px 5px;
+      margin:5px 5px 5px 5px;
     
-}
-
-/*nút làm lại*/
-#button_do_again
-{
-    background-color: #D7DF01;
-    color:white;
-    font-size: 18px;
-    font-weight: bold;
-    width: 120px;
-    height: 50px;
-    border-radius: 10px;
-    margin:5px 5px 5px 5px;
 }
 
 /*Footer*/

@@ -1,9 +1,10 @@
 <%-- 
-    Document   : exercise_student
+    Document   : excercise_student
     Created on : Jan 2, 2021, 3:45:04 PM
     Author     : A556U
 --%>
-<%@page import="Model.Exercise"%>
+<%@page import="Model.Excercise"%>
+<%@page import="Model.Excercise"%>
 <%@page import="Model.Part"%>
 <%@page import="Model.Course"%>
 <%@page import="DAO.CourseDB"%>
@@ -16,8 +17,8 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Exercise</title>
-        <link rel="stylesheet" href="Views/Css/Course/exercise_student_css.css">
+        <title>Excercise</title>
+        <link rel="stylesheet" href="Views/Css/Course/excercise_student_css.css">
          <link rel="stylesheet" href="Views/Css/common.css">
         <script src="https://kit.fontawesome.com/a076d05399.js"></script>
         
@@ -32,24 +33,23 @@
                     Part part =(Part) session.getAttribute("part");
     %>
              
-                    <%Course course= CourseDB.getCourseById(part.getCourseId());%>
+                    <%Course course= part.getCourse();%>
                 <label id="label_courseName"><%=course.getName()%></label>
             </div>
             <div id='div_account'>
                 <label id='label_account'>${User.getName()}<i class='fas fa-caret-down'></i></label>               
             </div>
         </div>
-        <form action="Process_Exercise_Student" medthod ="post">
-            
+        <form action="Process_Excercise_Student" medthod ="post">            
             <%
-            Chap chap = (Chap)ChapDB.getChapByPrimaryKey(part.getCourseId(), part.getChapId());
+            Chap chap = part.getChap();
             request.setAttribute("part", part);
             %>
             <div id="container">
                 <h1 id='label_chapName'><%=chap.getName()%></h1>
                 <h1 id='label_partName'><%=part.getName()%></h1>
-                <div id='div_all_exercises'>
-                    <div class='div_exercise' id='div_exercise1'>
+                <div id='div_all_excercises'>
+                    <div class='div_excercise' id='div_excercise1'>
                         <input type='button' class ='button_question' id='button_question1' >
                         <input type='radio' class='radio_answer' id='radio_answer1_A' name='answer1' value='A' ><label for='radio_answer1_A'id='label_answer1_A'></label><br>
                         <input type='radio' class='radio_answer' id='radio_answer1_B' name='answer1' value='B'><label for='radio_answer1_B' id='label_answer1_B'></label><br>
@@ -108,44 +108,44 @@
             <%}%>
     </body>
     <script>
-        var totalExercises = 30;
-        var exerciseList = [];
-        var totalExercise=1;
-        exerciseList[1] = 1;
+        var totalExcercises = 30;
+        var excerciseList = [];
+        var totalExcercise=1;
+        excerciseList[1] = 1;
         
         console.log("${message}");
         
-        for (var i = 0; i <= totalExercises; i++)
+        for (var i = 0; i <= totalExcercises; i++)
         {
-            exerciseList.push(0);
+            excerciseList.push(0);
         }
 
-        function AddExercise()
+        function AddExcercise()
         {
             var emptyPosition = 0;
-            for (var i = 1; i <= totalExercises; i++)
+            for (var i = 1; i <= totalExcercises; i++)
             {
-                if (exerciseList[i] === 0)
+                if (excerciseList[i] === 0)
                 {
                     emptyPosition = i;
                     break;
                 }
             }
 
-            totalExercise++;
+            totalExcercise++;
             //Create textarea to enter a question
-            var newExerciseDiv = document.createElement('div');
-            newExerciseDiv.setAttribute('class', 'div_exercise');
-            newExerciseDiv.setAttribute('id', 'div_exercise' + emptyPosition);
+            var newExcerciseDiv = document.createElement('div');
+            newExcerciseDiv.setAttribute('class', 'div_excercise');
+            newExcerciseDiv.setAttribute('id', 'div_excercise' + emptyPosition);
 
-            var allExerciseDiv = document.getElementById('div_all_exercises');
-            allExerciseDiv.appendChild(newExerciseDiv);
+            var allExcerciseDiv = document.getElementById('div_all_excercises');
+            allExcerciseDiv.appendChild(newExcerciseDiv);
 
             var newQuestion = document.createElement('input');
             newQuestion.setAttribute("type", "button");
             newQuestion.setAttribute('class', 'button_question');
             newQuestion.setAttribute('id', 'button_question' + emptyPosition);
-            newExerciseDiv.appendChild(newQuestion);
+            newExcerciseDiv.appendChild(newQuestion);
 
             var name = ['A', 'B', 'C', 'D'];
             for (var i = 0; i < 4; i++)
@@ -156,125 +156,122 @@
                 newAnswer.setAttribute('id', 'radio_answer' + emptyPosition + '_' + name[i]);
                 newAnswer.setAttribute("name", 'answer' + emptyPosition);
                 newAnswer.setAttribute("value", name[i]);
-                newExerciseDiv.appendChild(newAnswer);
+                newExcerciseDiv.appendChild(newAnswer);
                 
                 //Answer 
                 var newLabel = document.createElement("label");
                 newLabel.setAttribute("id", "label_answer"+emptyPosition+"_"+name[i]);
                 newLabel.setAttribute("for",'radio_answer' + emptyPosition + '_' + name[i] );
-                newExerciseDiv.appendChild(newLabel);
+                newExcerciseDiv.appendChild(newLabel);
                 
                 var spaceLine = document.createElement("br");
-                newExerciseDiv.appendChild(spaceLine);
+                newExcerciseDiv.appendChild(spaceLine);
             }
 
             var pCorrectAnswer = document.createElement('p');
             pCorrectAnswer.setAttribute('class', 'p_correctAnswer');
             pCorrectAnswer.setAttribute('id', 'p_correctAnswer'+emptyPosition);
 //            pCorrectAnswer.innerHTML = 'Đáp án đúng: ';
-            newExerciseDiv.appendChild(pCorrectAnswer);
+            newExcerciseDiv.appendChild(pCorrectAnswer);
 
            
 
             var newExplanationTextarea = document.createElement('p');
             newExplanationTextarea.setAttribute('class', 'p_explaination');
             newExplanationTextarea.setAttribute('id', 'p_explaination' + emptyPosition);;
-            newExerciseDiv.appendChild(newExplanationTextarea);
+            newExcerciseDiv.appendChild(newExplanationTextarea);
     
-            exerciseList[emptyPosition] = 1;
+            excerciseList[emptyPosition] = 1;
         }
        
         ///Load data
-        console.log("max", "<%=request.getAttribute("maxExercise")%>");
+       
         <% try
         {
-            int maxExercise = Integer.parseInt(request.getAttribute("maxExercise").toString());
-             request.setAttribute("maxExercise", 0);
-            for(int exerciseid =1; exerciseid<=maxExercise; exerciseid++)
+            int maxExcercise = Integer.parseInt(request.getAttribute("maxExcercise").toString());
+             request.setAttribute("maxExcercise", 0);
+            for(int excerciseid =1; excerciseid<=maxExcercise; excerciseid++)
             {
                 
-                Exercise exercise = (Exercise) request.getAttribute("Exercise"+exerciseid);
-                if(exercise!=null)
+                Excercise excercise = (Excercise) request.getAttribute("Excercise"+excerciseid);
+                if(excercise!=null)
                 {
-                    String correctAnswer = exercise.getCorrectAnswer();%>
+                    String correctAnswer = excercise.getCorrectAnswer();%>
                         console.log("chạy");
-                    var button_question = document.getElementById("button_question"+<%=exerciseid%>);
+                    var button_question = document.getElementById("button_question"+<%=excerciseid%>);
                     while( button_question==null)
                     {
-                        AddExercise();
-                        button_question = document.getElementById("button_question"+<%=exerciseid%>);
+                        AddExcercise();
+                        button_question = document.getElementById("button_question"+<%=excerciseid%>);
                     }
 
-                    button_question.value="<c:out value='<%=exercise.getQuestion()%>'/>";
+                    button_question.value="<c:out value='<%=excercise.getQuestion()%>'/>";
                   
                   
 
-                    var ansLabel = document.getElementById("label_answer"+"<%=exercise.getExerciseId()%>"+"_A");
-                    if("<%=exercise.getAnswerA()%>"!=="")
+                    var ansLabel = document.getElementById("label_answer"+"<%=excercise.getExcerciseOrder()%>"+"_A");
+                    if("<%=excercise.getAnswerA()%>"!=="")
                     {
-                        ansLabel.innerHTML="A. "+ "<%=exercise.getAnswerA()%>";
+                        ansLabel.innerHTML="A. "+ "<%=excercise.getAnswerA()%>";
                     }
                     else//không có thì xóa
                     {
                         ansLabel.remove();
-                        document.getElementById("radio_answer"+"<%=exercise.getExerciseId()%>"+"_A").remove();
+                        document.getElementById("radio_answer"+"<%=excercise.getExcerciseOrder()%>"+"_A").remove();
                     }
 
-                     ansLabel = document.getElementById("label_answer"+"<%=exercise.getExerciseId()%>"+"_B");
-                     if("<%=exercise.getAnswerB()%>"!=="")
+                     ansLabel = document.getElementById("label_answer"+"<%=excercise.getExcerciseOrder()%>"+"_B");
+                     if("<%=excercise.getAnswerB()%>"!=="")
                     {
-                        ansLabel.innerHTML="B. "+"<%=exercise.getAnswerB()%>";
+                        ansLabel.innerHTML="B. "+"<%=excercise.getAnswerB()%>";
                     }
                     else//không có thì xóa
                     {
                         ansLabel.remove();
-                        document.getElementById("radio_answer"+"<%=exercise.getExerciseId()%>"+"_B").style.display="none";
+                        document.getElementById("radio_answer"+"<%=excercise.getExcerciseOrder()%>"+"_B").style.display="none";
                     }
 
 
-                    ansLabel = document.getElementById("label_answer"+"<%=exercise.getExerciseId()%>"+"_C");
-                    if("<%=exercise.getAnswerC()%>"!=="")
+                    ansLabel = document.getElementById("label_answer"+"<%=excercise.getExcerciseOrder()%>"+"_C");
+                    if("<%=excercise.getAnswerC()%>"!=="")
                     {
-                        ansLabel.innerHTML= "C. "+"<%=exercise.getAnswerC()%>";
+                        ansLabel.innerHTML= "C. "+"<%=excercise.getAnswerC()%>";
                     }
                     else
                     {
                         ansLabel.style.display="none";
-                       document.getElementById("radio_answer"+"<%=exercise.getExerciseId()%>"+"_C").style.display="none";
+                       document.getElementById("radio_answer"+"<%=excercise.getExcerciseOrder()%>"+"_C").style.display="none";
                     }
 
-                    ansLabel = document.getElementById("label_answer"+"<%=exercise.getExerciseId()%>"+"_D");
-                    if("<%=exercise.getAnswerD()%>"!=="")
+                    ansLabel = document.getElementById("label_answer"+"<%=excercise.getExcerciseOrder()%>"+"_D");
+                    if("<%=excercise.getAnswerD()%>"!=="")
                     {
-                        ansLabel.innerHTML= "D. "+"<%=exercise.getAnswerD()%>";
+                        ansLabel.innerHTML= "D. "+"<%=excercise.getAnswerD()%>";
                     }
                     else
                     {
                         ansLabel.style.display="none";
-                        document.getElementById("radio_answer"+"<%=exercise.getExerciseId()%>"+"_D").style.display="none";
+                        document.getElementById("radio_answer"+"<%=excercise.getExcerciseOrder()%>"+"_D").style.display="none";
                     }
                     
                     //Đáp án
-                        <%String result = (String)request.getAttribute("resultOfAnswer"+exercise.getExerciseId());
+                        <%String result = (String)request.getAttribute("resultOfAnswer"+excercise.getExcerciseOrder());
                         if(result!=null)
                         {%>
-                        var correctAnswerLabel = document.getElementById("p_correctAnswer"+"<%=exercise.getExerciseId()%>");
+                        var correctAnswerLabel = document.getElementById("p_correctAnswer"+"<%=excercise.getExcerciseOrder()%>");
                         correctAnswerLabel.innerHTML= "<%=result%>";
                          //Giải thích
-                        var p_enplaination = document.getElementById("p_explaination"+"<%=exercise.getExerciseId()%>");
-                         p_enplaination.innerHTML="<%=exercise.getExplaination()%>";
+                        var p_enplaination = document.getElementById("p_explaination"+"<%=excercise.getExcerciseOrder()%>");
+                         p_enplaination.innerHTML="<%=excercise.getExplaination()%>";
                          
                          //Thêm nút làm lại bài
                          if(document.getElementById("button_do_again")==null)
                          {
                          var div_button = document.getElementById("div_button");
                          var button_completed = document.getElementById("button_completed");
-//                         var link_do_again = document.createElement("a");
-//                         link_do_again.setAttribute("href", "Display_Exercise_Student?courseid="+"${part.getCourseId()}"
-//                                 +"&chapid="+"${part.getChapId()}" +"&partid="+"${part.getPartId()}");
-                         //div_button.appendChild(link_do_again);
-                         button_completed.insertAdjacentHTML("afterend", "<a id='link_do_again' href= "+ "Display_Exercise_Student?courseid="+"${part.getCourseId()}"
-                                +"&chapid="+"${part.getChapId()}" +"&partid="+"${part.getPartId()}"+">");
+//                   
+                         button_completed.insertAdjacentHTML("afterend", "<a id='link_do_again' href= "+ "Display_Excercise_Student?courseid="+"${part.getCourse().getCourseId()}"
+                                +"&chapid="+"${part.getChap().getChapOrder()}" +"&partid="+"${part.getPartOrder()}"+">");
                           
                         var link_do_again = document.getElementById("link_do_again");
                          
@@ -283,8 +280,12 @@
                          button_do_again.setAttribute("id", "button_do_again");
                          button_do_again.setAttribute("value", "Làm lại");
                          link_do_again.appendChild(button_do_again);
-                         console.log("tạo");
+                        
                         }
+                        
+                        //Ẩn nứt hoàn thành
+                        var button_completed = document.getElementById("button_completed");
+                        button_completed.style.display="none";
                          
                          //in kết quả làm
                         if("<%=result%>"==="Trả lời đúng")
@@ -296,9 +297,9 @@
                     
                      
                         //Chọn lại lựa chọn mà student đã chọn
-                          <%String selectedAns = (String)request.getAttribute("answer"+exercise.getExerciseId());
+                          <%String selectedAns = (String)request.getAttribute("answer"+excercise.getExcerciseOrder());
                           if(selectedAns!=null) {%>
-                            var radio= document.getElementById("radio_answer"+"<%=exercise.getExerciseId()%>"+"_"+"<%=selectedAns%>");
+                            var radio= document.getElementById("radio_answer"+"<%=excercise.getExcerciseOrder()%>"+"_"+"<%=selectedAns%>");
                              radio.checked=true;
                         <%}%>
                 <%}

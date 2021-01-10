@@ -16,12 +16,12 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Giới thiệu khóa học</title>
         <link rel="stylesheet" href="Views/Css/Course/Course_Introduction_Student_css.css">
-        <link rel="stylesheet" href="Views/Css/common.css">
+        <link rel="stylesheet" href="Views/Css/common.scss">
         <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     </head>
 
     <body>     
-        <form action="Process_CourseIntroduction_Teacher"
+        <form action="#"
               method="post">
             <input type ="hidden" name='courseId' value="${course.getCourseId()}">
             <%--<c:out value="${course.getCourseId()}"/>--%>
@@ -30,7 +30,7 @@
                     <img id='image_logo' src ="logo.png" >
                 </div>
                 <div id='div_account'>
-                    <label id='label_account'>${User.getName()}  <i class='fas fa-caret-down'></i></label>               
+                    <label id='label_account'>  <i class='fas fa-caret-down'></i></label>               
                 </div>
             </div>
             <div class="div_container">
@@ -49,20 +49,14 @@
           
                         <div id='textbox_group'>
                             <div id="div_chap1" class="div_chap">                          
-                                <input type='button' class="button_chap" id='button_chap1'  
+                                <input type='button' class="button_chap" id='button_chap1'  onclick="clickChap(1)"
                                 <c:if test="${ not empty chap1}">
                                     value =  '<c:out value= "${chap1.getName()}" /> '                                        
                                 </c:if> >
                           
                         </div>
                     </div>
-                    <input class="btn_add_chap" id='btn_add_chap' type='button' value='Add Chap' onclick ='addChap()' >
-                    <input class="btn_standardize_chap" id='btn_standardize_chap' type='button' value='Chuẩn hóa' onclick='Standardize()' >
-
-<!--                    <form action ="exercise_teacher.jsp"
-                        method="post">
-                        <input type ="submit" value="thu">
-                    </form>-->
+                   
                     <script>
 
                         var counter_chap = 1;
@@ -89,6 +83,7 @@
                             var newTextBox = document.createElement('input');
                             newTextBox.setAttribute("type", "button");
                             newTextBox.setAttribute("class", "button_chap");
+                            newTextBox.setAttribute("onclick", "clickChap("+counter_chap+")");
 
 
                         <%for (int i = 2; i <= 10; i++) {%>
@@ -126,24 +121,21 @@
                              
                             } else
                             {
-                                lastPart = document.getElementById("link_goto_exercise_chap" + chap + "_part"+numberOfPart);
+                                lastPart = document.getElementById("link_chap" + chap + "_part"+numberOfPart);
                             }
+                            lastPart.insertAdjacentHTML("afterend", "<a  class ='link_part' id ='link_chap" + chap + "_part" + (numberOfPart + 1) +"' ></a>");
 
-                            lastPart.insertAdjacentHTML("afterend", "<input type = 'button' class ='button_part' id ='button_chap" + chap + "_part" + (numberOfPart + 1) +"' >");
-                            lastPart =document.getElementById("button_chap" + chap + "_part" + (numberOfPart+1));
+                            var link_part = document.getElementById("link_chap"+chap+"_part"+(numberOfPart+1));
+                            //ẩn nút
+                            link_part.style.display="none";
+
+                            var button_part = document.createElement("input");
+                            button_part.setAttribute("type", "button");
+                            button_part.setAttribute("class", "button_part");
+                            button_part.setAttribute("id", "button_chap"+chap+"_part"+(numberOfPart+1));
                             
-                            //Tới trang bài học
-                            lastPart.insertAdjacentHTML("afterend", "<a   id = 'link_goto_part_chap"+chap+"_part"+(numberOfPart+1)
-                                    +"' href='Display_Exercise_Teacher'><input class='link_goto_Part'  type ='button' value='Bài học'  ></a>");
-                            
-                            
-                            lastPart =document.getElementById("link_goto_part_chap" + chap + "_part" + (numberOfPart+1));
-                            
-                            //Thêm nút bài tập
-                            lastPart.insertAdjacentHTML("afterend", "<a  id = 'link_goto_exercise_chap"+chap+"_part"+(numberOfPart+1)
-                                    +"' href='Display_Exercise_Teacher?previousPage=Display_Course_Introduction_Teacher'><input  class='link_goto_Exercise'  type ='button' value='Bài tập' ></a>");
+                            link_part.appendChild(button_part);                        
                             numberOfParts[chap] += 1;
-                            //console.log(numberOfParts);
                         }
 
                         
@@ -185,7 +177,6 @@
                                                 var item = document.getElementById('button_chap' + chap + '_part' + i);
                                                 item.parentNode.removeChild(item);
                                                 numberOfParts[chap]--;
-                                                console.log(numberOfParts[chap]);
                                             }
                                         }
                                     }
@@ -193,16 +184,24 @@
                             }
                         }
 
+                        function clickChap(chap)
+                        {
+                            for(var partid =1;partid<=numberOfParts[chap]; partid++ )
+                             {
+                                var button_part =document.getElementById("link_chap"+chap+"_part"+partid);
+                                if(button_part.style.display==="none")
+                                     button_part.style.display="block";
+                                else
+                                    button_part.style.display="none";                            }
+                        }
                         <c:set var="maxchap" value="0"/>
                         <c:if test="${not empty maxChap}">
                             <c:set var="maxchap" value="${maxChap}"/>
                              
                         </c:if>
                         //Thêm các chap vào 
-                        console.log(${maxchap});
                         while (counter_chap < ${maxchap})
                         {
-                            console.log("lần");
                             addChap();
                         }
                         
@@ -214,13 +213,14 @@
                                         String s = "chap" + chapid + "_part" + partid;
                                         Part part = (Part) request.getAttribute("chap" + chapid + "_part" + partid);
                                         if (part != null) {%>
-                                        addPart(<%=part.getChapId()%>);
+                                        addPart("<%=part.getPartOrder()%>");
                                             var input = document.getElementById('<%="button_chap"+chapid+"_part"+partid%>');
                                             input.setAttribute("value","<c:out value='<%=part.getName()%>'/>");
                                             
-                                            //chang link of link_goto
-                                            var link = document.getElementById('<%="link_goto_exercise_chap"+chapid+"_part"+partid%>');
-                                            link.setAttribute("href", '<%="Display_Exercise_Teacher?courseid="+part.getCourseId()+"&chapid="+part.getChapId()+"&partid="+part.getPartId()%>');
+                                            //change link of link_goto
+                                            var link = document.getElementById('<%="link_chap"+chapid+"_part"+partid%>');
+                                            link.setAttribute("href", '<%="Display_Excercise_Student?courseid="+part.getCourse().getCourseId()
+                                                                        +"&chapid="+part.getChap().getChapOrder()+"&partid="+part.getPartOrder()%>');
                                             
                                             
                                         <% }
@@ -337,7 +337,6 @@
 
                         var loadFile = function (order) {
                             var image = document.getElementById('instructor_image_' + order);
-                            console.log(image);
                             image.src = URL.createObjectURL(event.target.files[0]);
                         };
 
@@ -354,9 +353,8 @@
                 <div id="div_part4_FAQ">
                     <h2>4. Các câu hỏi thường gặp:</h2>
                     <div id ='div_FAQ'>
-                        <textarea class='textarea_question'  id ='textarea_question1' placeholder='Nhập câu hỏi' name="question1"></textarea>
-                        <textarea class ='textarea_answer' id= 'textarea_answer1' placeholder='Nhập câu trả lời'name ='answer1'></textarea>
-                        <input type='button' id ='button_add_FAQ' value='Thêm' onclick='addFAQ()'>
+                        <input type="button" class='button_question'  id ='button_question1' >
+                        <input type="button" class ='button_answer' id= 'button_answer1'>                      
                     </div>
                 </div>    
                 <script>
@@ -372,39 +370,46 @@
                             return;
                         }
 
-                        var button_add_FAQ = document.getElementById("button_add_FAQ");
-                        button_add_FAQ.insertAdjacentHTML('beforebegin', "<textarea class='textarea_question'  id ='textarea_question" + counter_questions + "' placeholder='Nhập câu hỏi' name='question" + counter_questions + "'></textarea>");
+                        var div_FAQ = document.getElementById("div_FAQ");
+                        
+                        var button_question = document.createElement("input");
+                        button_question.setAttribute("type", "button");
+                        button_question.setAttribute("class", "button_question");
+                        button_question.setAttribute("id", "button_question" + counter_questions);
+                        div_FAQ.append(button_question);
+//                        button_add_FAQ.insertAdjacentHTML('beforebegin', "<input type='button' class='button_question'  id ='button_question" + counter_questions + "' >");
 
-                        button_add_FAQ.insertAdjacentHTML('beforebegin', "<textarea class ='textarea_answer' id= 'textarea_answer" + counter_questions + "'placeholder='Nhập câu trả lời' name ='answer" + counter_questions + "'></textarea>");
+                        button_question.insertAdjacentHTML('afterend', "<input type='button' class ='button_answer' id= 'button_answer" + counter_questions+ "' >");
                     }
                     
-                    var input1 = document.getElementById("textarea_question1");
-                                            console.log(input1);
-                                            input1 = document.getElementById('aaa111');
-                   <% try
-                         {
+//                    var input1 = document.getElementById("textarea_question1");
+//                                            console.log(input1);
+//                                            input1 = document.getElementById('aaa111');
+                   <% 
+                       
+//                       try
+//                         {
                              for (int faqid = 1; faqid <= 10; faqid++) {
                              
                                         FAQ faq = (FAQ) request.getAttribute("FAQ" + faqid );
                                         if (faq != null) {%>
                                         
-                                            var input1 = document.getElementById("textarea_question" + <%=faqid%>);
-                                            console.log(input1);
+                                            var input1 = document.getElementById("button_question" + <%=faqid%>);
                                             while(!input1)
                                             {
                                                 addFAQ();
-                                                input1 = document.getElementById("textarea_question"+ <%=faqid%>);
+                                                input1 = document.getElementById("button_question"+ <%=faqid%>);
                                             }
                                                                                      
                                                  
                                             input1.value= "<c:out value='<%=faq.getQuestion()%>'/>";
                                             
-                                            input1 = document.getElementById("textarea_answer"+<%=faqid%>);
+                                            input1 = document.getElementById("button_answer"+<%=faqid%>);
                                             input1.value= "<c:out value='<%=faq.getAnswer()%>'/>";                       
                                         <% }
                                }
-                            }                              
-                         catch(Exception ex){}%>
+//                            }                              
+//                         catch(Exception ex){}%>
                 </script>
            
             </div>
@@ -412,8 +417,8 @@
                 <!--<a href="Process_CourseIntroduction_Teacher"><input type='button' id ='button_save' value='Save'></a>-->
                 <!--<a  href="Process_CourseIntroduction_Teacher"><input  id='button_save' type="button" value="Lưu"></a>-->
                 <input id ='button_save'  type="submit" value="Lưu">
-                <a  href="Display_Course_Introduction_Teacher?requirement='new'"><input  id='button_newCourse' type="button" value="Tạo khóa học mới"></a>
-                  <a  href="teacher-profile"><input  id='button_profile' type="button" value="Trang chính"></a>
+<!--                <a  href="Display_Course_Introduction_Teacher?requirement='new'"><input  id='button_newCourse' type="button" value="Tạo khóa học mới"></a>
+                  <a  href="teacher-profile"><input  id='button_profile' type="button" value="Trang chính"></a>-->
 
             </div>
             <div class="footer">
@@ -451,7 +456,7 @@
             </div>
             <hr>
             <% String message = (String) request.getAttribute("message");
-                        if (message != null) {%>
+                if (message !=null ) {%>
             <%="<script> alert('" + message + "');</script>"%>
             <% request.removeAttribute("message");%>
             <%}%>
