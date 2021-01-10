@@ -16,7 +16,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Giới thiệu khóa học</title>
         <link rel="stylesheet" href="Views/Css/Course/CourseIntroduction_Teacher_css.css">
-        <link rel="stylesheet" href="Views/Css/common.scss">
+        <link href="Views/Css/Course/course.css" type="text/css" rel="stylesheet">
+        <link rel="stylesheet" href="Views/Css/common.css">
         <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     </head>
 
@@ -25,14 +26,20 @@
               method="post">
             <input type ="hidden" name='courseId' value="${course.getCourseId()}">
             <%--<c:out value="${course.getCourseId()}"/>--%>
-            <div class = 'div_menu'>
-                <div class='div_logo'>
-                    <img id='image_logo' src ="logo.png" >
+             <div class="small-container horizontal">
+                 <div class='div_logo'>
+                    <a href="home"><img id='image_logo' src ="logo.png" ></a>
                 </div>
-                <div id='div_account'>
-                    <label id='label_account'><c:out value="${User.getName()}"/>  <i class='fas fa-caret-down'></i></label>               
+                 
+                <div id='div_account' class="div_account">
+                    <label id='label_account'>${User.getName()} </label>
+                    <div class="drop-down account" id="drop-down-person">
+<!--                        <a href="admin"><button>Thông tin cá nhân</button></a>-->
+                        <!--<a href="sign-in"><button>Đăng xuất</button></a>-->
+                     </div>    
+                    <i class='fas fa-caret-down' onclick="ToggleDropDown('drop-down-person')"></i>    
                 </div>
-            </div>
+             </div>
             <div class="div_container">
                 <!--Mục tiêu-->
                 <div class='div_mucTieu'>
@@ -424,7 +431,7 @@
                 <!--<a  href="Process_CourseIntroduction_Teacher"><input  id='button_save' type="button" value="Lưu"></a>-->
                 <input id ='button_save'  type="submit" value="Lưu">
                 <a  href="Display_Course_Introduction_Teacher?requirement='new'"><input  id='button_newCourse' type="button" value="Tạo khóa học mới"></a>
-                  <a  href="teacher-profile"><input  id='button_profile' type="button" value="Trang chính"></a>
+                  <a  href="teacher"><input  id='button_profile' type="button" value="Trang chính"></a>
 
             </div>
             <div class="footer">

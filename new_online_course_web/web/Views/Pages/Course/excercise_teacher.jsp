@@ -18,36 +18,45 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Excercise</title>
-        <link rel="stylesheet" href="Views/Css/Course/excercise_teacher_css.css">
-         <link rel="stylesheet" href="Views/Css/common.scss">
+        <link rel="stylesheet" href="Views/Css/Course/excercise_teacher_css.css">        
+        <link rel="stylesheet" href="Views/Css/common.css">
         <script src="https://kit.fontawesome.com/a076d05399.js"></script>
         
     </head>
     <body>
         <%--<c:out value="${part}"/>--%>
        
-        <div class = 'div_menu'> 
-            <div class='div_logo'>
-                <img id='image_logo' src ="logo.png" >
-            </div>
-            <div id ='div_CourseName'>
-                <%Part part =(Part) session.getAttribute("part");                  
-                  Course course= part.getCourse();%>
-                <label id="label_courseName"><c:out value ="<%=course.getName()%>"/></label>
-            </div>
-            <div id='div_account'>
-                <label id='label_account'>${User.getName()}<i class='fas fa-caret-down'></i></label>               
-            </div>
+        <div class = 'div_menu'>
+            <div class="small-container horizontal">
+                 <div class='div_logo'>
+                    <a href="home"><img id='image_logo' src ="logo.png" ></a>
+                  
+                </div>
+                <div id="div_CourseName">
+                    <label id="label_courseName"><c:out value="${part.getCourse().getName()}"/> </label>
+                </div>
+                <div id='div_account' class="div_account">
+                    <label id='label_account'>${User.getName()} </label>
+                    <div class="drop-down account" id="drop-down-person">
+<!--                        <a href="admin"><button>Thông tin cá nhân</button></a>
+                        <a href="sign-in"><button>Đăng xuất</button></a>-->
+                     </div>    
+                    <i class='fas fa-caret-down' onclick="ToggleDropDown('drop-down-person')"></i>    
+                </div>
+             </div>
         </div>
+           
         <form action="Process_Excercise_Teacher" medthod ="post">
-            
+            <%Part part =(Part) session.getAttribute("part");                  
+                  Course course= part.getCourse();%>
             <%
             Chap chap = (Chap)ChapDB.getChapOfCourseByOrder(part.getCourse(), part.getChap().getChapOrder());
             request.setAttribute("part", part);
             %>
             <div id="container">
-                <h1 id='label_chapName'><%=chap.getName()%></h1>
-                <h1 id='label_partName'><%=part.getName()%></h1>
+                
+                <h1 id='label_chapName'><c:out value="<%=chap.getName()%>"/></h1>
+                <h1 id='label_partName'><c:out value="<%=part.getName()%>"/></h1>
                 <div id='div_all_excercises'>
                     <div class='div_excercise' id='div_excercise1'>
                         <textarea class ='textarea_question' id='question1' name ='question1' placeholder="Nhập câu hỏi"></textarea>

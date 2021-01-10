@@ -71,7 +71,13 @@ public class Display_Excercise_Teacher extends HttpServlet {
                 if (part == null) {
                     request.setAttribute("message", "Không tìm thấy phần bài học để thêm bài tập!");
                     url= "/"+ (String)request.getParameter("previousPage");
-                } else {
+                } 
+                else if(!CourseDB.courseOfTeacherExists(course.getCourseId(), user))
+                {
+                     request.setAttribute("message", "Bạn không có khóa học này!");
+                     url="/teacher";
+                     
+                }else {
 
                     session.setAttribute("part", part);
 

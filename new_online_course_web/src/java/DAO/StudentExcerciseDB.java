@@ -112,13 +112,13 @@ public class StudentExcerciseDB {
         
         List<StudentExcercise> resultList ;
         
-//        try
+        try
         {
             resultList = q.getResultList();
             if( resultList==null || resultList.isEmpty())
                 resultList=null;
         }
-//        finally
+        finally
         {
             entityManager.close();
         }

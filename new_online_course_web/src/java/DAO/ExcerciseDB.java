@@ -78,7 +78,8 @@ public class ExcerciseDB {
         return exercise;
     }
      
-     public static boolean excericseExists(Course course,Chap chap, Part part, int exerciseOrder) {
+     public static boolean excericseExists(Course course,Chap chap, Part part, int exerciseOrder) 
+     {
         Excercise e = getExercise(course, chap, part, exerciseOrder);
         return e != null;
     }

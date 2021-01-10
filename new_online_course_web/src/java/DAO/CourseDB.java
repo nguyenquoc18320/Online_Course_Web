@@ -191,4 +191,40 @@ public class CourseDB {
         }
         return exerciseList;
     }
+     
+     //Kiểm tra khóa học của 1 user
+     public static Course getCourseOfTeacher(int courseid, User user)
+     {
+         EntityManager em = DBUtil.getEmFactory().createEntityManager();
+          String queryS = "Select c from Course c where c.CourseId = :courseid and c.user= :user ";
+        
+        TypedQuery<Course> q = em.createQuery(queryS, Course.class);
+        q.setParameter("courseid", courseid);
+        q.setParameter("user", user);
+        
+        
+        Course course ;
+        
+        try
+        {
+            course = q.getSingleResult();
+            
+        }
+        catch(Exception ex)
+                {
+                    course=null;
+                }
+        finally
+        {
+            em.close();
+        }
+        
+        return course;
+     }
+     
+     public static boolean courseOfTeacherExists(int courseid, User user)
+     {
+         Course c = getCourseOfTeacher(courseid, user);
+         return c!=null;
+     }
 }

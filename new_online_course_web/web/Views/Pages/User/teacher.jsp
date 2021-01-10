@@ -65,15 +65,24 @@
     </head>
     <body>
         <div class = 'div_menu'>
-           <div class="header">
-                <a href="home"><div class="logo"></div></a>
-            </div>
-            <div id='div_account'>
-                <label id='label_account'>Name<i class='fas fa-caret-down'></i></label>
-            </div>
+            <div class="small-container horizontal">
+                 <div class='div_logo'>
+                    <a href="home"><img id='image_logo' src ="logo.png" ></a>
+                </div>
+                 
+                <div id='div_account' class="div_account">
+                    <label id='label_account'>${User.getName()} </label>
+                    <div class="drop-down account" id="drop-down-person">
+<!--                        <a href="admin"><button>Thông tin cá nhân</button></a>
+                        <a href="sign-in"><button>Đăng xuất</button></a>-->
+                     </div>    
+                    <i class='fas fa-caret-down' onclick="ToggleDropDown('drop-down-person')"></i>    
+                </div>
+             </div>
         </div>
         <div class="small-container">
             <div class="profile">
+                
                 <p class="name-user">${User.getName()}</p>
                 <!--<p class="role-user">Student</p>-->    
             </div>
@@ -98,6 +107,12 @@
                 <form action="Display_Course_Introduction_Teacher?requirement=new" method="post" class="add-course-div">
                     <input type="submit" id="btnAddCourse" value="Thêm khóa học">
                 </form>
+                    
+                     <% String message = (String) request.getAttribute("message");
+                        if (message != null) {%>
+            <%="<script> alert('" + message + "');</script>"%>
+            <% request.removeAttribute("message");%>
+            <%}%>
             </div>
         </div>
     </body>

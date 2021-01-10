@@ -24,10 +24,10 @@ h2
     background-color:#3A01DF ;
     border-radius: 10px 10px 10px 10px;
 }
-.div_menu
+/*.div_menu
 {
     height: 100px;
-    /*background-color: blue;*/
+    background-color: blue;
     border-bottom:2px outset #b1154a;
     box-shadow: 0px 5px 5px gray;
     display: flex;
@@ -40,7 +40,7 @@ h2
     width: 200px;
     height: 100%;
     display: flex;
-    /*background-color: red;*/
+    background-color: red;
 }
 
 #image_logo
@@ -69,7 +69,7 @@ h2
     margin-right: 0px;
     margin-top: auto;
     margin-bottom: auto;
-}
+}*/
 
 /*body div*/
 .div_container

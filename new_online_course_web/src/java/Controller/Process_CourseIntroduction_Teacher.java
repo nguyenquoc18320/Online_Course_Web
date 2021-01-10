@@ -85,7 +85,13 @@ public class Process_CourseIntroduction_Teacher extends HttpServlet {
             } else {
                 message = "Tạo khóa học mới thất bại";
             }
-        } else {
+        } 
+        else if(!CourseDB.courseOfTeacherExists(course.getCourseId(), user))
+                {
+                     request.setAttribute("message", "Bạn không có khóa học này!");
+                     url="/teacher";
+                }
+        else {
             courseid = Integer.parseInt(courseId);
             course = new Course(courseid, courseName, objective, user, now, false, "");
             try {

@@ -73,9 +73,14 @@ public class Display_Course_Introduction_Teacher extends HttpServlet {
                 if (course == null) {
                     String message = "Không tìm thấy khóa học!";
                     request.setAttribute("message", message);
+                } 
+                //kiểm tra khóa học có phải của giáo viên
+                else if(!CourseDB.courseOfTeacherExists(course.getCourseId(), user))
+                {
+                     request.setAttribute("message", "Bạn không có khóa học này!");
+                     url="/teacher";
                 }
-                
-                if (course != null) {
+                else if (course != null) {
                     request.setAttribute("course", course);
                     int courseid = course.getCourseId();
                     List<Chap> chapList = ChapDB.getAllChapByCourseId(courseid);
@@ -98,7 +103,7 @@ public class Display_Course_Introduction_Teacher extends HttpServlet {
                     List<FAQ> faqList = FAQDB.getAllFAQOfCourse(courseid);
                     if (faqList != null) {
                         for (FAQ f : faqList) {
-                            request.setAttribute("FAQ" + f.getFAQId(), f);
+                            request.setAttribute("FAQ" + f.getFAQOrder(), f);
                         }
                     }
 
