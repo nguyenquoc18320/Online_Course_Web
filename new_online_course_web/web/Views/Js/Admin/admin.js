@@ -34,7 +34,7 @@ function ShowFrontDiv(id)
 
 function CloseFrontDivEditInfo()
 {
-    window.location = "/new_online_course_web/account-profile?isShowEditInfo=false";
+    window.location = "/new_online_course_web/account-profile?isShowEditInfo=false"; 
 }
 
 function ShowFrontDivEditInfo()
