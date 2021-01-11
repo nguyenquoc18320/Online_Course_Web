@@ -105,10 +105,12 @@ public class AddAdminController extends HttpServlet {
                                 System.out.println("Result: " + isInserted);
                             }catch(Exception e)
                             {
+                                url += "?isShowAddAdmin=true";
                                 errorAddAdmin = "Ngày sinh không hợp lệ!";
                             }
                             if (!isInserted)
                             {
+                                url += "?isShowAddAdmin=true";
                                 errorAddAdmin = "Thêm nhân viên quản lý thất bại!";
                             }
                             else
@@ -118,24 +120,27 @@ public class AddAdminController extends HttpServlet {
                         }
                         else
                         {
+                            url += "?isShowAddAdmin=true";
                             errorAddAdmin = "Số điện thoại đã tồn tại!";
                         }
                     }
                     else
                     {
+                        url += "?isShowAddAdmin=true";
                         errorAddAdmin = "Email đã tồn tại!";
                     }
                 }
                 else
                 {
+                    url += "?isShowAddAdmin=true";
                     errorAddAdmin = "Mật khẩu không khớp! " + passwordAdd + " " + confirmPasswordAdd;
                 }
             }
             else{
+                url += "?isShowAddAdmin=true";
                 errorAddAdmin = "Không để trống dữ liệu!";
             }
-            request.setAttribute("ErrorAddAdmin", errorAddAdmin);
-            System.out.println("ErrorAddAdmin: " + errorAddAdmin);
+            session.setAttribute("ErrorAddAdmin", errorAddAdmin);
         }
         else
         {
@@ -143,7 +148,7 @@ public class AddAdminController extends HttpServlet {
         }
          if (!url.contains(".jsp"))
         {
-            response.setStatus(response.SC_MOVED_TEMPORARILY); 
+            response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY); 
             response.setHeader("Location", URL.url + url); 
         }
         RequestDispatcher rd = getServletContext().getRequestDispatcher(url);
