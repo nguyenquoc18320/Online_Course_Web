@@ -83,7 +83,8 @@ and open the template in the editor.
     color: #fff;
     padding: 15px 40px;
     display: flex;
-    height: 20px;
+    /*height: 40px;*/
+    padding: 15px;
     position: relative;
 }
 
@@ -105,6 +106,7 @@ and open the template in the editor.
 .info-detail-profile{
     display: flex;
     font-size: 20px;
+    padding: 20px 0;
 }
 
 .title-info-detail-profile{
@@ -126,7 +128,7 @@ and open the template in the editor.
 
 .filter{
     display: flex;
-    margin: 40px 0;
+    margin: 40px 0 20px 0;
 }
 
 .filter select{
@@ -143,6 +145,17 @@ and open the template in the editor.
     width: 500px;
     padding: 5px 10px;
     margin-right: 20px;
+}
+
+.btn-admin{
+    margin: 0px 20px 20px auto;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-admin i{
+    font-size: 28px;
 }
 
 .thead-light tr th{
@@ -197,6 +210,12 @@ a:hover , a:visited{
     justify-content: center;
 }
 
+.front-div.admin{
+    left: 300px;
+    width: calc(100% - 300px);
+}
+
+
 .content-front{
     background: #fff;
     width: 50%;
@@ -235,10 +254,11 @@ a:hover , a:visited{
 .field-input{
     margin-left: 0;
     font-size: 16px;
+    padding: 5px 0;
 }
 
 .field-input p{
-    
+    padding: 5px 0;
 }
 
 .field-input input, .field-input select{
@@ -290,7 +310,7 @@ a:hover , a:visited{
 
 .drop-down.setting{
     top: 40px; 
-    right: 40px;
+    right: 15px;
 }
 
 .drop-down.account{
@@ -322,3 +342,173 @@ a:hover , a:visited{
 .select-date select{
     padding: 5px 10px;
 }
+
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jan 8, 2021, 12:40:23 PM
+    Author     : TRAN VAN AN
+*/
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+*:focus{
+    outline: none;
+}
+
+a{
+    text-decoration: none;
+}
+
+.container-full{
+    display: flex;
+}
+
+.side-bar{
+    /* position: relative; */
+    width: 300px;
+    height: 100vh;
+    text-align: center; 
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    background-color: #B8E5FA;
+}
+
+.logo{
+
+}
+
+    .logo img{
+        width: 70%;
+    }
+
+.profile{
+    height: 300px;
+}
+
+    .profile img{
+        height: 60%;
+    }
+
+    .profile :nth-child(2){
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .profile :nth-child(3){
+        font-size: 20px;
+        font-weight: bold;
+        color: #197BBD;
+    }
+
+.menu{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.menu button{
+    padding: 20px 50px;
+    font-size: 20px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    background-color: #6DCFF6;
+    text-align: left;
+}
+
+
+.menu button:hover{
+    background-color: #197BBD;
+    color: #fff;
+}
+
+.menu i{
+    font-size: 20px;
+}
+
+.nav-bar{
+    position: relative;
+    display: flex;
+    height: 80px;
+    width: calc(100vw - 300px);
+    align-items: center;
+    background-color: #6DCFF6;
+    color: #000;
+}
+
+.nav-bar h1{
+    font-size: 30px;
+    margin-left: 40px;
+}
+
+.nav-bar i{
+    position: absolute;
+    right: 40px;
+    font-size: 40px;
+    cursor: pointer;
+}
+
+.drop-down
+{
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    top: 70px;
+    right: 40px;
+    border: 1px solid #197BBD;
+    height: fit-content;
+    transition: 1s ease-in-out all;
+}
+
+.drop-down button{
+    padding: 5px 20px;
+    cursor: pointer;
+    border: none;
+    background-color: #6DCFF6;
+    color: #000;
+}
+
+.drop-down button:hover{
+    background-color: #197BBD;
+    color: #fff;
+}
+
+.flex{
+    display: flex;
+}
+
+.pagination{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        margin: 0;  
+    }
+
+    .pagination input{
+       text-align: center;
+       width: 40px;
+       margin: 0 20px;
+    }
+
+    .pagination i{
+        font-size: 20px;
+        padding: 0 20px;
+        cursor: pointer;
+    }
