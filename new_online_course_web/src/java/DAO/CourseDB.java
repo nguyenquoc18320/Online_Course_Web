@@ -129,7 +129,7 @@ public class CourseDB {
     public static int getMaxCourseID() {
        int max=0;
         EntityManager entityManager = DBUtil.getEmFactory().createEntityManager();
-        String queryS = "SELECT max(courseid) from Course";
+        String queryS = "SELECT max(CourseId) from Course";
 
         try {
              max = Integer.parseInt(entityManager.createNativeQuery(queryS).getSingleResult().toString());

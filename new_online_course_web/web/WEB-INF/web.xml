@@ -24,6 +24,10 @@
         <servlet-name>Process_Excercise_Student</servlet-name>
         <servlet-class>Controller.Process_Excercise_Student</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UploadFileController</servlet-name>
+        <servlet-class>Controller.UploadFileController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Display_Course_Introduction_Teacher</servlet-name>
         <url-pattern>/Display_Course_Introduction_Teacher</url-pattern>
@@ -48,12 +52,16 @@
         <servlet-name>Process_Excercise_Student</servlet-name>
         <url-pattern>/Process_Excercise_Student</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UploadFileController</servlet-name>
+        <url-pattern>/uploadFile</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>home</welcome-file>
+        <welcome-file>/Views/Pages/Home/uploadFile.jsp</welcome-file>
     </welcome-file-list>
 </web-app>

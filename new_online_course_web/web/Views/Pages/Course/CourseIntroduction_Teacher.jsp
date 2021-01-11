@@ -23,7 +23,7 @@
 
     <body>     
         <form action="Process_CourseIntroduction_Teacher"
-              method="post">
+              method="post" enctype="multipart/form-data">
             <input type ="hidden" name='courseId' value="${course.getCourseId()}">
             <%--<c:out value="${course.getCourseId()}"/>--%>
              <div class="small-container horizontal">
@@ -257,13 +257,14 @@
                     <div id="div_all_instructor">  
                         <div class='div_instructor' id ='div_instructor1'>
                             <div class="div_instructor_image">
-                                <img class ="instructor_image" id='instructor_image_1' src="logo.png" name='imageIntructor1'>
+                                <img class ="instructor_image" id='instructor_image_1' src="" name='imageIntructor1'>
 
                             </div>
                             <div class ="div_instructor_information">
                                 <input class='input_instructor_name' type="text" name="instructorName1" placeholder="Nhập tên người giảng dạy">
                                 <input class='input_instructor_disription' type="text" name="instructorDescription1"placeholder="Mô tả chức vụ ">
-                                <input type="file"  accept="image/*" name="image1" id="image1"  onchange="loadFile('1')" style="display: none;">
+                                <!--<input type="file"  accept="image/*" name="image1" id="image1"  onchange="loadFile('1')" style="display: none;">-->
+                                <input type="file" value="Upload file" name="hinhanh"  /> 
                                 <label for ='image1' class='label_upload_image' >Upload</label>
                                 <input type='button' class ='button_remove_instructor' value='-' onclick='removeInstructor(1)'>
                             </div>
@@ -280,7 +281,7 @@
                         {
                             if (numberOfInstructors >= 7)
                             {
-                                alert("Chỉ cho phép tối đa 7 người hướng dẫn");
+                                alert("Chỉ cho phép tối đa 6 người hướng dẫn");
                                 return;
                             }
 
@@ -306,7 +307,7 @@
 
                             var newImage = document.createElement("img");
                             newImage.setAttribute('class', "instructor_image");
-                            newImage.setAttribute('src', 'logo.png');
+                            newImage.setAttribute('src', '');
                             newImage.setAttribute('id', "instructor_image_" + instructorOrder);
                             newImage.setAttribute('name', 'imageIntructor' + instructorOrder);
                             newImageDiv.appendChild(newImage);
@@ -339,8 +340,8 @@
                             new_div_instructor_information.appendChild(button_remove);
 
 
-                            var createFile = '<input type="file"  accept="image/*" name="image' + instructorOrder + '" id="image' + instructorOrder + '"onchange="loadFile(' + instructorOrder + ')" style="display: none;">';
-                            newInstructorDescriptionInput.insertAdjacentHTML('afterend', createFile);
+//                            var createFile = '<input type="file"  accept="image/*" name="image' + instructorOrder + '" id="image' + instructorOrder + '"onchange="loadFile(' + instructorOrder + ')" style="display: none;">';
+//                            newInstructorDescriptionInput.insertAdjacentHTML('afterend', createFile);
 
                             var label_upload_image = document.createElement('label');
                             label_upload_image.setAttribute('for', 'image' + instructorOrder);
@@ -355,7 +356,7 @@
 
                         var loadFile = function (order) {
                             var image = document.getElementById('instructor_image_' + order);
-                            console.log(image);
+                          
                             image.src = URL.createObjectURL(event.target.files[0]);
                         };
 

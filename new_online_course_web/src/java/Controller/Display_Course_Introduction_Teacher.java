@@ -40,7 +40,7 @@ public class Display_Course_Introduction_Teacher extends HttpServlet {
         User user = (User) session.getAttribute("User");
 
         String requirement = request.getParameter("requirement");
-
+        String message=null;
         if (user == null ) {
             url = "/sign-in";
         }
@@ -71,7 +71,7 @@ public class Display_Course_Introduction_Teacher extends HttpServlet {
                 int maxChap = 0;
 
                 if (course == null) {
-                    String message = "Không tìm thấy khóa học!";
+                     message = "Không tìm thấy khóa học!";
                     request.setAttribute("message", message);
                 } 
                 //kiểm tra khóa học có phải của giáo viên
@@ -83,6 +83,7 @@ public class Display_Course_Introduction_Teacher extends HttpServlet {
                 else if (course != null) {
                     request.setAttribute("course", course);
                     int courseid = course.getCourseId();
+
                     List<Chap> chapList = ChapDB.getAllChapByCourseId(courseid);
                     if (chapList != null) {
                         for (Chap c : chapList) {
@@ -112,7 +113,7 @@ public class Display_Course_Introduction_Teacher extends HttpServlet {
             }
             else
             {
-                request.setAttribute("message", null);
+                request.setAttribute("message", message);
             }
         }
 
