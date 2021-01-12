@@ -68,6 +68,52 @@ public class CourseDB {
         }
         return courses;
     }
+   
+     //lấy các khóa học đã được duyệt
+    public static List<Course> GetAllCoursesApprovedByUser(User user)
+    { 
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        String qString = "SELECT c FROM Course AS c WHERE c.user = :user and c.Approved = :approved";
+        TypedQuery<Course> q = em.createQuery(qString, Course.class);
+        q.setParameter("user", user);
+         q.setParameter("approved", true);
+     
+        List<Course> courses = null;
+        try{
+            courses = q.getResultList();
+        }catch(NoResultException ex)
+        {
+            courses = null;
+            System.out.println("Kết nối thất bại!");
+        }
+        finally{
+            em.close();
+        }
+        return courses;
+    }
+    
+    public static List<Course> GetAllCoursesNotApprovedByUser(User user)
+    { 
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        String qString = "SELECT c FROM Course AS c WHERE c.user = :user and c.Approved = :approved";
+        TypedQuery<Course> q = em.createQuery(qString, Course.class);
+        q.setParameter("user", user);
+         q.setParameter("approved", false);
+     
+        List<Course> courses = null;
+        try{
+            courses = q.getResultList();
+        }catch(NoResultException ex)
+        {
+            courses = null;
+            System.out.println("Kết nối thất bại!");
+        }
+        finally{
+            em.close();
+        }
+        return courses;
+    }
+    
     public static boolean insertCourse(Course course) {
         boolean result = true;
         EntityManager entityManager = DBUtil.getEmFactory().createEntityManager();
@@ -114,7 +160,7 @@ public class CourseDB {
         tran.begin();
 
         try {
-            entityManager.remove(course);
+            entityManager.remove(entityManager.merge(course));
             tran.commit();
         } catch (Exception e) {
             System.out.println(e);

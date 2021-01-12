@@ -5,14 +5,12 @@
  */
 package Controller;
 
-import Model.*;
-import DAO.*;
-
+import DAO.CourseDB;
+import Model.Course;
+import Model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,8 +20,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author A556U
  */
-@WebServlet(name = "Display_Course_Introduction_Student", urlPatterns = {"/Display_Course_Introduction_Student"})
-public class Display_Course_Introduction_Student extends HttpServlet {
+public class Process_Delete_Course_Teacher extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,63 +35,40 @@ public class Display_Course_Introduction_Student extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
-        String url = "/Views/Pages/Course/Course_Introduction_Student.jsp";
+        String url = "/teacher";
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("User");
-            
-         if (user == null ) {
+
+        String message = null;
+        if (user == null) {
             url = "/sign-in";
-        }
-        else if(user.getRole().getRoleId()!=3)
-        {
-             url = "/Views/Pages/Home/home.jsp";
+        } else if (user.getRole().getRoleId() != 2) {
+            url = "/Views/Pages/Home/home.jsp";
         } else {
-                int courseid = Integer.parseInt(request.getParameter("courseid"));
-            //Course course = (Course) request.getAttribute("course");   
+            try {
+                int courseid = Integer.parseInt((String) request.getParameter("courseid"));
+
                 Course course = CourseDB.getCourseById(courseid);
-                
 
-                int maxChap = 0;
-
-                if (course == null) {
-                    String message = "Không tìm thấy khóa học!";
-                    request.setAttribute("message", message);
-                }
+                //get courseid if exist, it is sent from teacherprofile
                 if (course != null) {
-                    request.setAttribute("course", course);
-                    List<Chap> chapList = ChapDB.getAllChapByCourse(course);
-                    if (chapList != null) {
-                        for (Chap c : chapList) {
-                            int chapOrder = c.getChapOrder();
-                            request.setAttribute("chap" + chapOrder, c);
-                            maxChap = chapOrder;
-
-                            List<Part> partList = PartDB.getAllPartOfChap(course, c);
-                            if (partList != null) {
-                                for (Part p : partList) {
-                                    request.setAttribute("chap" + chapOrder + "_part" + p.getPartOrder(), p);
-                                }
-                            }
+                    if (!CourseDB.courseOfTeacherExists(course.getCourseId(), user)) {
+                        request.setAttribute("message", "Bạn không có khóa học này!");
+                        url = "/teacher";
+                    } else  {
+                        if(!CourseDB.deleteCourse(course))
+                        {
+                            message="Lỗi! Không xóa được khóa học";
                         }
                     }
-
-                    //Các câu hỏi thường gặp
-                    List<FAQ> faqList = FAQDB.getAllFAQOfCourse(course);
-                    if (faqList != null) {
-                        for (FAQ f : faqList) {
-                            request.setAttribute("FAQ" + f.getFAQOrder(), f);
-                        }
-                    }
-                    
-                    List<Instructor> instructorList = InstructorDB.getAllInstructorsByCourse(course);
-                    for (int i = 0; i < instructorList.size(); i++) {
-                        request.setAttribute("instructor" + (i + 1), instructorList.get(i));
-                    }
+                } else {
+                    message = "Không tìm thấy khóa học";
                 }
-
-                request.setAttribute("maxChap", maxChap);
+            } catch (Exception ex) {
+                message = "Không tìm thấy khóa học";
+            }
+            request.setAttribute("message", message);
         }
-
         getServletContext().getRequestDispatcher(url).forward(request, response);
     }
 

@@ -45,10 +45,14 @@ public class TeacherProfileController extends HttpServlet {
         HttpSession session = request.getSession();
         //User user = (User)session.getAttribute("User");
         User user = (User)session.getAttribute("User");
-        if (user != null && user.getRole().getRoleName().equals("teacher"))
+        if (user != null && user.getRole().getRoleName().equals("teacher") && user.getRole().getRoleId()==2)
         {
-            List<Course> courses = CourseDB.GetCourseByUserId(user.getUserId());
-            session.setAttribute("CoursesTeacher", courses);
+            List<Course> Approvedcourses = CourseDB.GetAllCoursesApprovedByUser(user);
+            request.setAttribute("ApprovedCoursesTeacher", Approvedcourses);
+            
+            List<Course> NotApprovedcourses = CourseDB.GetAllCoursesNotApprovedByUser(user);
+             request.setAttribute("NotApprovedCoursesTeacher", NotApprovedcourses);
+//            request.setAttribute("message", ""+NotApprovedcourses.size());
         }
         else
         {

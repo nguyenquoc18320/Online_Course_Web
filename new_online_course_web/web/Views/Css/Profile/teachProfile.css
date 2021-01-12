@@ -12,20 +12,26 @@ and open the template in the editor.
     justify-content: center;
 }
 
-.course-teacher{
+.div-list-course
+{
+    margin-bottom: 30px;
+}
+
+.div-course-teacher{
     font-weight: bold;
     width: 90%;
     border: 1px solid #000; 
     display: flex;
-    padding: 10px 20px 10px 30px;
+    padding: 0 20px 0 30px;
     border-radius: 50px;
-    margin: 10px auto;
+    margin: 10px auto auto auto;
     align-items: center;
 }
 
 .text-course-teacher{
     flex: 100%;
     cursor: pointer;
+    font-size: 18px;
 }
 
 .btn-course{
@@ -50,10 +56,11 @@ and open the template in the editor.
     text-align: center;
 }
 #btnAddCourse{
-    margin: 0 auto; 
+    margin: 30px auto; 
     border-radius: 50px;
     padding: 5px 10px;
     cursor: pointer;
+    font-size: 18px;
     font-weight: bold;
     color: #fff;
     background-color: green;
@@ -76,4 +83,17 @@ and open the template in the editor.
 .role-user{
     font-size: 30px;
     margin-bottom: 40px;
+}
+
+.input_courseOption
+{
+    text-align: left;
+    width: 100%;
+    font-size: 20px;
+    font-family: Arial;
+    font-weight: bold;
+    padding: 10px 50px 10px 50px;
+    color: white;
+    background-color:#3A01DF ;
+    border-radius: 10px 10px 10px 10px;
 }

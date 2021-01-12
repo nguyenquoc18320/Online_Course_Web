@@ -15,8 +15,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Giới thiệu khóa học</title>
-        <link rel="stylesheet" href="Views/Css/Course/Course_Introduction_Student_css.css">
-         <!--<link href="Views/Css/Course/course.css" type="text/css" rel="stylesheet">-->
+        <link rel="stylesheet" href="Views/Css/Course/Course_Introduction_Student_css.css">    
         <link rel="stylesheet" href="Views/Css/common.css">
         <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     </head>
@@ -251,15 +250,13 @@
 
                             </div>
                             <div class ="div_instructor_information">
-                                <input class='input_instructor_name' type="text" name="instructorName1" placeholder="Nhập tên người giảng dạy">
-                                <input class='input_instructor_disription' type="text" name="instructorDescription1"placeholder="Mô tả chức vụ ">
-                                <input type="file"  accept="image/*" name="image1" id="image1"  onchange="loadFile('1')" style="display: none;">
-                                <label for ='image1' class='label_upload_image' >Upload</label>
-                                <input type='button' class ='button_remove_instructor' value='-' onclick='removeInstructor(1)'>
+                                <input class='input_instructor_name'  id ="input_instructorName1" type="button" >
+                                <input class='input_instructor_description'  id ="input_instructorDescription1" type="button" >                               
+                               
                             </div>
                         </div>
                     </div>
-                    <input type='button' id ='button_add_instructor' value='Thêm' onclick='addIntructor()'>
+                    
 
                     <script>
                         var numberOfInstructors = 1;
@@ -308,35 +305,21 @@
 
                             var newNameInput = document.createElement("input");
                             newNameInput.setAttribute('class', 'input_instructor_name');
-                            newNameInput.setAttribute('type', 'text');
+                             newNameInput.setAttribute('id','input_instructorName'+instructorOrder);
+                            newNameInput.setAttribute('type', 'button');
                             newNameInput.setAttribute('name', 'instructorName' + instructorOrder);
                             newNameInput.setAttribute('placeholder', 'Nhập tên người giảng dạy');
                             new_div_instructor_information.appendChild(newNameInput);
 
 
                             var newInstructorDescriptionInput = document.createElement("input");
-                            newInstructorDescriptionInput.setAttribute('class', 'input_instructor_disription');
-                            newInstructorDescriptionInput.setAttribute('type', 'text');
+                            newInstructorDescriptionInput.setAttribute('class', 'input_instructor_description');
+                            newInstructorDescriptionInput.setAttribute('id','input_instructorDescription'+instructorOrder);
+                            newInstructorDescriptionInput.setAttribute('type', 'button');
                             newInstructorDescriptionInput.setAttribute('name', 'instructorDescription' + instructorOrder);
                             newInstructorDescriptionInput.setAttribute('placeholder', 'Mô tả chức vụ');
                             new_div_instructor_information.appendChild(newInstructorDescriptionInput);
-
-                            var button_remove = document.createElement('input');
-                            button_remove.setAttribute("value", '-');
-                            button_remove.setAttribute("type", 'button');
-                            button_remove.setAttribute("class", 'button_remove_instructor');
-                            button_remove.setAttribute('onclick', 'removeInstructor(' + instructorOrder + ')');
-                            new_div_instructor_information.appendChild(button_remove);
-
-
-                            var createFile = '<input type="file"  accept="image/*" name="image' + instructorOrder + '" id="image' + instructorOrder + '"onchange="loadFile(' + instructorOrder + ')" style="display: none;">';
-                            newInstructorDescriptionInput.insertAdjacentHTML('afterend', createFile);
-
-                            var label_upload_image = document.createElement('label');
-                            label_upload_image.setAttribute('for', 'image' + instructorOrder);
-                            label_upload_image.setAttribute('class', 'label_upload_image');
-                            label_upload_image.innerHTML = 'Upload';
-                            new_div_instructor_information.appendChild(label_upload_image);
+                          
 
                             checkEmpty[instructorOrder] = 1;
                             numberOfInstructors++;
@@ -355,6 +338,30 @@
                             checkEmpty[order] = 0;
                             numberOfInstructors--;
                         }
+                        
+                         <%
+                        for(int instructorCounter=1; instructorCounter<=6; instructorCounter++)
+                        {   
+                            Instructor ins = (Instructor)request.getAttribute("instructor"+instructorCounter);
+                            if(ins!=null){%>
+                             console.log("<%=instructorCounter%>");
+                             var image = document.getElementById("instructor_image_"+"<%=instructorCounter%>");
+                             while(image ==null)
+                                {
+                                    addIntructor();
+                                image = document.getElementById("instructor_image_"+"<%=instructorCounter%>");
+                                }
+                            
+                                image.setAttribute("src", "<c:out value='<%=ins.getPathOfImage()%>'/>");
+                            
+                                var inputInstructorName = document.getElementById("input_instructorName"+"<%=instructorCounter%>");
+                                inputInstructorName.setAttribute("value", "<c:out value='<%=ins.getName()%>'/>");
+                            
+                                var inputInstructorDes = document.getElementById("input_instructorDescription"+"<%=instructorCounter%>");
+                                inputInstructorDes.setAttribute("value", "<c:out value='<%=ins.getPosition()%>'/>");
+                            
+                            <%}
+                        }%>
                     </script>
                 </div>
 
@@ -463,8 +470,8 @@
                 </div>
             </div>
             <hr>
-            <% String message = (String) request.getAttribute("message");
-                if (message !=null ) {%>
+             <% String message = (String) request.getAttribute("message");
+                if (message != null) {%>
             <%="<script> alert('" + message + "');</script>"%>
             <% request.removeAttribute("message");%>
             <%}%>

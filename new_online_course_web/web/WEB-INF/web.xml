@@ -28,6 +28,10 @@
         <servlet-name>UploadFileController</servlet-name>
         <servlet-class>Controller.UploadFileController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Process_Delete_Course_Teacher</servlet-name>
+        <servlet-class>Controller.Process_Delete_Course_Teacher</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Display_Course_Introduction_Teacher</servlet-name>
         <url-pattern>/Display_Course_Introduction_Teacher</url-pattern>
@@ -56,12 +60,16 @@
         <servlet-name>UploadFileController</servlet-name>
         <url-pattern>/uploadFile</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Process_Delete_Course_Teacher</servlet-name>
+        <url-pattern>/Process_Delete_Course_Teacher</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>/Views/Pages/Home/uploadFile.jsp</welcome-file>
+        <welcome-file>home</welcome-file>
     </welcome-file-list>
 </web-app>

@@ -88,22 +88,25 @@ public class Process_Excercise_Student extends HttpServlet {
                     
                     request.setAttribute("answer"+e.getExcerciseOrder(), answerOfStudent);
                     
-                    
-                    StudentExcercise stEx= new StudentExcercise(user,course, chap, part, e, maxTime+1, answerOfStudent);
-                    
-                    //Add anser into database
-                    if(!StudentExcerciseDB.insert(stEx))
-                    {
-                        message="Lưu thông tin thất bại";
-                    }
+                    //whether the ans is correct
+                    boolean correct =false;
                     
                     if(answerOfStudent!=null && e.getCorrectAnswer().equals(answerOfStudent))
                     {
-                        request.setAttribute("resultOfAnswer"+e.getExcerciseOrder(), "Trả lời đúng");                     
+                        request.setAttribute("resultOfAnswer"+e.getExcerciseOrder(), "Trả lời đúng");   
+                        correct=true;
                     }
                     else 
                     {
                         request.setAttribute("resultOfAnswer"+e.getExcerciseOrder(), "Trả lời sai! Đáp án đúng là "+e.getCorrectAnswer());                     
+                    }
+                    
+                    StudentExcercise stEx= new StudentExcercise(user, course, chap, part, e, correct, maxTime+1, answerOfStudent);
+
+                    //Add anser into database
+                    if(!StudentExcerciseDB.insert(stEx))
+                    {
+                        message="Lưu thông tin thất bại";
                     }
                      
                 }

@@ -62,7 +62,7 @@ public class Process_CourseIntroduction_Teacher extends HttpServlet {
 //        Date now=new SimpleDateFormat("dd/MM/yyyy").parse(sDate1);
 
         Timestamp now = new Timestamp(Calendar.getInstance().getTimeInMillis());
-
+        String message = "";
 //        user= new User(1,"a", now,
         String url = "/Views/Pages/Course/CourseIntroduction_Teacher.jsp";
 
@@ -75,7 +75,6 @@ public class Process_CourseIntroduction_Teacher extends HttpServlet {
             String courseName = (String) request.getParameter("courseName");
             String courseId = (String) request.getParameter("courseId");
 
-            String message = "";
             int courseid;
             Course course = null;
             //if courseid does not exist in the database
@@ -205,54 +204,114 @@ public class Process_CourseIntroduction_Teacher extends HttpServlet {
                 request.setAttribute("maxChap", maxChap);
 
                 //Xử lí instructor
+                int instructorId = 0;
+
+                //những vị trí instruc tor cần xóa
+                ArrayList<Integer> deleteInstructorList = new ArrayList<Integer>();
+
+                List<Instructor> instructorList = InstructorDB.getAllInstructorsByCourse(course);
                 for (int i = 1; i < 7; i++) {
-                    String name = request.getParameter("instructorName" + i);
-                    String description = request.getParameter("instructorDescription" + i);
+//                    if (request.getParameter("instructor_image_" + i) != null) {
+                    javax.servlet.http.Part part = request.getPart("image" + i);//
+                    String name = (String) request.getParameter("instructorName" + i);
+                    String description = (String) request.getParameter("instructorDescription" + i);
 
-                    DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
-                    ServletFileUpload upload = new ServletFileUpload(fileItemFactory);
-                    try {
-                        List<FileItem> fileItems = upload.parseRequest(request);
-                         message = ""+fileItems.size();
-                        for (FileItem fileItem : fileItems) {
-                            if (!fileItem.isFormField()) {
-                                // xử lý file
-                                String nameimg = fileItem.getName();
-                                if (!nameimg.equals("")) {
-                                    String dirUrl = request.getServletContext()
-                                            .getRealPath("") + File.separator + "files";
-                                    File dir = new File(dirUrl);
-                                    if (!dir.exists()) {
-                                        dir.mkdir();
-                                    }
-                                    String fileImg = dirUrl + File.separator + nameimg;
-                                    File file = new File(fileImg);
-                                    try {
+                    if (part != null && name != null && description != null && name != "" && description != "") {
+                        String fileName = extractFileName(part);
+                        //để ko bị lỗi null với file
+                        try {
+                            String applicationPath = getServletContext().getRealPath("");
+                            String uploadPath = applicationPath + File.separator + "files";
 
-                                        fileItem.write(file);
-                                        message = "lưu1";
-                                        System.out.println("UPLOAD THÀNH CÔNG...!");
-                                        System.out.println("ĐƯỜNG DẪN KIỂM TRA UPLOAD HÌNH ẢNH : \n" + dirUrl);
-                                    } catch (Exception e) {
-                                        message = "không lưu1";
-                                        System.out.println("CÓ LỖ TRONG QUÁ TRÌNH UPLOAD!");
-                                        e.printStackTrace();
-                                    }
+                            System.out.println("applicationPath:" + applicationPath);
+                            File fileUploadDirectory = new File(uploadPath);
+                            if (!fileUploadDirectory.exists()) {
+                                fileUploadDirectory.mkdirs();
+                            }
+
+                            String savePath = uploadPath + File.separator + fileName;
+                            System.out.println("savePath: " + savePath);
+//                        message = "aaa" + savePath;
+                            String sRootPath = new File(savePath).getAbsolutePath();
+                            System.out.println("sRootPath: " + sRootPath);
+
+                            part.write(savePath + File.separator);
+
+//                        File fileSaveDir1 = new File(savePath);
+                            //path of the image
+                            String imgPath = "files/" + fileName;
+
+                            Instructor instructor;
+                            if (instructorList != null && instructorId < instructorList.size()) {
+                                instructor = instructorList.get(instructorId);
+                                instructor.setName(name);
+                                instructor.setPosition(description);
+                                instructor.setPathOfImage(imgPath);
+
+                                if (!InstructorDB.updateInstructor(instructor)) {
+                                    message = "Chưa lưu thông tin người hướng dẫn";
+                                }
+                            } else//tạo mới
+                            {
+                                instructor = new Instructor(name, description, "files/" + fileName, course);
+                                if (!InstructorDB.insertInstructor(instructor)) {
+                                    message = "Chưa lưu thông tin người hướng dẫn";
                                 }
                             }
+//                            request.setAttribute("instructor" + instructorId, instructor);      
+//                            message = "" + instructorId;
+                        } catch (Exception ex) {
+
                         }
-                    } catch (FileUploadException e) {
-                        message = "không lưu";
-                        e.printStackTrace();
+                        instructorId++;
+                    } else//khi không có instructor thì set vị trí để xóa sau
+                    {
+                        if (instructorList != null && instructorId < instructorList.size()) {
+
+                            deleteInstructorList.add(instructorId);
+                            instructorId++;
+                        }
+                    }
+
+                }
+
+                //Xóa các ảnh 
+                if (instructorList != null) {
+                    for (int i = deleteInstructorList.size() - 1; i >= 0; i--) {
+                        int deletePosition = deleteInstructorList.get(i);
+                        Instructor ins = instructorList.get(deletePosition);
+                        if (!InstructorDB.deleteInstructor(ins)) {
+                            message = "Chưa lưu người hướng dẫn";
+                        }                
+                        instructorList = InstructorDB.getAllInstructorsByCourse(course);
                     }
                 }
+                if (instructorList != null) {   
+                instructorList = InstructorDB.getAllInstructorsByCourse(course);
+                    for (int i = 0; i < instructorList.size(); i++) {
+                        request.setAttribute("instructor" + (i + 1), instructorList.get(i));
+                    }
+                }
+
             }
+
             if (message.equals("")) {
                 message = "Lưu thành công";
             }
             request.setAttribute("message", message);
         }
         getServletContext().getRequestDispatcher(url).forward(request, response);
+    }
+
+    private String extractFileName(javax.servlet.http.Part part) {//This method will print the file name.
+        String contentDisp = part.getHeader("content-disposition");
+        String[] items = contentDisp.split(";");
+        for (String s : items) {
+            if (s.trim().startsWith("filename")) {
+                return s.substring(s.indexOf("=") + 2, s.length() - 1);
+            }
+        }
+        return "";
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

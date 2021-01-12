@@ -36,7 +36,9 @@ public class StudentExcercise implements Serializable{
     private Part part;
     
     @ManyToOne
-    private Excercise exercise;
+    private Excercise excercise;
+    
+    private boolean correct;
     
     //Lần làm thứ 
     private int time;
@@ -47,26 +49,32 @@ public class StudentExcercise implements Serializable{
         
     }
 
-    public StudentExcercise(int id, User user, Course course, Chap chap, Part part, Excercise exercise, int time, String selectedAnswer) {
+    public StudentExcercise(int id, User user, Course course, Chap chap, Part part, Excercise excercise, boolean correct, int time, String selectedAnswer) {
         this.id = id;
         this.user = user;
         this.course = course;
         this.chap = chap;
         this.part = part;
-        this.exercise = exercise;
+        this.excercise = excercise;
+        this.correct = correct;
         this.time = time;
         this.selectedAnswer = selectedAnswer;
     }
 
-    public StudentExcercise(User user, Course course, Chap chap, Part part, Excercise exercise, int time, String selectedAnswer) {
+    public StudentExcercise(User user, Course course, Chap chap, Part part, Excercise excercise, boolean correct, int time, String selectedAnswer) {
         this.user = user;
         this.course = course;
         this.chap = chap;
         this.part = part;
-        this.exercise = exercise;
+        this.excercise = excercise;
+        this.correct = correct;
         this.time = time;
         this.selectedAnswer = selectedAnswer;
     }
+
+
+    
+    
 
     public int getId() {
         return id;
@@ -109,11 +117,11 @@ public class StudentExcercise implements Serializable{
     }
 
     public Excercise getExercise() {
-        return exercise;
+        return excercise;
     }
 
-    public void setExercise(Excercise exercise) {
-        this.exercise = exercise;
+    public void setExercise(Excercise excercise) {
+        this.excercise = excercise;
     }
 
     public int getTime() {
@@ -130,6 +138,14 @@ public class StudentExcercise implements Serializable{
 
     public void setSelectedAnswer(String selectedAnswer) {
         this.selectedAnswer = selectedAnswer;
+    }
+
+    public boolean isCorrect() {
+        return correct;
+    }
+
+    public void setCorrect(boolean correct) {
+        this.correct = correct;
     }
     
     

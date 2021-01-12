@@ -40,47 +40,38 @@ public class Display_Course_Introduction_Teacher extends HttpServlet {
         User user = (User) session.getAttribute("User");
 
         String requirement = request.getParameter("requirement");
-        String message=null;
-        if (user == null ) {
+        String message = null;
+        if (user == null) {
             url = "/sign-in";
-        }
-        else if(user.getRole().getRoleId()!=2)
-        {
-             url = "/Views/Pages/Home/home.jsp";
-        }
-        else {
+        } else if (user.getRole().getRoleId() != 2) {
+            url = "/Views/Pages/Home/home.jsp";
+        } else {
             if (requirement == null) {
                 Course course = (Course) request.getAttribute("course");
- 
+
                 if (course != null) {
                     course = CourseDB.getCourseById(course.getCourseId());
                 }
-                
+
                 //get courseid if exist, it is sent from teacherprofile
-                if(course==null)
-                {
+                if (course == null) {
                     String courseid = request.getParameter("courseid");
 
-                    if(courseid !=null && !courseid.equals(""))
-                    {
-                         course = CourseDB.getCourseById(Integer.parseInt(courseid));
+                    if (courseid != null && !courseid.equals("")) {
+                        course = CourseDB.getCourseById(Integer.parseInt(courseid));
                     }
                 }
-                
-                
+
                 int maxChap = 0;
 
                 if (course == null) {
-                     message = "Không tìm thấy khóa học!";
+                    message = "Không tìm thấy khóa học!";
                     request.setAttribute("message", message);
-                } 
-                //kiểm tra khóa học có phải của giáo viên
-                else if(!CourseDB.courseOfTeacherExists(course.getCourseId(), user))
-                {
-                     request.setAttribute("message", "Bạn không có khóa học này!");
-                     url="/teacher";
-                }
-                else if (course != null) {
+                } //kiểm tra khóa học có phải của giáo viên
+                else if (!CourseDB.courseOfTeacherExists(course.getCourseId(), user)) {
+                    request.setAttribute("message", "Bạn không có khóa học này!");
+                    url = "/teacher";
+                } else if (course != null) {
                     request.setAttribute("course", course);
                     int courseid = course.getCourseId();
 
@@ -91,7 +82,7 @@ public class Display_Course_Introduction_Teacher extends HttpServlet {
                             request.setAttribute("chap" + chapOrder, c);
                             maxChap = c.getChapOrder();
 
-                            List<Part> partList = PartDB.getAllPartOfChap( courseid, chapOrder);
+                            List<Part> partList = PartDB.getAllPartOfChap(courseid, chapOrder);
                             if (partList != null) {
                                 for (Part p : partList) {
                                     request.setAttribute("chap" + chapOrder + "_part" + p.getPartOrder(), p);
@@ -107,12 +98,18 @@ public class Display_Course_Introduction_Teacher extends HttpServlet {
                             request.setAttribute("FAQ" + f.getFAQOrder(), f);
                         }
                     }
-
+                    
+                    List<Instructor> instructorList = InstructorDB.getAllInstructorsByCourse(course);
+                    if(instructorList!=null)
+                    {
+                    for (int i = 0; i < instructorList.size(); i++) {
+                        request.setAttribute("instructor" + (i + 1), instructorList.get(i));
+                    }
+                    }
                 }
                 request.setAttribute("maxChap", maxChap);
-            }
-            else
-            {
+
+            } else {
                 request.setAttribute("message", message);
             }
         }

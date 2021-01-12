@@ -1,8 +1,11 @@
 
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
 <%@page import="Model.Chap"%>
 <%@page import="Model.Part"%>
 <%@page import="Model.FAQ"%>
 <%@page import="Model.User"%>
+<%@page import="Model.Instructor"%>
 <%@page  import = "Model.*" %>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -159,7 +162,7 @@
                             lastPart.insertAdjacentHTML("afterend", "<a class='link_excercise'  id = 'link_goto_excercise_chap"+chap+"_part"+(numberOfPart+1)
                                     +"' href='Display_Excercise_Teacher?previousPage=Display_Course_Introduction_Teacher'><input  class='link_goto_Excercise'  type ='button' value='Bài tập' ></a>");
                             numberOfParts[chap] += 1;
-                            //console.log(numberOfParts);
+                            
                         }
 
                         
@@ -201,7 +204,7 @@
                                                 var item = document.getElementById('textbox_chap' + chap + '_part' + i);
                                                 item.parentNode.removeChild(item);
                                                 numberOfParts[chap]--;
-                                                console.log(numberOfParts[chap]);
+                                                
                                             }
                                         }
                                     }
@@ -215,10 +218,10 @@
                              
                         </c:if>
                         //Thêm các chap vào 
-                        console.log(${maxchap});
+                        
                         while (counter_chap < ${maxchap})
                         {
-                            console.log("lần");
+                            
                             addChap();
                         }
                         
@@ -257,14 +260,13 @@
                     <div id="div_all_instructor">  
                         <div class='div_instructor' id ='div_instructor1'>
                             <div class="div_instructor_image">
-                                <img class ="instructor_image" id='instructor_image_1' src="" name='imageIntructor1'>
+                                <img class ="instructor_image" id='instructor_image_1' src="" name='imageInstructor1'>
 
                             </div>
                             <div class ="div_instructor_information">
-                                <input class='input_instructor_name' type="text" name="instructorName1" placeholder="Nhập tên người giảng dạy">
-                                <input class='input_instructor_disription' type="text" name="instructorDescription1"placeholder="Mô tả chức vụ ">
-                                <!--<input type="file"  accept="image/*" name="image1" id="image1"  onchange="loadFile('1')" style="display: none;">-->
-                                <input type="file" value="Upload file" name="hinhanh"  /> 
+                                <input class='input_instructor_name' id ="input_instructorName1" type="text" name="instructorName1"  placeholder="Nhập tên người giảng dạy">
+                                <input class='input_instructor_disription'  id ="input_instructorDescription1" type="text" name="instructorDescription1" placeholder="Mô tả chức vụ ">
+                                <input type="file"  accept="image/*" name="image1" id="image1"  onchange="loadFile('1')" style="display: none;"> 
                                 <label for ='image1' class='label_upload_image' >Upload</label>
                                 <input type='button' class ='button_remove_instructor' value='-' onclick='removeInstructor(1)'>
                             </div>
@@ -273,10 +275,12 @@
                     <input type='button' id ='button_add_instructor' value='Thêm' onclick='addIntructor()'>
 
                     <script>
+                        
                         var numberOfInstructors = 1;
 
                         var checkEmpty = [0, 1, 0, 0, 0, 0, 0, 0];
 
+                        
                         function addIntructor()
                         {
                             if (numberOfInstructors >= 7)
@@ -309,7 +313,7 @@
                             newImage.setAttribute('class', "instructor_image");
                             newImage.setAttribute('src', '');
                             newImage.setAttribute('id', "instructor_image_" + instructorOrder);
-                            newImage.setAttribute('name', 'imageIntructor' + instructorOrder);
+                            newImage.setAttribute('name', 'imageInstructor' + instructorOrder);
                             newImageDiv.appendChild(newImage);
 
                             //instructtor's information div
@@ -319,6 +323,7 @@
 
                             var newNameInput = document.createElement("input");
                             newNameInput.setAttribute('class', 'input_instructor_name');
+                            newNameInput.setAttribute('id','input_instructorName'+instructorOrder);
                             newNameInput.setAttribute('type', 'text');
                             newNameInput.setAttribute('name', 'instructorName' + instructorOrder);
                             newNameInput.setAttribute('placeholder', 'Nhập tên người giảng dạy');
@@ -327,6 +332,7 @@
 
                             var newInstructorDescriptionInput = document.createElement("input");
                             newInstructorDescriptionInput.setAttribute('class', 'input_instructor_disription');
+                            newInstructorDescriptionInput.setAttribute('id', 'input_instructorDescription'+instructorOrder);
                             newInstructorDescriptionInput.setAttribute('type', 'text');
                             newInstructorDescriptionInput.setAttribute('name', 'instructorDescription' + instructorOrder);
                             newInstructorDescriptionInput.setAttribute('placeholder', 'Mô tả chức vụ');
@@ -340,8 +346,8 @@
                             new_div_instructor_information.appendChild(button_remove);
 
 
-//                            var createFile = '<input type="file"  accept="image/*" name="image' + instructorOrder + '" id="image' + instructorOrder + '"onchange="loadFile(' + instructorOrder + ')" style="display: none;">';
-//                            newInstructorDescriptionInput.insertAdjacentHTML('afterend', createFile);
+                            var createFile = '<input type="file"  accept="image/*" name="image' + instructorOrder + '" id="image' + instructorOrder + '"onchange="loadFile(' + instructorOrder + ')" style="display: none;">';
+                            newInstructorDescriptionInput.insertAdjacentHTML('afterend', createFile);
 
                             var label_upload_image = document.createElement('label');
                             label_upload_image.setAttribute('for', 'image' + instructorOrder);
@@ -358,6 +364,7 @@
                             var image = document.getElementById('instructor_image_' + order);
                           
                             image.src = URL.createObjectURL(event.target.files[0]);
+                            console.log(image.getAttribute("src"));
                         };
 
                         function removeInstructor(order)
@@ -365,8 +372,34 @@
                             var div_instructor = document.getElementById('div_instructor' + order);
                             div_instructor.remove();
                             checkEmpty[order] = 0;
+                            
                             numberOfInstructors--;
                         }
+                        
+                        //hiển thị thông tin instructor
+                        <%
+                        for(int instructorCounter=1; instructorCounter<=6; instructorCounter++)
+                        {   
+                            Instructor ins = (Instructor)request.getAttribute("instructor"+instructorCounter);
+                            if(ins!=null){%>
+                             console.log("<%=instructorCounter%>");
+                             var image = document.getElementById("instructor_image_"+"<%=instructorCounter%>");
+                             while(image ==null)
+                                {
+                                    addIntructor();
+                                image = document.getElementById("instructor_image_"+"<%=instructorCounter%>");
+                                }
+                            
+                                image.setAttribute("src", "<c:out value='<%=ins.getPathOfImage()%>'/>");
+                            
+                                var inputInstructorName = document.getElementById("input_instructorName"+"<%=instructorCounter%>");
+                                inputInstructorName.setAttribute("value", "<c:out value='<%=ins.getName()%>'/>");
+                            
+                                var inputInstructorDes = document.getElementById("input_instructorDescription"+"<%=instructorCounter%>");
+                                inputInstructorDes.setAttribute("value", "<c:out value='<%=ins.getPosition()%>'/>");
+                            
+                            <%}
+                        }%>
                     </script>
                 </div>
 
@@ -398,7 +431,7 @@
                     }
                     
                     var input1 = document.getElementById("textarea_question1");
-                                            console.log(input1);
+                                            
                                             input1 = document.getElementById('aaa111');
                    <% try
                          {
@@ -408,7 +441,7 @@
                                         if (faq != null) {%>
                                         
                                             var input1 = document.getElementById("textarea_question" + <%=faqid%>);
-                                            console.log(input1);
+                                            
                                             while(!input1)
                                             {
                                                 addFAQ();

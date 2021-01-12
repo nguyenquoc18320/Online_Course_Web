@@ -229,15 +229,17 @@ padding-bottom: 20px;
     display: flex;
     width: 100%;
     flex-flow: wrap;
+    padding-bottom: 20px;
 }
 
 .div_instructor
 {
-    margin-left: 20px;
+    margin-left: 100px;
     margin-top: 20px;
     height: 150px;
     display: flex;
     /*background-color: blue*/
+
 }
 
 .div_instructor_image
@@ -260,21 +262,31 @@ padding-bottom: 20px;
 {
     display: flex;
     flex-direction: column;
+    
 }
 
 .input_instructor_name
 {
+    border: none;
+    text-align: left;
     font-size: 17px;
+    width:300px;
     margin-left: 10px;
     font-weight:bold;
+    color:#B43104;
+    background-color: transparent;
 }
 
-.input_instructor_disription
+.input_instructor_description
 {
+    border: none;
+    text-align: left;
     font-size: 17px;
     margin-left: 10px;
+    width:300px;
     font-style: italic;
     margin-top: 10px;
+    background-color: transparent;
 }
 
 .label_upload_image
