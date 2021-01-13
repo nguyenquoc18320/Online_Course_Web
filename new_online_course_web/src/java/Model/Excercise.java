@@ -4,11 +4,14 @@ package Model;
 import Model.Course;
 import Model.Chap;
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -35,6 +38,9 @@ public class Excercise implements Serializable{
     
     @ManyToOne
     private Part part;
+    
+    @OneToMany (mappedBy = "Excercise", cascade = CascadeType.REMOVE)
+    private List<StudentExcercise> studentExcercises;
     
     private String Question;
     private String AnswerA;

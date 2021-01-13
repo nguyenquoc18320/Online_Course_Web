@@ -25,6 +25,10 @@ public class User implements Serializable {
     private String Email;
     private boolean Gender;
     private String Phone;
+    
+    @ManyToMany
+    List<Course> Registedcourses;
+    
     @ManyToOne
     @JoinColumn(name="RoleId")
     private Role role;
@@ -33,6 +37,12 @@ public class User implements Serializable {
     @JoinColumn(name="AccountId")
     private Account account;
 
+    @OneToMany (mappedBy = "User", cascade = CascadeType.REMOVE)
+    private List<Course> courses;
+    
+    @OneToMany (mappedBy = "User", cascade = CascadeType.REMOVE)
+    private List<StudentExcercise> studentExcercises;
+    
     public Account getAccount() {
         return account;
     }

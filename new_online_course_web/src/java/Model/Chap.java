@@ -3,6 +3,7 @@ package Model;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,7 +25,7 @@ import javax.persistence.OneToMany;
 
 @Entity 
 
-public class Chap {
+public class Chap implements Serializable{
     @ManyToOne
     private Course course;
     
@@ -33,9 +34,15 @@ public class Chap {
     private int ChapId ;
     private int ChapOrder;
     private String Name;
-//    @OneToMany(targetEntity = Part.class)
-//    private List<Part> parts; 
+    @OneToMany(mappedBy = "Chap",cascade = CascadeType.REMOVE )
+    private List<Part> parts; 
+    
+     @OneToMany(mappedBy = "Chap",cascade = CascadeType.REMOVE )
+    private List<Excercise> excercise; 
 
+     @OneToMany (mappedBy = "Chap", cascade = CascadeType.REMOVE)
+    private List<StudentExcercise> studentExcercises;
+     
      public Chap() {
     }
 

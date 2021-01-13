@@ -5,6 +5,8 @@
  */
 package Model;
 
+import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,7 +18,7 @@ import javax.persistence.ManyToOne;
  * @author A556U
  */
 @Entity
-public class Instructor {
+public class Instructor implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;

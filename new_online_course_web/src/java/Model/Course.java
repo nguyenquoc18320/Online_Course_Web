@@ -2,8 +2,10 @@ package Model;
 
 
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -21,7 +23,7 @@ import javax.persistence.Temporal;
  * @author A556U
  */
 @Entity
-public class Course {
+public class Course implements Serializable{
     @Id 
     private int CourseId;
     private String Name;
@@ -33,8 +35,23 @@ public class Course {
     private boolean Approved;
     private String document;
 
-//    @OneToMany (targetEntity = Chap.class)
-//    private List<Chap> chaps;
+    @OneToMany (mappedBy = "Course", cascade = CascadeType.REMOVE)
+    private List<Chap> chaps;
+    
+    @OneToMany (mappedBy = "Course", cascade = CascadeType.REMOVE)
+    private List<Part> parts;
+    
+    @OneToMany (mappedBy = "Course", cascade = CascadeType.REMOVE)
+    private List<Excercise> excercises;
+    
+    @OneToMany (mappedBy = "Course", cascade = CascadeType.REMOVE)
+    private List<FAQ> faqs;
+    
+    @OneToMany (mappedBy = "Course", cascade = CascadeType.REMOVE)
+    private List<Instructor> instructors;
+    
+    @OneToMany (mappedBy = "Course", cascade = CascadeType.REMOVE)
+    private List<StudentExcercise> studentExcercises;
     
     public Course()
     {

@@ -62,7 +62,7 @@ public class Process_Delete_Course_Teacher extends HttpServlet {
                         }
                     }
                 } else {
-                    message = "Không tìm thấy khóa học";
+                    message = "Không tìm thấy khóa học1";
                 }
             } catch (Exception ex) {
                 message = "Không tìm thấy khóa học";

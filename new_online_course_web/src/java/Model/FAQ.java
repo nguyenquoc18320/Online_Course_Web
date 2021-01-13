@@ -2,6 +2,8 @@ package Model;
 
 
 import Model.Course;
+import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,7 +21,7 @@ import javax.persistence.ManyToOne;
  * @author A556U
  */
 @Entity
-public class FAQ {
+public class FAQ implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int FAQId;

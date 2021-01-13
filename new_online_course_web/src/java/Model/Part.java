@@ -3,6 +3,9 @@ package Model;
 
 import Model.Course;
 import Model.Chap;
+import java.io.Serializable;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.persistence.OneToMany;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -24,12 +28,12 @@ import javax.persistence.MapsId;
 
 
 @Entity
-public class Part {
+public class Part implements Serializable{
 
     @ManyToOne
     private Chap chap;
     
-    @ManyToOne 
+    @ManyToOne
     private Course course;
     
     @Id
@@ -40,7 +44,12 @@ public class Part {
     private String Video;
     private String Document;
     
-   
+    @OneToMany (mappedBy = "Part", cascade = CascadeType.REMOVE)
+    private List<Excercise> excercises;
+    
+    @OneToMany (mappedBy = "Part", cascade = CascadeType.REMOVE)
+    private List<StudentExcercise> studentExcercises;
+    
     public Part()
     {
         

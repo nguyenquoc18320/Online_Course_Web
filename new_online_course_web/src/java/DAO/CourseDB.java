@@ -160,7 +160,7 @@ public class CourseDB {
         tran.begin();
 
         try {
-            entityManager.remove(entityManager.merge(course));
+            entityManager.remove(entityManager.merge(course));   
             tran.commit();
         } catch (Exception e) {
             System.out.println(e);
