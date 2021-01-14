@@ -129,7 +129,7 @@ public class StudentExcerciseDB {
     
     public static int getMaxTime(User user, Course course, Chap chap, Part part )
     {
-      
+       
        List<StudentExcercise> ansList = getAllAnswerOfPart(user, course, chap, part);
              
         int max=0;
@@ -142,7 +142,7 @@ public class StudentExcerciseDB {
                    max=ansList.get(i).getTime();
            }
        }
-  
+
         return max;
     }
     

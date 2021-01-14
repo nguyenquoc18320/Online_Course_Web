@@ -1,5 +1,4 @@
 
-<%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@page import="Model.Chap"%>
 <%@page import="Model.Part"%>
@@ -136,8 +135,6 @@
                                 alert("Only 10 textboxes allow");
                                 return false;
                             }
-
-
                             var lastPart;
                             if (numberOfPart === 0)
                             {
@@ -153,9 +150,9 @@
                             
                             //Tới trang bài học
                             lastPart.insertAdjacentHTML("afterend", "<a  class='link_part' id = 'link_goto_part_chap"+chap+"_part"+(numberOfPart+1)
-                                    +"' href='#'><input class='link_goto_Part'  type ='button' value='Bài học' button' ></a>");
+                                    +"' href='Display_Part_Teacher?previousPage=Display_Course_Introduction_Teacher'><input class='link_goto_Part'  type ='button' value='Bài học' button' ></a>");
                             
-                            
+//                            Display_Part_Teacher?previousPage=Display_Course_Introduction_Teacher
                             lastPart =document.getElementById("link_goto_part_chap" + chap + "_part" + (numberOfPart+1));
                             
                             //Thêm nút bài tập
@@ -217,8 +214,7 @@
                             <c:set var="maxchap" value="${maxChap}"/>
                              
                         </c:if>
-                        //Thêm các chap vào 
-                        
+                        //Thêm các chap vào                         
                         while (counter_chap < ${maxchap})
                         {
                             
@@ -260,7 +256,7 @@
                     <div id="div_all_instructor">  
                         <div class='div_instructor' id ='div_instructor1'>
                             <div class="div_instructor_image">
-                                <img class ="instructor_image" id='instructor_image_1' src="" name='imageInstructor1'>
+                                <img class ="instructor_image" id='instructor_image_1' src="" name='imageIntructor1'>
 
                             </div>
                             <div class ="div_instructor_information">
@@ -275,12 +271,10 @@
                     <input type='button' id ='button_add_instructor' value='Thêm' onclick='addIntructor()'>
 
                     <script>
-                        
                         var numberOfInstructors = 1;
 
                         var checkEmpty = [0, 1, 0, 0, 0, 0, 0, 0];
 
-                        
                         function addIntructor()
                         {
                             if (numberOfInstructors >= 7)
@@ -364,7 +358,6 @@
                             var image = document.getElementById('instructor_image_' + order);
                           
                             image.src = URL.createObjectURL(event.target.files[0]);
-                            console.log(image.getAttribute("src"));
                         };
 
                         function removeInstructor(order)
@@ -372,7 +365,6 @@
                             var div_instructor = document.getElementById('div_instructor' + order);
                             div_instructor.remove();
                             checkEmpty[order] = 0;
-                            
                             numberOfInstructors--;
                         }
                         

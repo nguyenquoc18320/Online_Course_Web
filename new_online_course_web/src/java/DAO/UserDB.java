@@ -40,7 +40,7 @@ public class UserDB {
         return isInserted;
     }
     
-     public static List<User> GetUsers()
+    public static List<User> GetUsers()
     {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
         String qString = "SELECT u FROM User AS u";
@@ -254,7 +254,46 @@ public class UserDB {
         });
         return map;
     }
-    
+    public static boolean courseRegisterOfUser(User user, int courseid)
+    {
+        boolean result=true;
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        EntityTransaction tran = em.getTransaction();
+        tran.begin();
+//        try
+//        {
+            //user = UserDB.GetUserByUserId(user.getUserId());
+            Course course = CourseDB.getCourseById(courseid);
+                    
+            if(user==null || course ==null)
+                result=false;
+            else
+            {
+               System.out.println("UserId: " + user.getUserId());// + user.getRegistedcourses().toString());
+                System.out.println("CourseID: " + course.getCourseId());
+                
+                List<Course> coursesNew = user.getRegistedcourses();
+                if (coursesNew == null)
+                    coursesNew = new ArrayList();
+                coursesNew.add(course);
+                user.setRegistedcourses(coursesNew);
+                
+               System.out.println("Information: " + user.getRegistedcourses().toArray().toString());
+               em.merge(user);
+               tran.commit();
+            }
+//        }
+//        catch(Exception ex)
+//        {
+//            tran.rollback();
+//            result=false;
+//        }
+//        finally
+//        {
+            em.close();
+//        }
+        return result;
+    }
 }
 
  

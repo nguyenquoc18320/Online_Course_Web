@@ -1,21 +1,25 @@
 <%-- 
-    Document   : admin
-    Created on : Jan 4, 2021, 11:24:32 PM
-    Author     : TRAN VAN AN
+    Document   : student
+    Created on : Jan 13, 2021, 6:16:41 AM
+    Author     : ad
 --%>
 
+<%@page import="Model.Course"%>
+<%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="/common/taglib.jsp" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <!--css-->
         <link href="Views/Css/common.css" type="text/css" rel="stylesheet">
         <link href="Views/Css/Admin/admin.css" type="text/css" rel="stylesheet"/>
         <script src="https://kit.fontawesome.com/a076d05399.js"></script>
         <script src="Views/Js/Admin/admin.js"></script>
-        <title>ASQ | Admin</title>
+        <script src="Views/Js/Admin/account_managerment.js"></script>
+        
+        
+        <title>ASQ | Học viên</title>
     </head>
     <body>
          <div class = 'div_menu'>
@@ -27,7 +31,7 @@
                 <div id='div_account' class="div_account">
                     <label id='label_account'>${User.getName()} </label>
                     <div class="drop-down account" id="drop-down-person">
-                        <a href="admin"><button>Thông tin cá nhân</button></a>
+                        <a href="student"><button>Thông tin cá nhân</button></a>
                         <a href="sign-in"><button>Đăng xuất</button></a>
                      </div>    
                     <i class='fas fa-caret-down' onclick="ToggleDropDown('drop-down-person')"></i>    
@@ -51,15 +55,17 @@
                 <div class="title-profile">
                     <p>Giới thiệu</p>
                     <div class="drop-down setting" id="drop-down-setting">
-                        <button onclick="ShowFrontDivEditInfo()">Đổi thông tin cá nhân</button>
-                        <button onclick="ShowFrontDivEditPass()">Đổi mật khẩu</button>
+                        <button onclick="ShowFrontDivEditInfoStudent()">Đổi thông tin cá nhân</button>
+                        <button onclick="ShowFrontDivEditPassStudent()">Đổi mật khẩu</button>
                     </div>
                     <i class="fas fa-cog" id="setting" onclick="ToggleDropDown('drop-down-setting')"></i> 
                 </div>
                 <div class="info-profile">
                     <div class="info-detail-profile">
                         <p class="title-info-detail-profile">Chức vụ: </p>
-                        <p class="describe">${Role.getRoleName()}</p>
+                        <p class="describe">
+                            <c:if test="${Role.getRoleName() == 'student'}"><c:out value="Học viên"/></c:if>
+                        </p>
                     </div>
                     <div class="info-detail-profile">
                         <p class="title-info-detail-profile">Ngày sinh: </p>
@@ -79,7 +85,106 @@
                     </div>
                 </div>
             </div>
-            <div class="function">
+            <div class="introduce-profile lagre">
+                <div class="title-profile">
+                    <p>Khóa học đã đăng ký :</p>
+                </div>
+            </div>
+            <div class="introduce-profile lagre"> 
+                <div class="title-profile">
+                    <p>Thông tin khóa học mới:</p>
+                </div>
+                <script>
+                    function LoadCourses(courseId, name, obj, modifiedDate)
+                    {
+                        var tbody_table = document.getElementById("tbody-table");
+                        //tbody_table.empty();
+                        var NewTr = document.createElement("tr");
+
+                        var CourseId = document.createElement('td');
+                        CourseId.setAttribute('class', 'center');
+                        CourseId.innerHTML = courseId;
+                        NewTr.appendChild(CourseId);
+
+                        var Name = document.createElement('td');
+                        Name.innerHTML = name;
+                        NewTr.appendChild(Name);
+
+                        var Objective = document.createElement('td');
+                        Objective.innerHTML = obj;
+                        NewTr.appendChild(Objective);
+
+                        
+                        
+                        var ModifiedDate = document.createElement('td');
+                        ModifiedDate.setAttribute('class', 'center');
+                        
+                        var Input_date = document.createElement('a');
+                        Input_date.setAttribute('name', 'dateModifed');
+                        ModifiedDate.appendChild(Input_date);
+                        Input_date.innerHTML = modifiedDate;
+                         
+                        ////+"/"+ modifiedDate.getMonth()+"/" +modifiedDate.getDate();
+//                        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
+//                        //java.sql.Date dateReportDate =  Date.valueOf(dateReport); //formatDate.parse(dateReport);
+//                        java.util.Date modifiedDate = (java.util.Date) formatDate.parse(dateReport);
+//                        java.util.Date modifiedDate = new java.util.Date();
+//                        java.sql.Date ModifiedDate2 = new java.sql.Date(modifiedDate.getTime());
+                        NewTr.appendChild(ModifiedDate);
+                        
+                        
+                        var Infor = document.createElement('td');
+                        Infor.setAttribute('class', 'center');
+                        
+                        var alink = document.createElement('a');
+                        alink.setAttribute('href', 'Display_Course_Introduction_Student?courseid='+courseId);
+                        Infor.appendChild(alink);
+                        alink.innerHTML = '<i class="fas fa-info-circle"></i>';
+                        
+                        
+                        NewTr.appendChild(Infor);
+                        
+                        tbody_table.appendChild(NewTr); 
+                    }
+                </script>
+                <div class="table-div" id ="update_table">
+                     <div class="grid" id="gird-transport">
+                        <table border="1" cellpadding=0 id="table-transport" class="table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Mã khóa học</th>
+                                    <th scope="col">Tên khóa học</th>
+                                    <th scope="col">Mục tiêu khóa học</th>
+                                    <th scope="col">Thời gian</th>
+                                    <th scope="col">Chi tiết khóa học</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-table">
+                                
+                                   <%
+                                       List<Course> courses = (List<Course>)request.getAttribute("Courses");%>
+                            
+                                       <%if (courses != null )
+                                       {
+                                            %>
+                                            <script>tbody_table.empty();</script> 
+                                            <%
+                                           for (int i = 0; i < courses.size(); i++)
+                                           {
+                                                %> <script>LoadCourses("<%=courses.get(i).getCourseId()%>", "<%=courses.get(i).getName()%>", "<%=courses.get(i).getObjective()%>", "<%=courses.get(i).getModifiedDate()%>");
+                                                </script> <%
+//                                               
+                                           }
+                                       }
+                                   %>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+<!--            <div class="function">
                  <a href="account-managerment"><div class="introduce-profile small">
                    <div class="title-profile">
                         <p>Quản lý tài khoản</p>
@@ -88,7 +193,7 @@
                         <p class="detail-small">${Activated}/${Activated + Locked} tài khoản đang hoạt động</p>
                     </div>
                 </div> </a>
-            </div>   
+            </div>   -->
         </div>
      
         <div class="front-div" id="front-div">
@@ -102,7 +207,7 @@
             </script>
             <div class="content-front">
                 <div class="btn-close" id="btn-close">
-                    <i class="far fa-times-circle" onclick="CloseFrontDivEditInfo()"></i>
+                    <i class="far fa-times-circle" onclick="CloseFrontDivEditInfoStudent()"></i>
                 </div>
                 <p class="header">Cập nhật tài khoản</p>
                 <form action="edit-information" method="post">
@@ -154,7 +259,7 @@
             </script>
             <div class="content-front">
                 <div class="btn-close" id="btn-close">
-                    <i class="far fa-times-circle" onclick="CloseFrontDivEditPass()"></i>
+                    <i class="far fa-times-circle" onclick="CloseFrontDivEditPassStudent()"></i>
                 </div>
                 <p class="header">Cập nhật mật khẩu</p>
                 <form action="change-password" method="post">

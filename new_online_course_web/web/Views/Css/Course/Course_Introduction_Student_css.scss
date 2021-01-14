@@ -4,19 +4,23 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 */
 /* 
-    Created on : Jan 2, 2021, 9:58:34 AM
-    Author     : A556U
-*/
-
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/* 
     Created on : Nov 17, 2020, 2:58:48 PM
     Author     : A556U
 */
+
+.div_inspire
+{
+    margin-left: 10%;
+    margin-right: 10%;
+    height: 400px;
+}
+
+#image_inspire
+{
+    width: 100%;
+    height: 100%;
+}
+
 h2
 {
     padding: 10px 50px 10px 50px;
@@ -24,10 +28,10 @@ h2
     background-color:#3A01DF ;
     border-radius: 10px 10px 10px 10px;
 }
-/*.div_menu
+.div_menu
 {
     height: 100px;
-    background-color: blue;
+    /*background-color: blue;*/
     border-bottom:2px outset #b1154a;
     box-shadow: 0px 5px 5px gray;
     display: flex;
@@ -40,7 +44,7 @@ h2
     width: 200px;
     height: 100%;
     display: flex;
-    background-color: red;
+    /*background-color: red;*/
 }
 
 #image_logo
@@ -69,7 +73,7 @@ h2
     margin-right: 0px;
     margin-top: auto;
     margin-bottom: auto;
-}*/
+}
 
 /*body div*/
 .div_container
@@ -85,13 +89,13 @@ h2
 /*    padding-right: 50px;
     padding-left: 50px;*/
 padding-bottom: 20px;
-    background-color: #F2F2F2;
+    background-color: #E6E6E6;
      border-radius: 10px 10px 10px 10px;
 }
 
 
 
-#p_mucTieu
+#textarea_mucTieu
 {
     width: 90%;
     resize: vertical;
@@ -110,18 +114,18 @@ padding-bottom: 20px;
     margin-top: 50px;
     /*background-color: red;*/
     padding-bottom: 20px;
-    background-color: #F2F2F2;
+    background-color: #E6E6E6;
      border-radius: 10px 10px 10px 10px;
 }
 
 #courseName
 {
     width: 90%;
-    font-size: 50px;
-    color: #FF0000;
-    margin: 10px 5% 0 5%;
-    font-weight: bold;
-    text-align: center;
+    height: 80px;
+    font-size: 30px;
+    color: #b1154a;
+    margin: 0 5% 0 5%;
+
 }
 
 .div_chap
@@ -140,11 +144,13 @@ padding-bottom: 20px;
     font-family: Time New Roman;
     font-size: 18px;
     margin-top: 10px;
+    
 }
 
-.button_part
+.textbox_part
 {   
-    border:none;
+    background-color: #E6E6E6;
+    border-style: none;
     display: block;
     width: 90%;
     font-family: Time New Roman;
@@ -152,24 +158,20 @@ padding-bottom: 20px;
     margin-top:10px;
     margin-left: 10%;
     text-align: left;
-    background-color: transparent;
-    /*float: right;*/
 }
 
-
-
-.button_chap{
-    border: none;
-    border-radius: 3px;
+.textbox_chap{
+    background-color: #E6E6E6;
+    border-style: none;
     margin-bottom: 8px;
     padding: 8px;
     display: block;
     width: 100%;
     font-family: Time New Roman;
-    font-size: 18px;
+    font-size: 20px;
     margin-top:10px;
-    text-align: left ;
-    background-color: #F2F2F2;
+    text-align: left;
+    color: #B4045F;
 }
 .btn_add_chap{
     padding: 8px 16px;
@@ -198,28 +200,12 @@ padding-bottom: 20px;
     margin-top: 5px;
 }
 
-.link_goto_Part
-{
-    margin-top: 5px;
-    background-color: #B40486;
-         margin-left: 50%;
-          color: white;
-}
-
-.link_goto_Excercise
-{
-    margin-top: 5px;
-    margin-left: 5px;
-    background-color: #DF3A01;
-    color: white;
-}
-
 /*instructor info*/
 .div_part3_instructor
 {
     margin-top: 50px;
     /*background-color: blue;*/
-    background-color: #BDBDBD;
+    background-color: #E6E6E6;
      border-radius: 10px 10px 10px 10px;
     
 }
@@ -229,17 +215,15 @@ padding-bottom: 20px;
     display: flex;
     width: 100%;
     flex-flow: wrap;
-    padding-bottom: 20px;
 }
 
 .div_instructor
 {
-    margin-left: 100px;
+    margin-left: 20px;
     margin-top: 20px;
     height: 150px;
     display: flex;
     /*background-color: blue*/
-
 }
 
 .div_instructor_image
@@ -262,13 +246,11 @@ padding-bottom: 20px;
 {
     display: flex;
     flex-direction: column;
-    
 }
 
 .input_instructor_name
 {
     font-size: 17px;
-    width:300px;
     margin-left: 10px;
     font-weight:bold;
 }
@@ -277,7 +259,6 @@ padding-bottom: 20px;
 {
     font-size: 17px;
     margin-left: 10px;
-    width:300px;
     font-style: italic;
     margin-top: 10px;
 }
@@ -308,7 +289,7 @@ padding-bottom: 20px;
     border-radius: 3px;
     margin-top: 10px;
     margin-left: 20%;
-    background-color: #086A87;
+    background-color: #E6E6E6;
     color: white;
     font-weight: bold;
 }
@@ -317,7 +298,7 @@ padding-bottom: 20px;
 #div_part4_FAQ
 {
     margin-top: 50px;
-    background-color: #BDBDBD;
+    background-color: #E6E6E6;
      border-radius: 10px 10px 10px 10px;
 }
 
@@ -332,14 +313,12 @@ padding-bottom: 20px;
 {
    width: 100%;
    resize: vertical;
-   font-size: 17px;
+   font-size: 20px;
    font-family: Time New Roman;
-   text-align: left;
-   margin-bottom: 10px;
+   color:#DF013A;
 /*   background-color: blue;
    color:red;*/
 }
-
 .button_answer
 {
    width: 90%;
@@ -347,8 +326,6 @@ padding-bottom: 20px;
    font-size: 17px;
    font-family: Time New Roman;
    margin-left: 10%;
-   text-align: left;
-    margin-bottom: 30px;
 }
 
 
@@ -375,7 +352,6 @@ padding-bottom: 20px;
 
 #button_save
 {
-    width: 200px;
     font-weight: bold;
     background-color: #31B404;
     font-size: 18px;
@@ -383,27 +359,6 @@ padding-bottom: 20px;
     padding: 5px 20px 5px 20px;
 }
 
-#button_profile
-{
-     width: 200px;
-    margin-left: 20px;
-      font-weight: bold;
-    background-color: #045FB4;
-    font-size: 18px;
-    color:white;
-    padding: 5px 20px 5px 20px;
-}
-
-#button_newCourse
-{
-    width: 200px;
-    margin-left: 20px;
-      font-weight: bold;
-    background-color: #B40431;
-    font-size: 18px;
-    color:white;
-    padding: 5px 20px 5px 20px;
-}
 /*Footer*/
 .footer{
     margin-top: 50px;

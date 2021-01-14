@@ -68,52 +68,46 @@ public class CourseDB {
         }
         return courses;
     }
-   
-     //lấy các khóa học đã được duyệt
-    public static List<Course> GetAllCoursesApprovedByUser(User user)
-    { 
+    public static List<Course> GetCourses()
+    {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
-        String qString = "SELECT c FROM Course AS c WHERE c.user = :user and c.Approved = :approved";
+        String qString = "SELECT u FROM Course u where u.Approved = 1 ";
+            
         TypedQuery<Course> q = em.createQuery(qString, Course.class);
-        q.setParameter("user", user);
-         q.setParameter("approved", true);
-     
+       
+        List<Course> courses = null;
+//        try{
+            courses = q.getResultList();
+            if (courses == null || courses.isEmpty())
+                courses = null;
+//        }catch (Exception ex){
+//            System.out.println("Error: " + ex.getMessage());
+//        }
+//        finally{
+//            em.close();
+//        }
+        return courses;
+    }
+    public static List<Course> GetregisteredCourse()
+    {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        String qString = "SELECT c FROM Course AS c";
+            
+        TypedQuery<Course> q = em.createQuery(qString, Course.class);
+       
         List<Course> courses = null;
         try{
             courses = q.getResultList();
-        }catch(NoResultException ex)
-        {
-            courses = null;
-            System.out.println("Kết nối thất bại!");
+            if (courses == null || courses.isEmpty())
+                courses = null;
+        }catch (Exception ex){
+            System.out.println("Error: " + ex.getMessage());
         }
         finally{
             em.close();
         }
         return courses;
     }
-    
-    public static List<Course> GetAllCoursesNotApprovedByUser(User user)
-    { 
-        EntityManager em = DBUtil.getEmFactory().createEntityManager();
-        String qString = "SELECT c FROM Course AS c WHERE c.user = :user and c.Approved = :approved";
-        TypedQuery<Course> q = em.createQuery(qString, Course.class);
-        q.setParameter("user", user);
-         q.setParameter("approved", false);
-     
-        List<Course> courses = null;
-        try{
-            courses = q.getResultList();
-        }catch(NoResultException ex)
-        {
-            courses = null;
-            System.out.println("Kết nối thất bại!");
-        }
-        finally{
-            em.close();
-        }
-        return courses;
-    }
-    
     public static boolean insertCourse(Course course) {
         boolean result = true;
         EntityManager entityManager = DBUtil.getEmFactory().createEntityManager();
@@ -160,7 +154,7 @@ public class CourseDB {
         tran.begin();
 
         try {
-            entityManager.remove(entityManager.merge(course));   
+            entityManager.remove(course);
             tran.commit();
         } catch (Exception e) {
             System.out.println(e);
@@ -273,4 +267,52 @@ public class CourseDB {
          Course c = getCourseOfTeacher(courseid, user);
          return c!=null;
      }
+
+   
+     //lấy các khóa học đã được duyệt
+    public static List<Course> GetAllCoursesApprovedByUser(User user)
+    { 
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        String qString = "SELECT c FROM Course AS c WHERE c.user = :user and c.Approved = :approved";
+        TypedQuery<Course> q = em.createQuery(qString, Course.class);
+        q.setParameter("user", user);
+         q.setParameter("approved", true);
+     
+        List<Course> courses = null;
+        try{
+            courses = q.getResultList();
+        }catch(NoResultException ex)
+        {
+            courses = null;
+            System.out.println("Kết nối thất bại!");
+        }
+        finally{
+            em.close();
+        }
+        return courses;
+    }
+    
+    public static List<Course> GetAllCoursesNotApprovedByUser(User user)
+    { 
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        String qString = "SELECT c FROM Course AS c WHERE c.user = :user and c.Approved = :approved";
+        TypedQuery<Course> q = em.createQuery(qString, Course.class);
+        q.setParameter("user", user);
+         q.setParameter("approved", false);
+     
+        List<Course> courses = null;
+        try{
+            courses = q.getResultList();
+        }catch(NoResultException ex)
+        {
+            courses = null;
+            System.out.println("Kết nối thất bại!");
+        }
+        finally{
+            em.close();
+        }
+        return courses;
+    }
+    
+   
 }

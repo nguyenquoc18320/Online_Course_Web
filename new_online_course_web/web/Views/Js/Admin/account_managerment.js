@@ -134,25 +134,3 @@ function ShowFrontDivAddAdmin()
 {
     window.location = "/new_online_course_web/account-managerment?isShowAddAdmin=true";
 }
-
-function numberOfPages(type, max = 9999)
-{
-    var number = document.getElementById("numberOfPages");
-    if (type === 'start'){
-        number.value = 1;
-    }else if (type === 'end'){
-        number.value = max;
-    }else if (type === 'previous'){
-        if (parseInt(number.value) > 1)
-            number.value = parseInt(number.value) - 1;
-    }else if (type === 'next')
-    {
-        if (parseInt(number.value) < max)
-            number.value = parseInt(number.value) + 1;
-    }
-}
-
-function reloadDataAccount(){
-    var number = document.getElementById("numberOfPages");
-    window.location = "/new_online_course_web/account-managerment?numberOfPages=" + number.value;
-}

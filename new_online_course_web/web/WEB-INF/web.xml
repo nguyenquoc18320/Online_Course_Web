@@ -29,8 +29,24 @@
         <servlet-class>Controller.UploadFileController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>Process_Delete_Course_Teacher</servlet-name>
-        <servlet-class>Controller.Process_Delete_Course_Teacher</servlet-class>
+        <servlet-name>Display_Part_Teacher</servlet-name>
+        <servlet-class>Controller.Display_Part_Teacher</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>StudentController</servlet-name>
+        <servlet-class>Controller.StudentController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddCourse_Student</servlet-name>
+        <servlet-class>Controller.AddCourse_Student</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>User_Course</servlet-name>
+        <servlet-class>Model.User_Course</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>User_CourseDB</servlet-name>
+        <servlet-class>DAO.User_CourseDB</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Display_Course_Introduction_Teacher</servlet-name>
@@ -61,8 +77,24 @@
         <url-pattern>/uploadFile</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>Process_Delete_Course_Teacher</servlet-name>
-        <url-pattern>/Process_Delete_Course_Teacher</url-pattern>
+        <servlet-name>Display_Part_Teacher</servlet-name>
+        <url-pattern>/Display_Part_Teacher</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StudentController</servlet-name>
+        <url-pattern>/StudentController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddCourse_Student</servlet-name>
+        <url-pattern>/AddCourse_Student</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>User_Course</servlet-name>
+        <url-pattern>/User_Course</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>User_CourseDB</servlet-name>
+        <url-pattern>/User_CourseDB</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

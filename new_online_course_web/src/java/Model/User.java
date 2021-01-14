@@ -26,7 +26,7 @@ public class User implements Serializable {
     private boolean Gender;
     private String Phone;
     
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     List<Course> Registedcourses;
     
     @ManyToOne
@@ -89,6 +89,8 @@ public class User implements Serializable {
         this.account = account;
         this.CreatedDate = CreatedDate;
     }
+    
+    
 
     
     public User(int UserId, String Name, Date DateOfBirth, String Email, boolean Gender, String Phone, Role role, Timestamp CreatedDate) {
@@ -164,6 +166,14 @@ public class User implements Serializable {
 
     public void setCreatedDate(Timestamp CreatedDate) {
         this.CreatedDate = CreatedDate;
+    }
+
+    public List<Course> getRegistedcourses() {
+        return Registedcourses;
+    }
+
+    public void setRegistedcourses(List<Course> Registedcourses) {
+        this.Registedcourses = Registedcourses;
     }
 
     

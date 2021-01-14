@@ -41,57 +41,68 @@ public class Display_Course_Introduction_Student extends HttpServlet {
         String url = "/Views/Pages/Course/Course_Introduction_Student.jsp";
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("User");
-
-        if (user == null) {
+            
+         if (user == null ) {
             url = "/sign-in";
-        } else if (user.getRole().getRoleId() != 3) {
-            url = "/Views/Pages/Home/home.jsp";
+        }
+        else if(user.getRole().getRoleId()!=3)
+        {
+             url = "/Views/Pages/Home/home.jsp";
         } else {
-            int courseid = Integer.parseInt(request.getParameter("courseid"));
+            try
+            {   
+                int courseid = Integer.parseInt(request.getParameter("courseid"));
             //Course course = (Course) request.getAttribute("course");   
-            Course course = CourseDB.getCourseById(courseid);
+                Course course = CourseDB.getCourseById(courseid);
+                
 
-            int maxChap = 0;
+                int maxChap = 0;
 
-            if (course == null) {
-                String message = "Không tìm thấy khóa học!";
-                request.setAttribute("message", message);
-            }
-            if (course != null) {
-                request.setAttribute("course", course);
-                List<Chap> chapList = ChapDB.getAllChapByCourse(course);
-                if (chapList != null) {
-                    for (Chap c : chapList) {
-                        int chapOrder = c.getChapOrder();
-                        request.setAttribute("chap" + chapOrder, c);
-                        maxChap = chapOrder;
+                if (course == null) {
+                    String message = "Không tìm thấy khóa học!";
+                    request.setAttribute("message", message);
+                }
+                if (course != null) {
+                    request.setAttribute("course", course);
+                    List<Chap> chapList = ChapDB.getAllChapByCourse(course);
+                    if (chapList != null) {
+                        for (Chap c : chapList) {
+                            int chapOrder = c.getChapOrder();
+                            request.setAttribute("chap" + chapOrder, c);
+                            maxChap = chapOrder;
 
-                        List<Part> partList = PartDB.getAllPartOfChap(course, c);
-                        if (partList != null) {
-                            for (Part p : partList) {
-                                request.setAttribute("chap" + chapOrder + "_part" + p.getPartOrder(), p);
+                            List<Part> partList = PartDB.getAllPartOfChap(course, c);
+                            if (partList != null) {
+                                for (Part p : partList) {
+                                    request.setAttribute("chap" + chapOrder + "_part" + p.getPartOrder(), p);
+                                }
                             }
+                        }
+                    }
+
+                    //Các câu hỏi thường gặp
+                    List<FAQ> faqList = FAQDB.getAllFAQOfCourse(course);
+                    if (faqList != null) {
+                        for (FAQ f : faqList) {
+                            request.setAttribute("FAQ" + f.getFAQOrder(), f);
+                        }
+                    }
+                    
+                    List<Instructor> instructorList = InstructorDB.getAllInstructorsByCourse(course);
+                    if ( instructorList != null)
+                    {
+                        for (int i = 0; i < instructorList.size(); i++) {
+                            request.setAttribute("instructor" + (i + 1), instructorList.get(i));
                         }
                     }
                 }
 
-                //Các câu hỏi thường gặp
-                List<FAQ> faqList = FAQDB.getAllFAQOfCourse(course);
-                if (faqList != null) {
-                    for (FAQ f : faqList) {
-                        request.setAttribute("FAQ" + f.getFAQOrder(), f);
-                    }
-                }
-
-                List<Instructor> instructorList = InstructorDB.getAllInstructorsByCourse(course);
-                if (instructorList != null) {
-                    for (int i = 0; i < instructorList.size(); i++) {
-                        request.setAttribute("instructor" + (i + 1), instructorList.get(i));
-                    }
-                }
+                request.setAttribute("maxChap", maxChap);
             }
-
-            request.setAttribute("maxChap", maxChap);
+            catch(Exception ex)
+            {
+                url="/student";
+            }
         }
 
         getServletContext().getRequestDispatcher(url).forward(request, response);

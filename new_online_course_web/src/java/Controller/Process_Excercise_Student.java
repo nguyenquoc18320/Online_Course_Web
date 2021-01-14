@@ -52,7 +52,6 @@ public class Process_Excercise_Student extends HttpServlet {
         String message = "";
 
         String url = "/Views/Pages/Course/excercise_student.jsp";
-        
         //the following part to test
         // part = new Part(1, 1, 1, "");
         int maxExcercise = 0;
@@ -68,19 +67,19 @@ public class Process_Excercise_Student extends HttpServlet {
         {
              url = "/Views/Pages/Home/home.jsp";
         }else {
-           
             session.setAttribute("part", part);
              
             Course course = part.getCourse();
             Chap chap = part.getChap();
             
             List<Excercise> excerciseList = ExcerciseDB.getAllExcercisePartOfPart(course,chap, part);
-             
+            
             maxExcercise=excerciseList.size();
             if (excerciseList != null) {
                 
                 //get max time of attemps
                 int maxTime = StudentExcerciseDB.getMaxTime(user, course, chap, part);
+                
                 for (Excercise e : excerciseList) {
                     request.setAttribute("Excercise" + e.getExcerciseOrder(), e);
                     maxExcercise = e.getExcerciseOrder();
@@ -103,6 +102,7 @@ public class Process_Excercise_Student extends HttpServlet {
                     }
                     
                     StudentExcercise stEx= new StudentExcercise(user, course, chap, part, e, correct, maxTime+1, answerOfStudent);
+
                     //Add anser into database
                     if(!StudentExcerciseDB.insert(stEx))
                     {
@@ -111,7 +111,7 @@ public class Process_Excercise_Student extends HttpServlet {
                      
                 }
             }
-           
+            
               request.setAttribute("maxExcercise", maxExcercise);
         }
 

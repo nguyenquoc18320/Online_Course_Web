@@ -40,7 +40,7 @@ public class EditInformationController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("utf-8");
         
-        String url = "/account-profile";
+        String url = "/admin";
         HttpSession session = request.getSession();
         
         User user = (User)session.getAttribute("User");
@@ -51,8 +51,6 @@ public class EditInformationController extends HttpServlet {
             
             String errorEditInformation = "";
             url = "/" + user.getRole().getRoleName();
-            if (url.equals("/admin"))
-                url = "/account-profile";
             String userIdEdit = request.getParameter("userIdEdit");
             if (userIdEdit == null)
                 userIdEdit = "";
@@ -89,7 +87,7 @@ public class EditInformationController extends HttpServlet {
                     userEdit = UserDB.GetUserByUserId(Integer.parseInt(userIdEdit));
                     if (!isUpdated)
                         url += "?isShowEditInfo=true";
-                    if (url.equals("/account-profile"))
+                    if (url.equals("/admin"))
                         session.setAttribute("User", userEdit);
                 }
                 else
@@ -102,7 +100,7 @@ public class EditInformationController extends HttpServlet {
                         userEdit = UserDB.GetUserByUserId(Integer.parseInt(userIdEdit));
                         if (!isUpdated)
                             url += "?isShowEditInfo=true";
-                        if (url.equals("/account-profile"))
+                        if (url.equals("/admin"))
                             session.setAttribute("User", userEdit);
                     }
                       else
@@ -120,7 +118,7 @@ public class EditInformationController extends HttpServlet {
         }
         if (!url.contains(".jsp"))
         {
-            response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY); 
+            response.setStatus(response.SC_MOVED_TEMPORARILY); 
             response.setHeader("Location", URL.url + url); 
         }
         

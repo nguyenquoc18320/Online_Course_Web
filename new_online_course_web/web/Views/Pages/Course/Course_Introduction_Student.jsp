@@ -15,13 +15,14 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Giới thiệu khóa học</title>
-        <link rel="stylesheet" href="Views/Css/Course/Course_Introduction_Student_css.css">    
+        <link rel="stylesheet" href="Views/Css/Course/Course_Introduction_Student_css.css">
+         <!--<link href="Views/Css/Course/course.css" type="text/css" rel="stylesheet">-->
         <link rel="stylesheet" href="Views/Css/common.css">
         <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     </head>
 
     <body>     
-        <form action="#"
+        <form action="add-course"
               method="post">
             <input type ="hidden" name='courseId' value="${course.getCourseId()}">
             <%--<c:out value="${course.getCourseId()}"/>--%>
@@ -250,8 +251,8 @@
 
                             </div>
                             <div class ="div_instructor_information">
-                                <input class='input_instructor_name'  id ="input_instructorName1" type="button" >
-                                <input class='input_instructor_description'  id ="input_instructorDescription1" type="button" >                               
+                                <input class='input_instructor_name'  id ="input_instructorName1" type="button" name="instructorName1" placeholder="Nhập tên người giảng dạy">
+                                <input class='input_instructor_disription'  id ="input_instructorDescription1" type="button" name="instructorDescription1"placeholder="Mô tả chức vụ ">                               
                                
                             </div>
                         </div>
@@ -313,7 +314,7 @@
 
 
                             var newInstructorDescriptionInput = document.createElement("input");
-                            newInstructorDescriptionInput.setAttribute('class', 'input_instructor_description');
+                            newInstructorDescriptionInput.setAttribute('class', 'input_instructor_disription');
                             newInstructorDescriptionInput.setAttribute('id','input_instructorDescription'+instructorOrder);
                             newInstructorDescriptionInput.setAttribute('type', 'button');
                             newInstructorDescriptionInput.setAttribute('name', 'instructorDescription' + instructorOrder);
@@ -429,9 +430,10 @@
            
             </div>
             <div class = 'div_save'>
-                <!--<a href="Process_CourseIntroduction_Teacher"><input type='button' id ='button_save' value='Save'></a>-->
+<!--                <a href="Process_CourseIntroduction_Teacher"><input type='button' id ='button_save' value='Save'></a>-->
                 <!--<a  href="Process_CourseIntroduction_Teacher"><input  id='button_save' type="button" value="Lưu"></a>-->
-                <input id ='button_save'  type="submit" value="Lưu">
+                
+                <input id ='button_save'  type="submit" value="Đăng ký khóa học">
 <!--                <a  href="Display_Course_Introduction_Teacher?requirement='new'"><input  id='button_newCourse' type="button" value="Tạo khóa học mới"></a>
                   <a  href="teacher-profile"><input  id='button_profile' type="button" value="Trang chính"></a>-->
 
@@ -470,8 +472,8 @@
                 </div>
             </div>
             <hr>
-             <% String message = (String) request.getAttribute("message");
-                if (message != null) {%>
+            <% String message = (String) request.getAttribute("message");
+                if (message !=null ) {%>
             <%="<script> alert('" + message + "');</script>"%>
             <% request.removeAttribute("message");%>
             <%}%>

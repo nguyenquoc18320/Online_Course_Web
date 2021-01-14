@@ -5,10 +5,14 @@
  */
 package Controller;
 
-import DAO.*;
+import DAO.AccountDB;
+import DAO.CourseDB;
+import DAO.URL;
+import DAO.UserDB;
 import Model.*;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,9 +23,9 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author TRAN VAN AN
+ * @author ad
  */
-@WebServlet(name = "AdminController", urlPatterns = {"/admin"})
+@WebServlet(urlPatterns = {"/student"})
 public class StudentController extends HttpServlet {
 
     /**
@@ -38,11 +42,16 @@ public class StudentController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("utf-8");
         
-        String url = "/Views/Pages/Admin/admin.jsp";
+        String url = "/Views/Pages/User/student.jsp";
         HttpSession session = request.getSession();
         User user = (User)session.getAttribute("User");
-        if (user != null && user.getRole().getRoleName().equals("admin"))
+        if (user != null && user.getRole().getRoleName().equals("student"))
         {
+            //ds 
+            List<Course> courses = CourseDB.GetCourses();
+            request.setAttribute("Courses", courses); 
+            
+            request.setAttribute("Role", user.getRole());
             //Get Error Edit Information
             String errorEditInformation = (String)session.getAttribute("ErrorEditInformation");
             if (errorEditInformation == null)
@@ -68,14 +77,7 @@ public class StudentController extends HttpServlet {
             if ("false".equals(isShowEditPass))
                 session.setAttribute("ErrorChangePassword", null);
             request.setAttribute("IsShowEditPass", isShowEditPass);
-            
-            Role role = user.getRole();
-            if (role != null)
-                request.setAttribute("Role", role);
-            int activated = AccountDB.CountAccountActivated();
-            request.setAttribute("Activated", activated);
-            int locked = AccountDB.CountAccountLocked();
-            request.setAttribute("Locked", locked);
+           
         }
         else{
             url = "/sign-in";

@@ -100,11 +100,10 @@ public class Display_Course_Introduction_Teacher extends HttpServlet {
                     }
                     
                     List<Instructor> instructorList = InstructorDB.getAllInstructorsByCourse(course);
-                    if(instructorList!=null)
-                    {
-                    for (int i = 0; i < instructorList.size(); i++) {
-                        request.setAttribute("instructor" + (i + 1), instructorList.get(i));
-                    }
+                        if(instructorList!=null){
+                        for (int i = 0; i < instructorList.size(); i++) {
+                            request.setAttribute("instructor" + (i + 1), instructorList.get(i));
+                        }
                     }
                 }
                 request.setAttribute("maxChap", maxChap);

@@ -6,15 +6,15 @@
 
 function ToggleDropDown(id)
 {
-    var drop_down = document.getElementById(id);
-    if (drop_down !== null)
-        if (drop_down.style.display === 'flex')
+    var front_div = document.getElementById(id);
+    if (front_div !== null)
+        if (front_div.style.display === 'flex')
         {
-            drop_down.style.display = 'none';
+            front_div.style.display = 'none';
         }
         else
         {
-            drop_down.style.display = 'flex';
+            front_div.style.display = 'flex';
         }
 }
 
@@ -34,20 +34,40 @@ function ShowFrontDiv(id)
 
 function CloseFrontDivEditInfo()
 {
-    window.location = "/new_online_course_web/account-profile?isShowEditInfo=false"; 
+    window.location = "/new_online_course_web/admin?isShowEditInfo=false";
 }
 
 function ShowFrontDivEditInfo()
 {
-    window.location = "/new_online_course_web/account-profile?isShowEditInfo=true";
+    window.location = "/new_online_course_web/admin?isShowEditInfo=true";
 }
 
 function CloseFrontDivEditPass()
 {
-    window.location = "/new_online_course_web/account-profile?isShowEditPass=false";
+    window.location = "/new_online_course_web/admin?isShowEditPass=false";
 }
 
 function ShowFrontDivEditPass()
 {
-    window.location = "/new_online_course_web/account-profile?isShowEditPass=true";
+    window.location = "/new_online_course_web/admin?isShowEditPass=true";
+}
+//student
+function CloseFrontDivEditInfoStudent()
+{
+    window.location = "/new_online_course_web/student?isShowEditInfo=false";
+}
+
+function ShowFrontDivEditInfoStudent()
+{
+    window.location = "/new_online_course_web/student?isShowEditInfo=true";
+}
+
+function CloseFrontDivEditPassStudent()
+{
+    window.location = "/new_online_course_web/student?isShowEditPass=false";
+}
+
+function ShowFrontDivEditPassStudent()
+{
+    window.location = "/new_online_course_web/student?isShowEditPass=true";
 }
